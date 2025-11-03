@@ -1,8 +1,6 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
-#if AVA_BASE_SETUP_VRCFTTEMPLATES
 
-using System;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -11,12 +9,11 @@ using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	public static class AVASetupVRCFTApplier
+	public static class AVASetupVRCApplier
 	{
-		public static void Apply(AVABaseSetupVRC Setup)
+		public static void Apply(AVABaseSetupVRC Setup, AVASetupStateVRC setupState)
 		{
 			var avatar = Setup.gameObject.GetComponent<VRCAvatarDescriptor>();
-			var setupState = Setup.gameObject.AddComponent<AVASetupStateVRC>();
 
 			// Run the setup producer-components
 			if(Setup.PreFacialTracking.ProducerComponent != null)
@@ -93,7 +90,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 
 			avatar.expressionParameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
-			avatar.expressionParameters.parameters = Array.Empty<VRCExpressionParameters.Parameter>();
+			avatar.expressionParameters.parameters = System.Array.Empty<VRCExpressionParameters.Parameter>();
 			AV3ManagerFunctions.AddParameters(avatar, setupState.Parameters, null, true, true);
 
 			avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
@@ -158,6 +155,5 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	}
 }
 
-#endif
 #endif
 #endif

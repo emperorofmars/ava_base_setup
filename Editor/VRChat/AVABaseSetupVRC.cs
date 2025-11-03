@@ -31,9 +31,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		{
 			if (Root.GetComponent<AVABaseSetupVRC>() is var setup && setup != null)
 			{
+				AVASetupStateVRC setupState = null;
 				try
 				{
-					AVASetupVRCFTApplier.Apply(setup);
+					setupState = setup.gameObject.AddComponent<AVASetupStateVRC>();
+					AVASetupVRCApplier.Apply(setup, setupState);
 					return true;
 				}
 				catch (System.Exception exception)
@@ -43,11 +45,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 				finally
 				{
-#if UNITY_EDITOR
+					foreach(var removeme in setup.GetComponentsInChildren<IAVAController>())
+						Object.DestroyImmediate(removeme);
 					Object.DestroyImmediate(setup);
-#else
-					Object.Destroy(setup);
-#endif
+					if(setupState)
+						Object.DestroyImmediate(setupState);
 				}
 			}
 			return true; // Nothing to do

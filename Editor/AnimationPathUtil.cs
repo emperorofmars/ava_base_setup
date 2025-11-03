@@ -39,15 +39,16 @@ namespace com.squirrelbite.ava_base_setup
 
 			foreach (var binding in AnimationUtility.GetCurveBindings(Clip))
 			{
-				Debug.Log(binding.path);
 				AnimationCurve curve = AnimationUtility.GetEditorCurve(Clip, binding);
 				var newBinding = binding;
 				if(!string.IsNullOrWhiteSpace(binding.path) && binding.path.StartsWith(Match))
 				{
-					newBinding = new EditorCurveBinding();
-					newBinding.path = binding.path.Replace(Match, Retarget);
-					newBinding.propertyName = binding.propertyName;
-					newBinding.type = binding.type;
+					newBinding = new EditorCurveBinding
+					{
+						path = binding.path.Replace(Match, Retarget),
+						propertyName = binding.propertyName,
+						type = binding.type
+					};
 				}
 				AnimationUtility.SetEditorCurve(ret, newBinding, curve);
 			}
