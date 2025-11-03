@@ -16,6 +16,13 @@ namespace com.squirrelbite.ava_base_setup
 			var bestMatch = MatchArray(UnifiedExpressions, Smr);
 			if(bestMatch > 0)
 				matchKind = (int)FT_Type.UnifiedExpressions;
+			if(MatchArray(SRanipal, Smr) is var matchSRanipal && matchSRanipal > bestMatch)
+			{
+				matchKind = (int)FT_Type.SRanipal;
+				bestMatch = matchSRanipal;
+			}
+			if(MatchArray(ARKit, Smr) is var matchARKit && matchSRanipal > bestMatch)
+				matchKind = (int)FT_Type.ARKit;
 			return matchKind;
 		}
 
@@ -27,6 +34,10 @@ namespace com.squirrelbite.ava_base_setup
 					matched++;
 			return (float)matched / Math.Max(1, FTSet.Length);
 		}
+
+
+		// Values from (2025-11-04)
+		// https://docs.google.com/spreadsheets/d/118jo960co3Mgw8eREFVBsaJ7z0GtKNr52IB4Bz99VTA
 
 		public static readonly string[] UnifiedExpressions = new string[] {
 			"EyeLookOut",
