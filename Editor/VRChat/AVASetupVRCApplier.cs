@@ -2,10 +2,12 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
+using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
@@ -94,7 +96,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			AV3ManagerFunctions.AddParameters(avatar, setupState.Parameters, null, true, true);
 
 			avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-			AV3ManagerFunctions.AddSubMenu(avatar, setupState.FTMenu, setupState.FTMenu.name, null, null, null, true, true);
+			AV3ManagerFunctions.AddSubMenu(avatar, setupState.FTMenu, "Face Tracking", null, null, AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/adjerry91.vrcft.templates/Icons/FaceTrackingIcon2.png"), true, true);
 
 			avatar.baseAnimationLayers = animatorLayers;
 		}
@@ -118,219 +120,195 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			if(Setup.UseFacialTracking && State.Layers[Layer].FT)
 			{
-				var animatorLayer1 = new AnimatorControllerLayer
+				if(Layer == 4)
 				{
-					name = "Face Tracking Settings",
-					stateMachine = new AnimatorStateMachine(),
-					defaultWeight = 1,
-				};
-				var stateFTOff = new AnimatorState { name = "FT Off", writeDefaultValues = true };
-				var stateOn = new AnimatorState { name = "On", writeDefaultValues = true };
-				var stateExpressionsOff = new AnimatorState { name = "Expressions Off", writeDefaultValues = true };
-				var stateOff = new AnimatorState { name = "Off", writeDefaultValues = true };
+					var animatorLayer1 = new AnimatorControllerLayer
+					{
+						name = "Face Tracking Settings",
+						stateMachine = new AnimatorStateMachine(),
+						defaultWeight = 1,
+					};
+					var stateFTOff = new AnimatorState { name = "FT Off", writeDefaultValues = true };
+					var stateOn = new AnimatorState { name = "On", writeDefaultValues = true };
+					var stateExpressionsOff = new AnimatorState { name = "Expressions Off", writeDefaultValues = true };
+					var stateOff = new AnimatorState { name = "Off", writeDefaultValues = true };
 
-				animatorLayer1.stateMachine.AddState(stateFTOff, new Vector3(200, 220));
-				animatorLayer1.stateMachine.AddState(stateOn, new Vector3(400, 100));
-				animatorLayer1.stateMachine.AddState(stateExpressionsOff, new Vector3(600, 220));
-				animatorLayer1.stateMachine.AddState(stateOff, new Vector3(400, 340));
+					animatorLayer1.stateMachine.AddState(stateFTOff, new Vector3(200, 220));
+					animatorLayer1.stateMachine.AddState(stateOn, new Vector3(400, 100));
+					animatorLayer1.stateMachine.AddState(stateExpressionsOff, new Vector3(600, 220));
+					animatorLayer1.stateMachine.AddState(stateOff, new Vector3(400, 340));
 
-				stateFTOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOn,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateFTOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOn,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateFTOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateExpressionsOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateFTOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateExpressionsOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateFTOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateOn.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateFTOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateOn.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateOn.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateExpressionsOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateOn.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateExpressionsOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateFTOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateFTOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateExpressionsOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateExpressionsOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOn,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOn,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateExpressionsOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOn,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateExpressionsOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOn,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
-				stateExpressionsOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
-					},
-				});
-				stateExpressionsOff.AddTransition(new AnimatorStateTransition
-				{
-					destinationState = stateFTOff,
-					conditions = new AnimatorCondition[] {
-						new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
-						new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
-					},
-				});
+					stateFTOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOn,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateFTOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOn,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateFTOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateExpressionsOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateFTOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateExpressionsOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateFTOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateOn.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateFTOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateOn.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateOn.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateExpressionsOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateOn.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateExpressionsOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateFTOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateFTOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateExpressionsOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateExpressionsOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOn,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOn,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateExpressionsOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOn,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateExpressionsOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOn,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
+					stateExpressionsOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Greater, parameter = "FacialExpressionsDisabled", threshold = 0.9f },
+						},
+					});
+					stateExpressionsOff.AddTransition(new AnimatorStateTransition
+					{
+						destinationState = stateFTOff,
+						conditions = new AnimatorCondition[] {
+							new() {mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
+							new() {mode = AnimatorConditionMode.Less, parameter = "FacialExpressionsDisabled", threshold = 0.1f },
+						},
+					});
 
-				var onControl = stateOn.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				// todo proper mapping
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 3;
-				onControl.goalWeight = 1;
+					var startLayer = ret.layers.Length + 1;
+					var ftLayerCount = State.Layers[Layer].FT.layers.Length + (State.Layers[Layer].FT_React ? State.Layers[Layer].FT_React.layers.Length : 0);
+					var mutLayerCount = State.Layers[Layer].Mut ? State.Layers[Layer].Mut.layers.Length : 0;
 
-				onControl = stateOn.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 4;
-				onControl.goalWeight = 1;
+					SetupBehaviour(stateOn, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 1);
+					SetupBehaviour(stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 1);
+					SetupBehaviour(stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 0);
+					SetupBehaviour(stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 0);
+					SetupBehaviour(stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 1);
+					SetupBehaviour(stateOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 0);
 
-				onControl = stateOn.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 5;
-				onControl.goalWeight = 1;
-
-				onControl = stateOn.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 6;
-				onControl.goalWeight = 1;
-
-				onControl = stateOn.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 7;
-				onControl.goalWeight = 1;
-
-				var offControl = stateFTOff.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 3;
-				onControl.goalWeight = 0;
-
-				offControl = stateFTOff.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
-				onControl.playable = Layer == 4 ? VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.FX : VRC.SDKBase.VRC_AnimatorLayerControl.BlendableLayer.Additive;
-				onControl.layer = 4;
-				onControl.goalWeight = 0;
-
-
-				// todo layer toggle
-				ret.AddLayer(animatorLayer1);
+					ret.AddLayer(animatorLayer1);
+				}
 
 				ret = AnimatorCloner.MergeControllers(ret, State.Layers[Layer].FT, null, false, 0);
 				if(State.Layers[Layer].FT_React)
@@ -356,6 +334,17 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				return ret;
 			}
 			return null;
+		}
+
+		private static void SetupBehaviour(AnimatorState State, VRC_AnimatorLayerControl.BlendableLayer Layer, int LayerStart, int LayerCount, float GoalWeight)
+		{
+			for(int i = LayerStart; i < LayerStart + LayerCount; i++)
+			{
+				var behaviour = State.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
+				behaviour.playable = Layer;
+				behaviour.layer = i;
+				behaviour.goalWeight = GoalWeight;
+			}
 		}
 	}
 }
