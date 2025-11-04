@@ -9,10 +9,24 @@ namespace com.squirrelbite.ava_base_setup
 	public abstract class IAVABaseSetup : MonoBehaviour
 	{
 		[System.Serializable]
+		public class ControllerMapping
+		{
+			// For applications which have just *the* one AnimatorController, leave the Mapping as null. Applications like VRChat have 5 separate layers of controllers, use the Mapping to refer to each.
+			public string Mapping = null;
+			public AnimatorController Controller = null;
+		}
+
+		[System.Serializable]
 		public class ControllerSource
 		{
-			public AnimatorController Controller = null;
-			public IAVAController ProducerComponent = null;
+			// Only one field will be used, preferentially the ProducerComponent.
+
+			// When a simple set of AnimatorControllers is enough, just map that.
+			//public AnimatorController Controller = null;
+			public List<ControllerMapping> Controllers = new();
+
+			// When more complex setup logic is needed, map a ProducerComponent.
+			public IAVAControllerProducer ProducerComponent = null;
 		}
 
 		public bool UseFacialTracking = true;

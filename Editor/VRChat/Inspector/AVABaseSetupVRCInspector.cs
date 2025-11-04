@@ -78,8 +78,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			DrawLayer(c.LayerManualExpressions, "LayerManualExpressions", c.UseFacialTracking && isFTAvailable ? "Manual Expression Layers (Toggled)" : "Manual Expression Layers");
 			DrawHLine();
 			DrawLayer(c.LayerPost, "LayerPost", c.UseFacialTracking && isFTAvailable ? "Bottom Layers (Always On)" : "Bottom Layers");
-			DrawHLine();
-			EditorGUILayout.ObjectField(serializedObject.FindProperty("LayerPostAdditiveController"), typeof(AnimatorController), new GUIContent("Extra Additive Animator Controller"));
 
 			if(EditorGUI.EndChangeCheck())
 			{
@@ -96,11 +94,42 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.BeginVertical();
-				if(Layer[i].ProducerComponent || !Layer[i].Controller)
-					EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("ProducerComponent"), typeof(IAVAController), new GUIContent());
+				if(Layer[i].ProducerComponent || Layer[i].Controllers.Count == 0)
+				{
+					EditorGUILayout.BeginHorizontal();
+					EditorGUILayout.PrefixLabel("Producer Component");
+					EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("ProducerComponent"), typeof(IAVAControllerProducer), new GUIContent());
+					EditorGUILayout.EndHorizontal();
+				}
 				if(!Layer[i].ProducerComponent)
-					EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("Controller"), typeof(AnimatorController), new GUIContent());
+				{
+					for(int j = 0; j < Layer[i].Controllers.Count; j++)
+					{
+						EditorGUILayout.BeginHorizontal();
+						var selection = AVAConstants.ControllerTypeToIndex.Keys.ToList();
+						var oldSelectionIndex = selection.IndexOf(Layer[i].Controllers[j].Mapping);
+						if(oldSelectionIndex <= 0)
+						{
+							oldSelectionIndex = 4;
+							Layer[i].Controllers[j].Mapping = selection[oldSelectionIndex];
+						}
+						var newSelectionIndex = EditorGUILayout.Popup(oldSelectionIndex, selection.ToArray());
+						if(oldSelectionIndex != newSelectionIndex)
+							Layer[i].Controllers[j].Mapping = selection[newSelectionIndex];
+
+						EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("Controllers").GetArrayElementAtIndex(j).FindPropertyRelative("Controller"), typeof(AnimatorController), new GUIContent());
+						if(GUILayout.Button("X", GUILayout.ExpandWidth(false))) Layer[i].Controllers.Remove(Layer[i].Controllers[j]);
+						EditorGUILayout.EndHorizontal();
+					}
+					EditorGUILayout.BeginHorizontal();
+					if(Layer[i].Controllers.Count == 0)
+						EditorGUILayout.LabelField("Add Controller Mapping");
+					GUILayout.FlexibleSpace();
+					if(GUILayout.Button(new GUIContent("Add +", "Add a new Animator Controller Mapping"), GUILayout.ExpandWidth(false))) Layer[i].Controllers.Add(new());
+					EditorGUILayout.EndHorizontal();
+				}
 				EditorGUILayout.EndVertical();
+				GUILayout.Space(5f);
 				if(GUILayout.Button("X", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true))) Layer.Remove(Layer[i]);
 				EditorGUILayout.EndHorizontal();
 				GUILayout.Space(5f);

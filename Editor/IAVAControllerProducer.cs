@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.ava_base_setup
 {
-	public abstract class IAVAController : MonoBehaviour
+	public abstract class IAVAControllerProducer : MonoBehaviour
 	{
 		public abstract void Apply();
 	}

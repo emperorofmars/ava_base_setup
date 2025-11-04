@@ -13,25 +13,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 {
 	public static class AVASetupVRCApplier
 	{
-		const string OUTPUT_PATH = "Packages/com.squirrelbite.ava_base_setup/Output/";
-
 		public static void Apply(AVABaseSetupVRC Setup, AVASetupStateVRC setupState)
 		{
 			var avatar = Setup.gameObject.GetComponent<VRCAvatarDescriptor>();
 
 			var outputHolder = ScriptableObject.CreateInstance<AVAOutputHolder>();
 			outputHolder.name = avatar.name;
-			AssetDatabase.DeleteAsset(OUTPUT_PATH + avatar.name + ".asset");
-			AssetDatabase.CreateAsset(outputHolder, OUTPUT_PATH + avatar.name + ".asset");
-
-			if(Setup.LayerPostAdditiveController)
-				setupState.Layers[1].Other.Add(Setup.LayerPostAdditiveController);
+			AssetDatabase.DeleteAsset(AVAConstants.OUTPUT_PATH + avatar.name + ".asset");
+			AssetDatabase.CreateAsset(outputHolder, AVAConstants.OUTPUT_PATH + avatar.name + ".asset");
 
 			foreach(var layer in Setup.LayerPreFT)
 				if(layer.ProducerComponent != null)
 					layer.ProducerComponent.Apply();
 				else
-					setupState.Layers[4].Pre_FT.Add(layer.Controller);
+					foreach(var c in layer.Controllers)
+						if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
+							setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].Pre_FT.Add(c.Controller);
 
 			if(Setup.UseFacialTracking)
 			{
@@ -47,25 +44,33 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						if(layer.ProducerComponent != null)
 							layer.ProducerComponent.Apply();
 						else
-							setupState.Layers[4].FT.Add(layer.Controller);
+							foreach(var c in layer.Controllers)
+								if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
+									setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].FT.Add(c.Controller);
 				}
 				foreach(var layer in Setup.LayerFTReact)
 					if(layer.ProducerComponent != null)
 						layer.ProducerComponent.Apply();
 					else
-						setupState.Layers[4].FT_React.Add(layer.Controller);
+						foreach(var c in layer.Controllers)
+							if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
+								setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].FT_React.Add(c.Controller);
 			}
 			foreach(var layer in Setup.LayerManualExpressions)
 				if(layer.ProducerComponent != null)
 					layer.ProducerComponent.Apply();
 				else
-					setupState.Layers[4].Mut.Add(layer.Controller);
+					foreach(var c in layer.Controllers)
+						if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
+							setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].Mut.Add(c.Controller);
 
 			foreach(var layer in Setup.LayerPost)
 				if(layer.ProducerComponent != null)
 					layer.ProducerComponent.Apply();
 				else
-					setupState.Layers[4].Other.Add(layer.Controller);
+					foreach(var c in layer.Controllers)
+						if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
+							setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].Other.Add(c.Controller);
 
 			// Ensure layers
 			avatar.customizeAnimationLayers = true;

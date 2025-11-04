@@ -19,7 +19,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public AVA_FT_Setup_Type FacialTrackingSetupType = AVA_FT_Setup_Type.Automatic;
 		public FacialTrackingMenu FacialTrackingMenu = FacialTrackingMenu.AVA_Improved;
 		public VRCExpressionsMenu FacialTrackingMenuManual;
-		public AnimatorController LayerPostAdditiveController;
 	}
 
 	[InitializeOnLoad]
@@ -46,8 +45,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 				finally
 				{
-					foreach(var removeme in setup.GetComponentsInChildren<IAVAController>())
-						Object.DestroyImmediate(removeme);
+					foreach(var removeMe in setup.GetComponentsInChildren<IAVAControllerProducer>())
+						Object.DestroyImmediate(removeMe);
 					Object.DestroyImmediate(setup);
 					if(setupState)
 						Object.DestroyImmediate(setupState);
