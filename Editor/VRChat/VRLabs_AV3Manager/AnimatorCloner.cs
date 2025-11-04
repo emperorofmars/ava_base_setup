@@ -21,7 +21,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 		private static Dictionary<string, string> _parametersNewName;
 		private static string _assetPath;
 
-		public static AnimatorController MergeControllers(AnimatorController mainController, AnimatorController controllerToMerge, Dictionary<string, string> paramNameSwap = null, bool saveToNew = false, uint skipLayers = 0, string MotionRetarget = null, string MotionMatch = null)
+		public static AnimatorController MergeControllers(AnimatorController mainController, AnimatorController controllerToMerge, Dictionary<string, string> paramNameSwap = null, bool saveToNew = false, uint skipLayers = 0, Func<AnimationClip, AnimationClip> AnimationCallback = null)
 		{
 			if (mainController == null)
 			{
@@ -66,7 +66,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 
 			for (uint i = skipLayers; i < controllerToMerge.layers.Length; i++)
 			{
-				AnimatorControllerLayer newL = CloneLayer(controllerToMerge.layers[i], i == 0, saveToNew, MotionRetarget, MotionMatch);
+				AnimatorControllerLayer newL = CloneLayer(controllerToMerge.layers[i], i == 0, saveToNew, AnimationCallback);
 				newL.name = mainController
 					.MakeUniqueLayerName(newL.name); // MakeLayerNameUnique(newL.name, mainController);
 				newL.stateMachine.name = newL.name;
@@ -104,7 +104,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return name + st;
 		}
 
-		private static AnimatorControllerLayer CloneLayer(AnimatorControllerLayer old, bool isFirstLayer = false, bool saveToNew = false, string MotionRetarget = null, string MotionMatch = null)
+		private static AnimatorControllerLayer CloneLayer(AnimatorControllerLayer old, bool isFirstLayer = false, bool saveToNew = false, Func<AnimationClip, AnimationClip> AnimationCallback = null)
 		{
 			var n = new AnimatorControllerLayer
 			{
@@ -114,13 +114,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				iKPass = old.iKPass,
 				name = old.name,
 				syncedLayerAffectsTiming = old.syncedLayerAffectsTiming,
-				stateMachine = CloneStateMachine(old.stateMachine, saveToNew, MotionRetarget, MotionMatch)
+				stateMachine = CloneStateMachine(old.stateMachine, saveToNew, AnimationCallback)
 			};
 			CloneTransitions(old.stateMachine, n.stateMachine);
 			return n;
 		}
 
-		private static AnimatorStateMachine CloneStateMachine(AnimatorStateMachine old, bool saveToNew, string MotionRetarget = null, string MotionMatch = null)
+		private static AnimatorStateMachine CloneStateMachine(AnimatorStateMachine old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
 		{
 			var n = new AnimatorStateMachine
 			{
@@ -131,7 +131,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				name = old.name,
 				parentStateMachinePosition = old.parentStateMachinePosition,
 				stateMachines = old.stateMachines.Select(x => CloneChildStateMachine(x, saveToNew)).ToArray(),
-				states = old.states.Select(x => CloneChildAnimatorState(x, saveToNew, MotionRetarget, MotionMatch)).ToArray()
+				states = old.states.Select(x => CloneChildAnimatorState(x, saveToNew, AnimationCallback)).ToArray()
 			};
 
 			if(saveToNew)
@@ -158,12 +158,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return n;
 		}
 
-		private static ChildAnimatorState CloneChildAnimatorState(ChildAnimatorState old, bool saveToNew, string MotionRetarget = null, string MotionMatch = null)
+		private static ChildAnimatorState CloneChildAnimatorState(ChildAnimatorState old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
 		{
 			var n = new ChildAnimatorState
 			{
 				position = old.position,
-				state = CloneAnimatorState(old.state, saveToNew, MotionRetarget, MotionMatch)
+				state = CloneAnimatorState(old.state, saveToNew, AnimationCallback)
 			};
 			foreach (var oldb in old.state.behaviours)
 			{
@@ -174,13 +174,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return n;
 		}
 
-		private static AnimatorState CloneAnimatorState(AnimatorState old, bool saveToNew, string MotionRetarget = null, string MotionMatch = null)
+		private static AnimatorState CloneAnimatorState(AnimatorState old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
 		{
 			// Checks if the motion is a blend tree, to avoid accidental blend tree sharing between animator assets
 			Motion motion = old.motion;
 			if (motion is BlendTree oldTree)
 			{
-				var tree = CloneBlendTree(null, oldTree, saveToNew, MotionRetarget, MotionMatch);
+				var tree = CloneBlendTree(null, oldTree, saveToNew, AnimationCallback);
 				motion = tree;
 				// need to save the blend tree into the animator
 				tree.hideFlags = HideFlags.HideInHierarchy;
@@ -189,9 +189,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			}
 
 			var newMotion = motion;
-			if(!string.IsNullOrWhiteSpace(MotionMatch) && !string.IsNullOrWhiteSpace(MotionRetarget) && motion is AnimationClip clip && clip != null)
+			if(AnimationCallback != null && motion is AnimationClip clip && clip != null)
 			{
-				newMotion = AnimationPathUtil.RepathClip(clip, MotionRetarget, MotionMatch);
+				newMotion = AnimationCallback(clip);
 			}
 
 			var n = new AnimatorState
@@ -220,7 +220,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 		}
 
 		// Taken from here: https://gist.github.com/phosphoer/93ca8dcbf925fc006e4e9f6b799c13b0
-		private static BlendTree CloneBlendTree(BlendTree parentTree, BlendTree oldTree, bool saveToNew, string MotionRetarget = null, string MotionMatch = null)
+		private static BlendTree CloneBlendTree(BlendTree parentTree, BlendTree oldTree, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
 		{
 			// Create a child tree in the destination parent, this seems to be the only way to correctly 
 			// add a child tree as opposed to AddChild(motion)
@@ -260,7 +260,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 
 				if (child.motion is BlendTree tree)
 				{
-					var childTree = CloneBlendTree(pastedTree, tree, saveToNew, MotionRetarget, MotionMatch);
+					var childTree = CloneBlendTree(pastedTree, tree, saveToNew, AnimationCallback);
 					childMotion.motion = childTree;
 					// need to save the blend tree into the animator
 					childTree.hideFlags = HideFlags.HideInHierarchy;
@@ -270,9 +270,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				else
 				{
 					var newMotion = child.motion;
-					if(!string.IsNullOrWhiteSpace(MotionMatch) && !string.IsNullOrWhiteSpace(MotionRetarget) && child.motion is AnimationClip clip && clip != null)
+					if(AnimationCallback != null && child.motion is AnimationClip clip && clip != null)
 					{
-						newMotion = AnimationPathUtil.RepathClip(child.motion as AnimationClip, MotionRetarget, MotionMatch);
+						newMotion = AnimationCallback(clip);
 					}
 					childMotion.motion = newMotion;
 				}

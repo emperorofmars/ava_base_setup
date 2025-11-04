@@ -84,6 +84,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				serializedObject.ApplyModifiedProperties();
 				EditorUtility.SetDirty(c);
 			}
+			GUILayout.Space(10f);
+			DrawHLine();
+			if(GUILayout.Button("Create Controllers", GUILayout.ExpandWidth(false)))
+			{
+				AVASetupStateVRC state = null;
+				try
+				{
+					state = c.gameObject.AddComponent<AVASetupStateVRC>();
+					AVASetupVRCApplier.Apply(c, state);
+				}
+				finally
+				{
+					if(state)
+						DestroyImmediate(state);
+				}
+			}
 		}
 
 		private void DrawLayer(List<IAVABaseSetup.ControllerSource> Layer, string LayerName, string Label)

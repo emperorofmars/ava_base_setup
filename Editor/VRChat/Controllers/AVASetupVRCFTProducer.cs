@@ -68,10 +68,19 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					Debug.LogError("FT_Setup: Could not determine facial tracking type!");
 					return;
 				}
-				setupState.Layers[4].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerFX, null, false, 1, AnimationPathUtil.GetPath(transform, FTMesh.transform, true), "Body"));
+
+				var motionMatch = "Body";
+				var motionRetarget = AnimationPathUtil.GetPath(transform, FTMesh.transform, true);
+
+				var AnimationRepather = new System.Func<AnimationClip, AnimationClip>(SourceClip => {
+					var newClip = AnimationPathUtil.RepathClip(SourceClip, motionRetarget, motionMatch);
+					return newClip;
+				});
+
+				setupState.Layers[4].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerFX, null, false, 1, AnimationRepather));
 
 				var controllerGesture = AssetDatabase.LoadAssetAtPath<AnimatorController>(VRCFT_TEMPLATES_BASE_PATH + "Eye Rotation/Additive - Eye Tracking - Eye Rotation.controller");
-				setupState.Layers[1].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerGesture, null, false, 1, AnimationPathUtil.GetPath(transform, FTMesh.transform, true), "Body"));
+				setupState.Layers[1].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerGesture, null, false, 1, AnimationRepather));
 			}
 			catch(System.Exception e)
 			{
