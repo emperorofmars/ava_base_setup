@@ -25,6 +25,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public List<VRCExpressionParameters.Parameter> Parameters = new();
 		public VRCExpressionsMenu FTMenu;
+
+		public List<Object> UnityResourcesToStoreIfDesired = new();
 	}
 }
 

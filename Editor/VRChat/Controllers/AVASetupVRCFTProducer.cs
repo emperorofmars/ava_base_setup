@@ -74,6 +74,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				var AnimationRepather = new System.Func<AnimationClip, AnimationClip>(SourceClip => {
 					var newClip = AnimationPathUtil.RepathClip(SourceClip, motionRetarget, motionMatch);
+					setupState.UnityResourcesToStoreIfDesired.Add(newClip);
 					return newClip;
 				});
 
@@ -88,7 +89,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				Debug.LogException(e);
 			}
 #else
-			Debug.LogError("FT_Setup: face tracking templates are not installed!");
+			Debug.LogWarning("FT_Setup: face tracking templates are not installed!");
 #endif
 		}
 	}

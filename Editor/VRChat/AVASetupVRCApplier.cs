@@ -141,6 +141,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 			AV3ManagerFunctions.AddSubMenu(avatar, setupState.FTMenu, "Face Tracking", null, new VRCExpressionsMenu.Control.Parameter(), AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/adjerry91.vrcft.templates/Icons/FaceTrackingIcon2.png"), true, true);
 
+			foreach(var asset in setupState.UnityResourcesToStoreIfDesired)
+				AssetDatabase.AddObjectToAsset(asset, outputHolder);
+
 			AssetDatabase.SaveAssets();
 
 			avatar.baseAnimationLayers = animatorLayers;

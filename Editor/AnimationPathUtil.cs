@@ -32,7 +32,6 @@ namespace com.squirrelbite.ava_base_setup
 			var ret = new AnimationClip
 			{
 				name = Clip.name,
-				events = Clip.events,
 				frameRate = Clip.frameRate,
 				wrapMode = Clip.wrapMode
 			};
