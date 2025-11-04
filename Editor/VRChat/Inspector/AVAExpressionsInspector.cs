@@ -29,19 +29,19 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			EditorGUILayout.LabelField("Expressions", EditorStyles.boldLabel);
 			GUILayout.Space(5f);
-			EditorGUI.indentLevel++;
-			for (int i = 0; i < c.Emotes.Count; i++)
-			{
-				EditorGUILayout.BeginHorizontal();
-				c.Emotes[i].Emote = EditorGUILayout.TextField(c.Emotes[i].Emote);
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("Emotes").GetArrayElementAtIndex(i).FindPropertyRelative("Animation"), new GUIContent());
-				GUILayout.Space(5f);
-				if (GUILayout.Button("X", GUILayout.ExpandWidth(false))) c.Emotes.RemoveAt(i);
-				EditorGUILayout.EndHorizontal();
+			using(new EditorGUI.IndentLevelScope())
+				for (int i = 0; i < c.Emotes.Count; i++)
+				{
+					using(new EditorGUILayout.HorizontalScope(GUI.skin.box))
+					{
+						c.Emotes[i].Emote = EditorGUILayout.TextField(c.Emotes[i].Emote);
+						EditorGUILayout.PropertyField(serializedObject.FindProperty("Emotes").GetArrayElementAtIndex(i).FindPropertyRelative("Animation"), new GUIContent());
+						GUILayout.Space(5f);
+						if (GUILayout.Button("X", GUILayout.ExpandWidth(false))) c.Emotes.RemoveAt(i);
+					}
 
-				if (i < c.Emotes.Count) GUILayout.Space(5f);
-			}
-			EditorGUI.indentLevel--;
+					if (i < c.Emotes.Count) GUILayout.Space(5f);
+				}
 			if (GUILayout.Button("+ Add Expression", GUILayout.MaxWidth(150)))
 				c.Emotes.Add(new AvatarEmote());
 
@@ -54,110 +54,107 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			GUILayout.Space(10f);
 
-			EditorGUI.indentLevel++;
-			if (c.Emotes.Count == 0)
+			using(new EditorGUI.IndentLevelScope())
 			{
-				EditorGUILayout.LabelField("No Expressions to bind!");
-			}
-			else
-			{
-				var bindingDropdown = c.Emotes.Select(e => e.Emote).Distinct().ToList();
-				bindingDropdown.Sort();
-
-				for (int i = 0; i < c.EmoteBindings.Count; i++)
+				if (c.Emotes.Count == 0)
 				{
-					EditorGUILayout.BeginHorizontal();
-					GUILayout.Space(10f);
-					EditorGUILayout.BeginVertical();
-					EditorGUILayout.BeginHorizontal();
+					EditorGUILayout.LabelField("No Expressions to bind!");
+				}
+				else
+				{
+					var bindingDropdown = c.Emotes.Select(e => e.Emote).Distinct().ToList();
+					bindingDropdown.Sort();
 
-					EditorGUILayout.BeginVertical();
-					GUILayout.Label("Left", GUILayout.ExpandWidth(false));
-					c.EmoteBindings[i].GuestureLeftHand = (HandGesture)EditorGUILayout.EnumPopup(c.EmoteBindings[i].GuestureLeftHand, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
-					EditorGUILayout.EndVertical();
-
-					GUILayout.Space(5f);
-
-					EditorGUILayout.BeginVertical();
-					GUILayout.Label("Right", GUILayout.ExpandWidth(false));
-					c.EmoteBindings[i].GuestureRightHand = (HandGesture)EditorGUILayout.EnumPopup(c.EmoteBindings[i].GuestureRightHand, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
-					EditorGUILayout.EndVertical();
-
-					GUILayout.Space(5f);
-
-					EditorGUILayout.BeginVertical();
-					GUILayout.Label("Use Trigger Intensity", GUILayout.ExpandWidth(false));
-					if (c.EmoteBindings[i].GuestureLeftHand > 0 && c.EmoteBindings[i].GuestureRightHand > 0)
+					for (int i = 0; i < c.EmoteBindings.Count; i++)
 					{
-						c.EmoteBindings[i].UseTriggerIntensity = (TriggerIntensity)EditorGUILayout.EnumPopup(c.EmoteBindings[i].UseTriggerIntensity, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
-					}
-					else
-					{
-						bool useIntensity = c.EmoteBindings[i].UseTriggerIntensity > 0;
-						bool useIntensityNew = EditorGUILayout.Toggle(useIntensity, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
-						if (useIntensity != useIntensityNew)
+						using(new EditorGUILayout.HorizontalScope(GUI.skin.box))
 						{
-							if (useIntensityNew)
-								c.EmoteBindings[i].UseTriggerIntensity = c.EmoteBindings[i].GuestureLeftHand > 0 ? TriggerIntensity.Left : TriggerIntensity.Right;
-							else
-								c.EmoteBindings[i].UseTriggerIntensity = TriggerIntensity.None;
-						}
-					}
-					EditorGUILayout.EndVertical();
-
-					GUILayout.Space(5f);
-
-					EditorGUILayout.BeginVertical();
-					GUILayout.Label("Expression");
-					var oldSelectedIndex = bindingDropdown.FindIndex(b => b == c.EmoteBindings[i].Emote);
-					if(oldSelectedIndex < 0)
-					{
-						oldSelectedIndex = 0;
-						c.EmoteBindings[i].Emote = bindingDropdown[oldSelectedIndex];
-						EditorUtility.SetDirty(c);
-					}
-					var newSelectedIndex = EditorGUILayout.Popup(oldSelectedIndex, bindingDropdown.Select(e => e.Length > 0 ? char.ToUpper(e[0]) + e[1..] : e).ToArray(), GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
-					if (newSelectedIndex != oldSelectedIndex)
-					{
-						c.EmoteBindings[i].Emote = bindingDropdown[newSelectedIndex];
-						EditorUtility.SetDirty(c);
-					}
-					EditorGUILayout.EndVertical();
-					EditorGUILayout.EndHorizontal();
-
-					if (string.IsNullOrWhiteSpace(c.EmoteBindings[i].Emote) || c.EmoteBindings[i].GuestureLeftHand == HandGesture.None && c.EmoteBindings[i].GuestureRightHand == HandGesture.None)
-					{
-						EditorGUILayout.HelpBox("Empty Binding! Please select emote and mappings.", MessageType.Error);
-						//EditorGUILayout.LabelField("Empty Binding! Please select emote and mappings.");
-					}
-					else
-					{
-						for (int nestedI = 0; nestedI < c.EmoteBindings.Count; nestedI++)
-						{
-							if (nestedI != i && c.EmoteBindings[nestedI].GuestureLeftHand == c.EmoteBindings[i].GuestureLeftHand && c.EmoteBindings[nestedI].GuestureRightHand == c.EmoteBindings[i].GuestureRightHand)
+							GUILayout.Space(10f);
+							using(new EditorGUILayout.VerticalScope())
 							{
-								EditorGUILayout.HelpBox("Duplicate Binding! Please select a different mapping.", MessageType.Error);
-								//EditorGUILayout.LabelField("Duplicate Binding! Please select a different mapping!");
-								break;
+								using(new EditorGUILayout.HorizontalScope())
+								{
+									using(new EditorGUILayout.VerticalScope())
+									{
+										GUILayout.Label("Left", GUILayout.ExpandWidth(false));
+										c.EmoteBindings[i].GuestureLeftHand = (HandGesture)EditorGUILayout.EnumPopup(c.EmoteBindings[i].GuestureLeftHand, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
+									}
+									GUILayout.Space(5f);
+									using(new EditorGUILayout.VerticalScope())
+									{
+										GUILayout.Label("Right", GUILayout.ExpandWidth(false));
+										c.EmoteBindings[i].GuestureRightHand = (HandGesture)EditorGUILayout.EnumPopup(c.EmoteBindings[i].GuestureRightHand, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
+									}
+									GUILayout.Space(5f);
+									using(new EditorGUILayout.VerticalScope())
+									{
+										GUILayout.Label("Use Trigger Intensity", GUILayout.ExpandWidth(false));
+										if (c.EmoteBindings[i].GuestureLeftHand > 0 && c.EmoteBindings[i].GuestureRightHand > 0)
+										{
+											c.EmoteBindings[i].UseTriggerIntensity = (TriggerIntensity)EditorGUILayout.EnumPopup(c.EmoteBindings[i].UseTriggerIntensity, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
+										}
+										else
+										{
+											bool useIntensity = c.EmoteBindings[i].UseTriggerIntensity > 0;
+											bool useIntensityNew = EditorGUILayout.Toggle(useIntensity, GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
+											if (useIntensity != useIntensityNew)
+											{
+												if (useIntensityNew)
+													c.EmoteBindings[i].UseTriggerIntensity = c.EmoteBindings[i].GuestureLeftHand > 0 ? TriggerIntensity.Left : TriggerIntensity.Right;
+												else
+													c.EmoteBindings[i].UseTriggerIntensity = TriggerIntensity.None;
+											}
+										}
+									}
+									GUILayout.Space(5f);
+									using(new EditorGUILayout.VerticalScope())
+									{
+										GUILayout.Label("Expression");
+										var oldSelectedIndex = bindingDropdown.FindIndex(b => b == c.EmoteBindings[i].Emote);
+										if(oldSelectedIndex < 0)
+										{
+											oldSelectedIndex = 0;
+											c.EmoteBindings[i].Emote = bindingDropdown[oldSelectedIndex];
+											EditorUtility.SetDirty(c);
+										}
+										var newSelectedIndex = EditorGUILayout.Popup(oldSelectedIndex, bindingDropdown.Select(e => e.Length > 0 ? char.ToUpper(e[0]) + e[1..] : e).ToArray(), GUILayout.ExpandWidth(false), GUILayout.MaxWidth(180));
+										if (newSelectedIndex != oldSelectedIndex)
+										{
+											c.EmoteBindings[i].Emote = bindingDropdown[newSelectedIndex];
+											EditorUtility.SetDirty(c);
+										}
+									}
+								}
+
+								if (string.IsNullOrWhiteSpace(c.EmoteBindings[i].Emote) || c.EmoteBindings[i].GuestureLeftHand == HandGesture.None && c.EmoteBindings[i].GuestureRightHand == HandGesture.None)
+								{
+									EditorGUILayout.HelpBox("Empty Binding! Please select emote and mappings.", MessageType.Error);
+									//EditorGUILayout.LabelField("Empty Binding! Please select emote and mappings.");
+								}
+								else
+								{
+									for (int nestedI = 0; nestedI < c.EmoteBindings.Count; nestedI++)
+									{
+										if (nestedI != i && c.EmoteBindings[nestedI].GuestureLeftHand == c.EmoteBindings[i].GuestureLeftHand && c.EmoteBindings[nestedI].GuestureRightHand == c.EmoteBindings[i].GuestureRightHand)
+										{
+											EditorGUILayout.HelpBox("Duplicate Binding! Please select a different mapping.", MessageType.Error);
+											//EditorGUILayout.LabelField("Duplicate Binding! Please select a different mapping!");
+											break;
+										}
+									}
+								}
 							}
+							GUILayout.Space(10f);
+							if (GUILayout.Button("X", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true))) c.EmoteBindings.RemoveAt(i);
 						}
+						if (i < c.EmoteBindings.Count) GUILayout.Space(10f);
 					}
-
-					EditorGUILayout.EndVertical();
-
-					GUILayout.Space(10f);
-
-					if (GUILayout.Button("X", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true))) c.EmoteBindings.RemoveAt(i);
-					EditorGUILayout.EndHorizontal();
-
-					if (i < c.EmoteBindings.Count) GUILayout.Space(10f);
-				}
-				if (GUILayout.Button("+ Add Binding", GUILayout.MaxWidth(150)))
-				{
-					c.EmoteBindings.Add(new AvatarEmoteBinding());
+					if (GUILayout.Button("+ Add Binding", GUILayout.MaxWidth(150)))
+					{
+						c.EmoteBindings.Add(new AvatarEmoteBinding());
+					}
 				}
 			}
-			EditorGUI.indentLevel--;
 
 			GUILayout.Space(10f);
 

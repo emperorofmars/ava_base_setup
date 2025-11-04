@@ -36,13 +36,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			if(!isFTAvailable)
 			{
 				EditorGUILayout.HelpBox("Warning, Facial Tracking Templates are not installed!\nInstall them from here:", MessageType.Warning, true);
-				EditorGUI.indentLevel++;
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.PrefixLabel("");
-				if(EditorGUILayout.LinkButton("https://adjerry91.github.io/VRCFaceTracking-Templates"))
-					Application.OpenURL("https://adjerry91.github.io/VRCFaceTracking-Templates");
-				EditorGUILayout.EndHorizontal();
-				EditorGUI.indentLevel--;
+				using(new EditorGUI.IndentLevelScope()) using(new EditorGUILayout.HorizontalScope(GUI.skin.box))
+				{
+					EditorGUILayout.BeginHorizontal(GUI.skin.box);
+					EditorGUILayout.PrefixLabel("");
+					if(EditorGUILayout.LinkButton("https://adjerry91.github.io/VRCFaceTracking-Templates"))
+						Application.OpenURL("https://adjerry91.github.io/VRCFaceTracking-Templates");
+				}
 			}
 			else
 			{
@@ -89,58 +89,65 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		private void DrawLayer(List<IAVABaseSetup.ControllerSource> Layer, string LayerName, string Label)
 		{
 			EditorGUILayout.LabelField(Label, EditorStyles.boldLabel);
-			EditorGUI.indentLevel++;
-			for(int i = 0; i < Layer.Count; i++)
+			using (new EditorGUI.IndentLevelScope())
 			{
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.BeginVertical();
-				if(Layer[i].ProducerComponent || Layer[i].Controllers.Count == 0)
+				for(int i = 0; i < Layer.Count; i++)
 				{
-					EditorGUILayout.BeginHorizontal();
-					EditorGUILayout.PrefixLabel("Producer Component");
-					EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("ProducerComponent"), typeof(IAVAControllerProducer), new GUIContent());
-					EditorGUILayout.EndHorizontal();
-				}
-				if(!Layer[i].ProducerComponent)
-				{
-					for(int j = 0; j < Layer[i].Controllers.Count; j++)
+					using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
 					{
-						EditorGUILayout.BeginHorizontal();
-						var selection = AVAConstants.ControllerTypeToIndex.Keys.ToList();
-						var oldSelectionIndex = selection.IndexOf(Layer[i].Controllers[j].Mapping);
-						if(oldSelectionIndex <= 0)
+						using (new EditorGUILayout.VerticalScope())
 						{
-							oldSelectionIndex = 4;
-							Layer[i].Controllers[j].Mapping = selection[oldSelectionIndex];
-						}
-						var newSelectionIndex = EditorGUILayout.Popup(oldSelectionIndex, selection.ToArray());
-						if(oldSelectionIndex != newSelectionIndex)
-							Layer[i].Controllers[j].Mapping = selection[newSelectionIndex];
+							if(Layer[i].ProducerComponent || Layer[i].Controllers.Count == 0)
+							{
+								using (new EditorGUILayout.HorizontalScope())
+								{
+									EditorGUILayout.PrefixLabel("Producer Component");
+									EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("ProducerComponent"), typeof(IAVAControllerProducer), new GUIContent());
+								}
+							}
+							if(!Layer[i].ProducerComponent)
+							{
+								for(int j = 0; j < Layer[i].Controllers.Count; j++)
+								{
+									using (new EditorGUILayout.HorizontalScope())
+									{
+										var selection = AVAConstants.ControllerTypeToIndex.Keys.ToList();
+										var oldSelectionIndex = selection.IndexOf(Layer[i].Controllers[j].Mapping);
+										if(oldSelectionIndex <= 0)
+										{
+											oldSelectionIndex = 4;
+											Layer[i].Controllers[j].Mapping = selection[oldSelectionIndex];
+										}
+										var newSelectionIndex = EditorGUILayout.Popup(oldSelectionIndex, selection.ToArray());
+										if(oldSelectionIndex != newSelectionIndex)
+											Layer[i].Controllers[j].Mapping = selection[newSelectionIndex];
 
-						EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("Controllers").GetArrayElementAtIndex(j).FindPropertyRelative("Controller"), typeof(AnimatorController), new GUIContent());
-						if(GUILayout.Button("X", GUILayout.ExpandWidth(false))) Layer[i].Controllers.Remove(Layer[i].Controllers[j]);
-						EditorGUILayout.EndHorizontal();
+										EditorGUILayout.ObjectField(serializedObject.FindProperty(LayerName).GetArrayElementAtIndex(i).FindPropertyRelative("Controllers").GetArrayElementAtIndex(j).FindPropertyRelative("Controller"), typeof(AnimatorController), new GUIContent());
+										if(GUILayout.Button("X", GUILayout.ExpandWidth(false))) Layer[i].Controllers.Remove(Layer[i].Controllers[j]);
+									}
+								}
+								using (new EditorGUILayout.HorizontalScope())
+								{
+									if(Layer[i].Controllers.Count == 0)
+										EditorGUILayout.LabelField("Add Controller Mapping");
+									GUILayout.FlexibleSpace();
+									if(GUILayout.Button(new GUIContent("Add +", "Add a new Animator Controller Mapping"), GUILayout.ExpandWidth(false))) Layer[i].Controllers.Add(new());
+								}
+							}
+						}
+						GUILayout.Space(5f);
+						if(GUILayout.Button("X", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true))) Layer.Remove(Layer[i]);
 					}
-					EditorGUILayout.BeginHorizontal();
-					if(Layer[i].Controllers.Count == 0)
-						EditorGUILayout.LabelField("Add Controller Mapping");
-					GUILayout.FlexibleSpace();
-					if(GUILayout.Button(new GUIContent("Add +", "Add a new Animator Controller Mapping"), GUILayout.ExpandWidth(false))) Layer[i].Controllers.Add(new());
-					EditorGUILayout.EndHorizontal();
+					GUILayout.Space(5f);
 				}
-				EditorGUILayout.EndVertical();
-				GUILayout.Space(5f);
-				if(GUILayout.Button("X", GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true))) Layer.Remove(Layer[i]);
-				EditorGUILayout.EndHorizontal();
-				GUILayout.Space(5f);
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					if(Layer.Count == 0)
+						EditorGUILayout.LabelField("-");
+					GUILayout.FlexibleSpace();
+					if(GUILayout.Button(new GUIContent("Add +", "Add a new Animator Controller or Controller Component"), GUILayout.ExpandWidth(false))) Layer.Add(new());
+				}
 			}
-			EditorGUILayout.BeginHorizontal();
-			if(Layer.Count == 0)
-				EditorGUILayout.LabelField("-");
-			GUILayout.FlexibleSpace();
-			if(GUILayout.Button(new GUIContent("Add +", "Add a new Animator Controller or Controller Component"), GUILayout.ExpandWidth(false))) Layer.Add(new());
-			EditorGUILayout.EndHorizontal();
-			EditorGUI.indentLevel--;
 		}
 
 		private void DrawHLine()
