@@ -55,8 +55,8 @@ namespace com.squirrelbite.ava_base_setup
 			foreach(var binding in AnimationUtility.GetObjectReferenceCurveBindings(Clip))
 			{
 				ObjectReferenceKeyframe[] curve = AnimationUtility.GetObjectReferenceCurve(Clip, binding);
+				// todo ?
 				AnimationUtility.SetObjectReferenceCurve(ret, binding, curve);
-				
 			}
 			return ret;
 		}

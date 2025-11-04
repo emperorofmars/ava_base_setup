@@ -91,11 +91,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				animatorLayers[1].animatorController = animatorGesture;
 			}
 
-			avatar.expressionParameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
-			avatar.expressionParameters.parameters = System.Array.Empty<VRCExpressionParameters.Parameter>();
+			if(avatar.expressionParameters == null)
+			{
+				avatar.expressionParameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+				avatar.expressionParameters.parameters = System.Array.Empty<VRCExpressionParameters.Parameter>();
+			}
 			AV3ManagerFunctions.AddParameters(avatar, setupState.Parameters, null, true, true);
 
-			avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
+			if(avatar.expressionsMenu == null)
+				avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
 			AV3ManagerFunctions.AddSubMenu(avatar, setupState.FTMenu, "Face Tracking", null, null, AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/adjerry91.vrcft.templates/Icons/FaceTrackingIcon2.png"), true, true);
 
 			avatar.baseAnimationLayers = animatorLayers;
