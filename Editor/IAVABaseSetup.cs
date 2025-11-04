@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -10,26 +11,26 @@ namespace com.squirrelbite.ava_base_setup
 		[System.Serializable]
 		public class ControllerSource
 		{
-			public AnimatorController Controller;
-			public IAVAController ProducerComponent;
+			public AnimatorController Controller = null;
+			public IAVAController ProducerComponent = null;
 		}
 
 		public bool UseFacialTracking = true;
 
 		// Controller to put before the facial tracking layers
-		public ControllerSource PreFacialTracking = new();
+		public List<ControllerSource> LayerPreFT = new();
 
 		// The facial tracking controller source
-		public ControllerSource FacialTracking = new();
+		public List<ControllerSource> LayerFT = new();
 
 		// Animations that react to facial tracking
-		public ControllerSource FacialTrackingReact = new();
+		public List<ControllerSource> LayerFTReact = new();
 
 		// E.g. hand expressions that are usually mutually exclusive to facial tracking
-		public ControllerSource ManualExpressions = new();
+		public List<ControllerSource> LayerManualExpressions = new();
 
 		// Functionality that is not affected by facial tracking
-		public ControllerSource OtherFunctionality = new();
+		public List<ControllerSource> LayerPost = new();
 	}
 }
 

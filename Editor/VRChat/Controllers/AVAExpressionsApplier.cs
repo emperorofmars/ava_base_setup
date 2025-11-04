@@ -31,12 +31,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var animatorFX = SetupBaseFX();
 			SetupEmotes(Setup, animatorFX);
 
-			setupState.Layers[4].Mut = animatorFX;
-
-			/*if (WriteToDisk)
-			{
-				AssetDatabase.CreateAsset(animatorFX, "Assets/AnimatorFX.controller");
-			}*/
+			setupState.Layers[4].Mut.Add(animatorFX);
 
 			return;
 		}

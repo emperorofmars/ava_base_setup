@@ -8,16 +8,17 @@ using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
+	[AddComponentMenu("")]
 	public class AVASetupStateVRC : MonoBehaviour
 	{
 		[System.Serializable]
 		public class AnimatorControllerLayer
 		{
-			public AnimatorController Pre_FT;
-			public AnimatorController FT;
-			public AnimatorController FT_React;
-			public AnimatorController Mut;
-			public AnimatorController Other;
+			public List<AnimatorController> Pre_FT = new();
+			public List<AnimatorController> FT = new();
+			public List<AnimatorController> FT_React = new();
+			public List<AnimatorController> Mut = new();
+			public List<AnimatorController> Other = new();
 		}
 
 		public List<AnimatorControllerLayer> Layers = new() { new(), new(), new(), new(), new() };

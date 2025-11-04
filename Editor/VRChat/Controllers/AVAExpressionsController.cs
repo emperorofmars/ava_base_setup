@@ -30,6 +30,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	/// <summary>
 	/// Opinionated base setup for VR & V-Tubing avatar expressions.
 	/// </summary>
+	[AddComponentMenu("AVA/VRChat/Expressions Controller")]
 	public class AVAExpressionsController : IAVAController, IEditorOnly
 	{
 		public HandDominance HandDominance = HandDominance.Right;
