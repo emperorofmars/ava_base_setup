@@ -9,7 +9,7 @@ using VRC.SDK3.Avatars.Components;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	public static class AVAExpressionsApplier
+	public static class AVAExpressionsApplierVRC
 	{
 		public static readonly ReadOnlyDictionary<HandGesture, int> HandGestureToParameterIndex = new(new Dictionary<HandGesture, int>()
 		{
@@ -23,7 +23,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{ HandGesture.ThumbsUp, 7 },
 		});
 
-		public static void Apply(AVAExpressionsController Setup, bool WriteToDisk = false)
+		public static void Apply(AVAExpressionsProducer Setup, bool WriteToDisk = false)
 		{
 			var avatar = Setup.gameObject.GetComponent<VRCAvatarDescriptor>();
 			var setupState = Setup.GetComponent<AVASetupStateVRC>();
@@ -53,7 +53,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return animatorFX;
 		}
 
-		private static AnimatorState AddSingleSideHandGestureState(AVAExpressionsController Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
+		private static AnimatorState AddSingleSideHandGestureState(AVAExpressionsProducer Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
 		{
 			var state = new AnimatorState { name = string.IsNullOrWhiteSpace(OverrideGestureName) ? Gesture.ToString() : OverrideGestureName, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(300, 60 * HandGestureToParameterIndex[Gesture], 0));
@@ -72,7 +72,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return state;
 		}
 
-		private static AnimatorState AddHandGestureState(AVAExpressionsController Setup, AnimatorControllerLayer Layer, AnimatorState Idle, HandGesture GestureLeft, HandGesture GestureRight, string Name, int Index)
+		private static AnimatorState AddHandGestureState(AVAExpressionsProducer Setup, AnimatorControllerLayer Layer, AnimatorState Idle, HandGesture GestureLeft, HandGesture GestureRight, string Name, int Index)
 		{
 			var state = new AnimatorState { name = Name, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(550, 60 * Index, 0));
@@ -97,7 +97,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return state;
 		}
 
-		private static void SetupEmotes(AVAExpressionsController Setup, AnimatorController animatorFX)
+		private static void SetupEmotes(AVAExpressionsProducer Setup, AnimatorController animatorFX)
 		{
 			var layerHandLeft = new AnimatorControllerLayer { name = "Left Hand", stateMachine = new AnimatorStateMachine(), defaultWeight = 1 };
 			{

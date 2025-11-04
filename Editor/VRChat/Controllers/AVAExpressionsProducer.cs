@@ -30,8 +30,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	/// <summary>
 	/// Opinionated base setup for VR & V-Tubing avatar expressions.
 	/// </summary>
-	[AddComponentMenu("AVA/VRChat/Expressions Controller")]
-	public class AVAExpressionsController : IAVAControllerProducer, IEditorOnly
+	[AddComponentMenu("AVA/VRChat/Expressions Producer")]
+	public class AVAExpressionsProducer : IAVAControllerProducer, IEditorOnly
 	{
 		public HandDominance HandDominance = HandDominance.Right;
 		public List<AvatarEmote> Emotes = new();
@@ -59,7 +59,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public override void Apply()
 		{
-			AVAExpressionsApplier.Apply(this);
+			AVAExpressionsApplierVRC.Apply(this);
 		}
 	}
 }
