@@ -54,7 +54,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				EditorGUILayout.HelpBox("Warning, Face Tracking Templates are not installed!\nInstall them from here:", MessageType.Warning, true);
 				using(new EditorGUI.IndentLevelScope()) using(new EditorGUILayout.HorizontalScope(GUI.skin.box))
 				{
-					EditorGUILayout.BeginHorizontal(GUI.skin.box);
 					EditorGUILayout.PrefixLabel("");
 					if(EditorGUILayout.LinkButton("https://adjerry91.github.io/VRCFaceTracking-Templates"))
 						Application.OpenURL("https://adjerry91.github.io/VRCFaceTracking-Templates");
