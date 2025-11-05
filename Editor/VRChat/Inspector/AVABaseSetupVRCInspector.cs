@@ -42,46 +42,30 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 #endif
 
 			var p_UseFaceTracking = new PropertyField(serializedObject.FindProperty("UseFaceTracking"));
+			ui.Add(p_UseFaceTracking);
 			var p_FaceTrackingSetupType = new PropertyField(serializedObject.FindProperty("FaceTrackingSetupType"));
-
 			{
 				var box = new VisualElement();
 				ui.Add(box);
-				box.Add(p_UseFaceTracking);
-
-				var box_inner = new VisualElement();
-				box.Add(box_inner);
 
 				HelpBox p_helpBox = FTMatch >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)FTMatch).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning);
 
-				box_inner.Add(p_FaceTrackingSetupType);
-				box_inner.Add(p_helpBox);
-				void handleInner()
+				box.Add(p_FaceTrackingSetupType);
+				box.Add(p_helpBox);
+				void handleBox()
 				{
-					if(c.UseFaceTracking)
-					{
-						if(!box.Contains(box_inner)) box.Add(box_inner);
-					}
-					else
-					{
-						if(box.Contains(box_inner)) box.Remove(box_inner);
-					}
+					if(c.UseFaceTracking) box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					else box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 				}
-				handleInner();
+				handleBox();
 				p_UseFaceTracking.RegisterValueChangeCallback(e => {
-					handleInner();
+					handleBox();
 				});
 
 				void handleHelp()
 				{
-					if(c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic)
-					{
-						if(!box_inner.Contains(p_helpBox)) box_inner.Add(p_helpBox);
-					}
-					else
-					{
-						if(box_inner.Contains(p_helpBox)) box_inner.Remove(p_helpBox);
-					}
+					if(c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic) p_helpBox.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					else p_helpBox.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 				}
 				handleHelp();
 				p_FaceTrackingSetupType.RegisterValueChangeCallback(e => {
@@ -121,14 +105,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				void handle_box()
 				{
-					if(c.UseFaceTracking)
-					{
-						if(!outer.Contains(box)) outer.Add(box);
-					}
-					else
-					{
-						if(outer.Contains(box)) outer.Remove(box);
-					}
+					if(c.UseFaceTracking) box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					else box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 				}
 				handle_box();
 				p_UseFaceTracking.RegisterValueChangeCallback(e => {
@@ -151,13 +129,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				{
 					if (c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
 					{
-						if (ftLayerHolder.Contains(l_ftInfo)) ftLayerHolder.Remove(l_ftInfo);
-						if (!ftLayerHolder.Contains(p_LayerFT)) ftLayerHolder.Add(p_LayerFT);
+						l_ftInfo.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+						p_LayerFT.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
 					}
 					else
 					{
-						if (ftLayerHolder.Contains(p_LayerFT)) ftLayerHolder.Remove(p_LayerFT);
-						if (!ftLayerHolder.Contains(l_ftInfo)) ftLayerHolder.Add(l_ftInfo);
+						l_ftInfo.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+						p_LayerFT.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 					}
 				}
 				handle_ft();
@@ -203,14 +181,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				void handle_ft_menu_params()
 				{
-					if(c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
-					{
-						if(!outer.Contains(box)) outer.Add(box);
-					}
-					else
-					{
-						if(outer.Contains(box)) outer.Remove(box);
-					}
+					if(c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual) box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					else box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 				}
 				handle_ft_menu_params();
 				p_UseFaceTracking.RegisterValueChangeCallback(e => {

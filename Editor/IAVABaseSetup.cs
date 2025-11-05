@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Animations;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,6 +28,67 @@ namespace com.squirrelbite.ava_base_setup
 
 		// When more complex setup logic is needed, map a ProducerComponent.
 		public IAVAControllerProducer ProducerComponent = null;
+	}
+
+	[CustomPropertyDrawer(typeof(ControllerSource))]
+	public class ControllerSourceDrawer : PropertyDrawer
+	{
+		public override VisualElement CreatePropertyGUI(SerializedProperty property)
+		{
+			return new UnityPlz(property);
+		}
+	}
+
+	sealed class UnityPlz : VisualElement
+	{
+		private readonly SerializedProperty _property;
+		
+		public UnityPlz(SerializedProperty property)
+		{
+			_property = property;
+
+			var ui = this;
+			var l = new Label("<color=yellow>Set the Producer Component or add AnimatorControllers</color>");
+			ui.Add(l);
+			var producer = new PropertyField(property.FindPropertyRelative("ProducerComponent"));
+			var controllers = new PropertyField(property.FindPropertyRelative("Controllers"));
+
+			var box_p = new VisualElement();
+			var box_c = new VisualElement();
+			ui.Add(box_p);
+			ui.Add(box_c);
+			box_p.Add(producer);
+			box_c.Add(controllers);
+
+			void handle()
+			{
+				if(property.FindPropertyRelative("ProducerComponent").boxedValue != null)
+				{
+					l.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+					producer.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					controllers.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+				}
+				else if(property.FindPropertyRelative("Controllers").arraySize > 0)
+				{
+					l.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+					producer.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+					controllers.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+				}
+				else
+				{
+					l.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					producer.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					controllers.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+				}
+			}
+			handle();
+			controllers.RegisterValueChangeCallback(e => {
+				handle();
+			});
+			producer.RegisterValueChangeCallback(e => {
+				handle();
+			});
+		}
 	}
 
 	public abstract class IAVABaseSetup : MonoBehaviour
