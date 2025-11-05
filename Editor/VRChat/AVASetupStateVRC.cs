@@ -24,7 +24,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public List<AnimatorControllerLayer> Layers = new() { new(), new(), new(), new(), new() };
 
 		public List<VRCExpressionParameters.Parameter> Parameters = new();
-		public VRCExpressionsMenu FTMenu;
+		public List<VRCExpressionsMenu.Control> AvatarMenuControls = new();
+		public List<VRCExpressionsMenu.Control> AvatarMenuControlsLast = new();
 
 		public List<Object> UnityResourcesToStoreIfDesired = new();
 	}

@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
 
+using System.Collections.Generic;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -22,6 +23,17 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			AssetDatabase.DeleteAsset(AVAConstants.OUTPUT_PATH + avatar.name + ".asset");
 			AssetDatabase.CreateAsset(outputHolder, AVAConstants.OUTPUT_PATH + avatar.name + ".asset");
 
+			foreach(var menu in Setup.AvatarMenus)
+				setupState.AvatarMenuControls.AddRange(menu.controls);
+			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
+				foreach(var menu in Setup.AvatarMenusFaceTracking)
+					setupState.AvatarMenuControls.AddRange(menu.controls);
+			foreach(var parameter in Setup.AvatarParameters)
+				setupState.Parameters.AddRange(parameter.parameters);
+			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
+				foreach(var parameter in Setup.AvatarParametersFaceTracking)
+					setupState.Parameters.AddRange(parameter.parameters);
+
 			foreach(var layer in Setup.LayerPreFT)
 				if(layer.ProducerComponent != null)
 					layer.ProducerComponent.Apply();
@@ -30,6 +42,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
 							setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].Pre_FT.Add(c.Controller);
 
+			// Run setup for all layers
 			if(Setup.UseFaceTracking)
 			{
 				if(Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic)
@@ -121,26 +134,36 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				AssetDatabase.AddObjectToAsset(animatorGesture, outputHolder);
 			}
+			// todo other layers perhaps?
 
-			if(avatar.expressionParameters == null)
-			{
-				avatar.expressionParameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
-				avatar.expressionParameters.parameters = System.Array.Empty<VRCExpressionParameters.Parameter>();
-				avatar.expressionParameters.name = "AVA Base Setup Parameters";
-
-				AssetDatabase.AddObjectToAsset(avatar.expressionParameters, outputHolder);
-			}
+			// Merge all parameters
+			avatar.expressionParameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+			avatar.expressionParameters.parameters = System.Array.Empty<VRCExpressionParameters.Parameter>();
+			avatar.expressionParameters.name = "AVA Base Setup Parameters";
 			AV3ManagerFunctions.AddParameters(avatar, setupState.Parameters, null, true, true);
+			AssetDatabase.AddObjectToAsset(avatar.expressionParameters, outputHolder);
 
-			if(avatar.expressionsMenu == null)
-			{
-				avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-				avatar.expressionsMenu.name = "AVA Base Setup Menu";
+			// Merge all menu entries
+			avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
+			avatar.expressionsMenu.name = "AVA Base Setup Menu";
+			var menuList = new List<VRCExpressionsMenu.Control>(setupState.AvatarMenuControls);
+			setupState.AvatarMenuControlsLast.Reverse();
+			menuList.AddRange(setupState.AvatarMenuControlsLast);
+			foreach(var control in menuList)
+				avatar.expressionsMenu.controls.Add(new() {
+					icon = control.icon,
+					labels = control.labels,
+					name = control.name,
+					parameter = control.parameter,
+					style = control.style,
+					subMenu = control.subMenu,
+					subParameters = control.subParameters,
+					type = control.type,
+					value = control.value
+				});
+			AssetDatabase.AddObjectToAsset(avatar.expressionsMenu, outputHolder);
 
-				AssetDatabase.AddObjectToAsset(avatar.expressionsMenu, outputHolder);
-			}
-			AV3ManagerFunctions.AddSubMenu(avatar, setupState.FTMenu, "Face Tracking", null, new VRCExpressionsMenu.Control.Parameter(), AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/adjerry91.vrcft.templates/Icons/FaceTrackingIcon2.png"), true, true);
-
+			// Save other stuff like generated animations
 			foreach(var asset in setupState.UnityResourcesToStoreIfDesired)
 				AssetDatabase.AddObjectToAsset(asset, outputHolder);
 
