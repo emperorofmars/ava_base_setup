@@ -51,14 +51,9 @@ namespace com.squirrelbite.ava_base_setup
 			var l = new Label("<color=yellow>Set the Producer Component or add AnimatorControllers</color>");
 			ui.Add(l);
 			var producer = new PropertyField(property.FindPropertyRelative("ProducerComponent"));
+			ui.Add(producer);
 			var controllers = new PropertyField(property.FindPropertyRelative("Controllers"));
-
-			var box_p = new VisualElement();
-			var box_c = new VisualElement();
-			ui.Add(box_p);
-			ui.Add(box_c);
-			box_p.Add(producer);
-			box_c.Add(controllers);
+			ui.Add(controllers);
 
 			void handle()
 			{
