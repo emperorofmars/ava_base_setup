@@ -25,6 +25,12 @@ namespace com.squirrelbite.ava_base_setup
 			return path;
 		}
 
+		public static Transform GetRoot(Transform t)
+		{
+			if(t.parent) return GetRoot(t.parent);
+			else return t;
+		}
+
 		public static AnimationClip RepathClip(AnimationClip Clip, string Retarget, string Match = "Body")
 		{
 			if(!Clip) return null;

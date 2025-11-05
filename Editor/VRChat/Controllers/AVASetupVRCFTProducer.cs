@@ -26,16 +26,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 #if AVA_BASE_SETUP_VRCFTTEMPLATES
 			var setupState = gameObject.GetComponent<AVASetupStateVRC>();
 
-			if(FTMesh == null)
-			{
-				SkinnedMeshRenderer match = null;
-				foreach(var candidate in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
-				{
-					if(candidate.name.ToLower() == "body" && match == null || AnimationPathUtil.GetParentDepth(match.transform) > AnimationPathUtil.GetParentDepth(candidate.transform))
-						match = candidate;
-				}
-				if(match) FTMesh = match;
-			}
+			FTMesh = FTMesh != null ? FTMesh : FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(transform).gameObject);
 			if(FTMesh == null)
 			{
 				Debug.LogError("FT_Setup: Could not determine SkinnedMeshRenderer for face tracking!");

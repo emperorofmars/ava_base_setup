@@ -10,6 +10,17 @@ namespace com.squirrelbite.ava_base_setup
 
 	public static class FTTypeMatcher
 	{
+		public static SkinnedMeshRenderer DetectFaceMesh(GameObject Root)
+		{
+			SkinnedMeshRenderer match = null;
+			foreach(var candidate in Root.GetComponentsInChildren<SkinnedMeshRenderer>())
+			{
+				if(candidate.name.ToLower() == "body" && match == null || AnimationPathUtil.GetParentDepth(match.transform) > AnimationPathUtil.GetParentDepth(candidate.transform))
+					match = candidate;
+			}
+			return match;
+		}
+
 		public static int Match(SkinnedMeshRenderer Smr)
 		{
 			int matchKind = -1;

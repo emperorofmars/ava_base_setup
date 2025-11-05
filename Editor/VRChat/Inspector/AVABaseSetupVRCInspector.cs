@@ -14,8 +14,16 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	{
 		static readonly Color SpacerColor = new(0.17f, 0.17f, 0.17f);
 
+		private int FTMatch = -1;
+
 		void OnEnable()
 		{
+			var c = (AVABaseSetupVRC)target;
+			SkinnedMeshRenderer ftMesh = null;
+			if(c.gameObject.TryGetComponent<AVASetupVRCFTProducer>(out var ftProducer))
+				ftMesh = ftProducer.FTMesh != null ? ftProducer.FTMesh : FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
+			if(ftMesh)
+				FTMatch = FTTypeMatcher.Match(ftMesh);
 		}
 
 		public override void OnInspectorGUI()
@@ -25,6 +33,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			EditorGUI.BeginChangeCheck();
 
 			EditorGUILayout.LabelField("Base Setup for Avatar Controllers!\nLayers get toggled based on what functionality is enabled at runtime.\nCurrently mapped FX and Additive Controllers will be replaced!", EditorStyles.helpBox);
+
+			if(FTMatch >= 0) using(new EditorGUILayout.HorizontalScope())
+				{
+					EditorGUILayout.PrefixLabel("Detected face tracking setup:");
+					EditorGUILayout.LabelField(((FT_Type)FTMatch).ToString());
+				}
+			else
+				EditorGUILayout.LabelField("Avatar doesn't support face tracking!");
 			GUILayout.Space(10f);
 
 #if AVA_BASE_SETUP_VRCFTTEMPLATES
@@ -35,7 +51,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			if(!isFTAvailable)
 			{
-				EditorGUILayout.HelpBox("Warning, Facial Tracking Templates are not installed!\nInstall them from here:", MessageType.Warning, true);
+				EditorGUILayout.HelpBox("Warning, Face Tracking Templates are not installed!\nInstall them from here:", MessageType.Warning, true);
 				using(new EditorGUI.IndentLevelScope()) using(new EditorGUILayout.HorizontalScope(GUI.skin.box))
 				{
 					EditorGUILayout.BeginHorizontal(GUI.skin.box);
@@ -46,28 +62,20 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 			else
 			{
-				EditorGUILayout.PropertyField(serializedObject.FindProperty("UseFacialTracking"));
-				if(c.UseFacialTracking)
-				{
-					EditorGUILayout.PropertyField(serializedObject.FindProperty("FacialTrackingSetupType"));
-					if(c.FacialTrackingSetupType == AVA_FT_Setup_Type.Manual)
-					{
-						EditorGUILayout.PropertyField(serializedObject.FindProperty("FacialTrackingMenu"));
-						if(c.FacialTrackingMenu == FacialTrackingMenu.Manual)
-							EditorGUILayout.PropertyField(serializedObject.FindProperty("FacialTrackingMenuManual"));
-					}
-				}
+				EditorGUILayout.PropertyField(serializedObject.FindProperty("UseFaceTracking"));
+				if(c.UseFaceTracking)
+					EditorGUILayout.PropertyField(serializedObject.FindProperty("FaceTrackingSetupType"));
 			}
 			GUILayout.Space(10f);
 			DrawHLine();
-			DrawLayer(c.LayerPreFT, "LayerPreFT", c.UseFacialTracking && isFTAvailable ? "Top Layers (Always On)" : "Top Layers");
+			DrawLayer(c.LayerPreFT, "LayerPreFT", c.UseFaceTracking && isFTAvailable ? "Top Layers (Always On)" : "Top Layers");
 
-			if(c.UseFacialTracking && isFTAvailable)
+			if(c.UseFaceTracking && isFTAvailable)
 			{
 				DrawHLine();
 				EditorGUILayout.LabelField("Face Tracking (Toggled)", EditorStyles.boldLabel);
 				EditorGUI.indentLevel++;
-				if(c.FacialTrackingSetupType == AVA_FT_Setup_Type.Manual)
+				if(c.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
 					DrawLayer(c.LayerFT, "LayerFT", "Face Tracking Setup");
 				else
 					EditorGUILayout.LabelField("Face Tracking Setup will be automatically detected.", EditorStyles.helpBox);
@@ -75,9 +83,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				EditorGUI.indentLevel--;
 			}
 			DrawHLine();
-			DrawLayer(c.LayerManualExpressions, "LayerManualExpressions", c.UseFacialTracking && isFTAvailable ? "Manual Expression Layers (Toggled)" : "Manual Expression Layers");
+			DrawLayer(c.LayerManualExpressions, "LayerManualExpressions", c.UseFaceTracking && isFTAvailable ? "Manual Expression Layers (Toggled)" : "Manual Expression Layers");
 			DrawHLine();
-			DrawLayer(c.LayerPost, "LayerPost", c.UseFacialTracking && isFTAvailable ? "Bottom Layers (Always On)" : "Bottom Layers");
+			DrawLayer(c.LayerPost, "LayerPost", c.UseFaceTracking && isFTAvailable ? "Bottom Layers (Always On)" : "Bottom Layers");
 
 			if(EditorGUI.EndChangeCheck())
 			{

@@ -29,7 +29,7 @@ namespace com.squirrelbite.ava_base_setup
 			public IAVAControllerProducer ProducerComponent = null;
 		}
 
-		public bool UseFacialTracking = true;
+		public bool UseFaceTracking = true;
 
 		// Controller to put before the facial tracking layers
 		public List<ControllerSource> LayerPreFT = new();

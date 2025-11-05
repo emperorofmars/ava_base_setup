@@ -30,9 +30,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						if(AVAConstants.ControllerTypeToIndex.ContainsKey(c.Mapping) && c.Controller)
 							setupState.Layers[AVAConstants.ControllerTypeToIndex[c.Mapping]].Pre_FT.Add(c.Controller);
 
-			if(Setup.UseFacialTracking)
+			if(Setup.UseFaceTracking)
 			{
-				if(Setup.FacialTrackingSetupType == AVA_FT_Setup_Type.Automatic)
+				if(Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic)
 				{
 					if(!Setup.gameObject.TryGetComponent<AVASetupVRCFTProducer>(out var autoFT))
 						autoFT = Setup.gameObject.AddComponent<AVASetupVRCFTProducer>();
@@ -166,7 +166,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			foreach(var controller in State.Layers[Layer].Pre_FT)
 				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
 
-			if(Setup.UseFacialTracking && State.Layers[Layer].FT.Count > 0)
+			if(Setup.UseFaceTracking && State.Layers[Layer].FT.Count > 0)
 			{
 				if(Layer == 4)
 				{

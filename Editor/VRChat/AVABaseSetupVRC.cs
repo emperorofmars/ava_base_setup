@@ -2,23 +2,18 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
-using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDKBase;
 using VRC.SDKBase.Editor.BuildPipeline;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
 	public enum AVA_FT_Setup_Type { Automatic, Manual };
-	public enum FacialTrackingMenu { AVA_Improved, VRCFT_Templates_Official, Manual };
 
 	[AddComponentMenu("AVA/VRChat/AVA Base Setup")]
 	public class AVABaseSetupVRC : IAVABaseSetup, IEditorOnly
 	{
-		public AVA_FT_Setup_Type FacialTrackingSetupType = AVA_FT_Setup_Type.Automatic;
-		public FacialTrackingMenu FacialTrackingMenu = FacialTrackingMenu.AVA_Improved;
-		public VRCExpressionsMenu FacialTrackingMenuManual;
+		public AVA_FT_Setup_Type FaceTrackingSetupType = AVA_FT_Setup_Type.Automatic;
 	}
 
 	[InitializeOnLoad]
