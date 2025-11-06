@@ -31,6 +31,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	/// Opinionated base setup for VR & V-Tubing avatar expressions.
 	/// </summary>
 	[AddComponentMenu("AVA/VRChat/Expressions Producer")]
+	[DisallowMultipleComponent]
+	[RequireComponent(typeof(AVABaseSetupVRC))]
 	public class AVAExpressionsProducer : IAVAControllerProducer, IEditorOnly
 	{
 		public HandDominance HandDominance = HandDominance.Right;

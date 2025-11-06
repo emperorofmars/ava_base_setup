@@ -48,6 +48,8 @@ namespace com.squirrelbite.ava_base_setup
 			_property = property;
 
 			var ui = this;
+			ui.style.paddingTop = ui.style.paddingBottom = 5;
+
 			var l = new Label("<color=yellow>Set the Producer Component or add AnimatorControllers</color>");
 			ui.Add(l);
 			var producer = new PropertyField(property.FindPropertyRelative("ProducerComponent"));
@@ -86,23 +88,34 @@ namespace com.squirrelbite.ava_base_setup
 		}
 	}
 
+	[DisallowMultipleComponent]
 	public abstract class IAVABaseSetup : MonoBehaviour
 	{
 		public bool UseFaceTracking = true;
 
-		// Controller to put before the facial tracking layers
+		// Controller to put before the face tracking layers
+		[InspectorName("Top Layers")]
+		[Tooltip("Controller to put before the face tracking layers.")]
 		public List<ControllerSource> LayerPreFT = new();
 
-		// The facial tracking controller source
+		// The face tracking controller source
+		[InspectorName("Face Tracking Layers")]
+		[Tooltip("The face tracking controller source.")]
 		public List<ControllerSource> LayerFT = new();
 
 		// Animations that react to facial tracking
+		[InspectorName("Layers Reacting to Face Tracking")]
+		[Tooltip("Animations that react to face tracking.")]
 		public List<ControllerSource> LayerFTReact = new();
 
-		// E.g. hand expressions that are usually mutually exclusive to facial tracking
+		// E.g. hand expressions that are usually mutually exclusive to face tracking
+		[InspectorName("Manual Expression Layers")]
+		[Tooltip("E.g. hand expressions that are usually mutually exclusive to face tracking.")]
 		public List<ControllerSource> LayerManualExpressions = new();
 
-		// Functionality that is not affected by facial tracking
+		// Functionality that is not affected by face tracking
+		[InspectorName("Bottom Layers")]
+		[Tooltip("Functionality that is not affected by face tracking.")]
 		public List<ControllerSource> LayerPost = new();
 	}
 }

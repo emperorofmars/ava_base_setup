@@ -14,6 +14,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	public enum FT_Type { Automatic = -1, UnifiedExpressions = 0, SRanipal = 1, ARKit = 2 };
 
 	[AddComponentMenu("AVA/VRChat/Face Tracking Producer")]
+	[DisallowMultipleComponent]
+	[RequireComponent(typeof(AVABaseSetupVRC))]
 	public class AVASetupVRCFTProducer : IAVAControllerProducer, IEditorOnly
 	{
 		public const string VRCFT_TEMPLATES_BASE_PATH = "Packages/adjerry91.vrcft.templates/Animators/";

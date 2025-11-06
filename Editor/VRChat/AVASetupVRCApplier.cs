@@ -118,7 +118,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					animatorLayers[4].animatorController = AnimatorCloner.MergeControllers(animatorFX, existingControllerFX, null, false, 0);
 				else
 					animatorLayers[4].animatorController = animatorFX;
-				animatorFX.name = "FX";
+				animatorFX.name = "AVA Base Setup FX";
 
 				AssetDatabase.AddObjectToAsset(animatorFX, outputHolder);
 			}
@@ -130,7 +130,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					animatorLayers[1].animatorController = AnimatorCloner.MergeControllers(animatorGesture, existingControllerGesture, null, false, 0);
 				else
 					animatorLayers[1].animatorController = animatorGesture;
-				animatorGesture.name = "Gesture";
+				animatorGesture.name = "AVA Base Setup Gesture";
 
 				AssetDatabase.AddObjectToAsset(animatorGesture, outputHolder);
 			}
