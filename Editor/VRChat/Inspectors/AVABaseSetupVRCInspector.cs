@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
 
+using com.squirrelbite.ava_base_setup.util;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var c = (AVABaseSetupVRC)target;
 			VisualElement ui = new();
 
-			AddElement(ui, new HelpBox("Base Setup for Avatar Animator Controllers with Facie Tracking!\nLayers get toggled based on what functionality is enabled at runtime.\nCurrently mapped FX & Gesture Controllers, Parameters and Menus will be replaced!", HelpBoxMessageType.Info)).style.marginBottom = 10;
+			Toolkit.AddElement(ui, new HelpBox("Base Setup for Avatar Animator Controllers with Facie Tracking!\nLayers get toggled based on what functionality is enabled at runtime.\nCurrently mapped FX & Gesture Controllers, Parameters and Menus will be replaced!", HelpBoxMessageType.Info)).style.marginBottom = 10;
 
 #if AVA_BASE_SETUP_VRCFTTEMPLATES
 			bool isFTAvailable = true;
@@ -38,12 +39,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			bool isFTAvailable = false;
 #endif
 
-			var p_UseFaceTracking = AddElement(ui, new PropertyField(serializedObject.FindProperty("UseFaceTracking")));
+			var p_UseFaceTracking = Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("UseFaceTracking")));
 			var p_FaceTrackingSetupType = new PropertyField(serializedObject.FindProperty("FaceTrackingSetupType"));
 			{
-				var box = AddElement(ui, new VisualElement());
+				var box = Toolkit.AddElement(ui, new VisualElement());
 				box.Add(p_FaceTrackingSetupType);
-				HelpBox p_helpBox = AddElement(ui, FTMatch >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)FTMatch).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning));
+				HelpBox p_helpBox = Toolkit.AddElement(ui, FTMatch >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)FTMatch).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning));
 
 				void handleBox()
 				{
@@ -67,20 +68,20 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 			if(!isFTAvailable && FTMatch >= 0)
 			{
-				AddElement(ui, new HelpBox("Warning, Face Tracking Templates are not installed!\nInstall them from here: <a href=\"https://adjerry91.github.io/VRCFaceTracking-Templates\">https://adjerry91.github.io/VRCFaceTracking-Templates</a>", HelpBoxMessageType.Warning));
+				Toolkit.AddElement(ui, new HelpBox("Warning, Face Tracking Templates are not installed!\nInstall them from here: <a href=\"https://adjerry91.github.io/VRCFaceTracking-Templates\">https://adjerry91.github.io/VRCFaceTracking-Templates</a>", HelpBoxMessageType.Warning));
 			}
 
 			{
-				var foldoutOuter = AddElement(ui, new Box());
+				var foldoutOuter = Toolkit.AddElement(ui, new Box());
 				foldoutOuter.style.marginTop = 15;
-				var foldout = AddElement(foldoutOuter, new Foldout {text = "<size=+3><font-weight=700>Animator Controller Setup</font-weight></size>"});
+				var foldout = Toolkit.AddElement(foldoutOuter, new Foldout {text = "<size=+3><font-weight=700>Animator Controller Setup</font-weight></size>", viewDataKey = "animator_controller_foldout"});
 				foldout.value = false;
 
-				DrawListAttribute(foldout, serializedObject.FindProperty("LayerPreFT"), new Label("<size=+1><font-weight=700>Layers before Face Tracking (Always On)</font-weight></size>"));
+				Toolkit.AddList(foldout, serializedObject.FindProperty("LayerPreFT"), new Label("<size=+1><font-weight=700>Layers before Face Tracking (Always On)</font-weight></size>"));
 
 				{
-					var outer = AddElement(foldout, new VisualElement());
-					var box = AddElement(outer, new Box());
+					var outer = Toolkit.AddElement(foldout, new VisualElement());
+					var box = Toolkit.AddElement(outer, new Box());
 					box.style.marginTop = 5;
 					box.style.marginBottom = 5;
 
@@ -96,13 +97,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 					box.Add(new Label("<size=+1><font-weight=700>Face Tracking Layers (Toggled)</font-weight></size>"));
 
-					var ftLayerHolder = AddElement(box, new VisualElement());
+					var ftLayerHolder = Toolkit.AddElement(box, new VisualElement());
 					ftLayerHolder.style.marginLeft = 10;
 
-					var l_ftInfo = AddElement(ftLayerHolder, new HelpBox("Face Tracking Setup will be handled automatically", HelpBoxMessageType.Info));
+					var l_ftInfo = Toolkit.AddElement(ftLayerHolder, new HelpBox("Face Tracking Setup will be handled automatically", HelpBoxMessageType.Info));
 					l_ftInfo.style.marginBottom = 5;
 
-					var p_LayerFT = DrawListAttribute(ftLayerHolder, serializedObject.FindProperty("LayerFT"));
+					var p_LayerFT = Toolkit.AddList(ftLayerHolder, serializedObject.FindProperty("LayerFT"));
 
 					void handle_ft()
 					{
@@ -122,28 +123,28 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						handle_ft();
 					});
 
-					var p_LayerFTReact = DrawListAttribute(box, serializedObject.FindProperty("LayerFTReact"), new Label("<size=+1><font-weight=700>Layers that React to Face Tracking (Toggled)</font-weight></size>"));
+					var p_LayerFTReact = Toolkit.AddList(box, serializedObject.FindProperty("LayerFTReact"), new Label("<size=+1><font-weight=700>Layers that React to Face Tracking (Toggled)</font-weight></size>"));
 					p_LayerFTReact.style.marginLeft = 10;
 				}
 
-				var p_LayerManualExpressions = DrawListAttribute(foldout, serializedObject.FindProperty("LayerManualExpressions"), new Label("<size=+1><font-weight=700>Manual Expression Layers (Toggled)</font-weight></size>"));
+				var p_LayerManualExpressions = Toolkit.AddList(foldout, serializedObject.FindProperty("LayerManualExpressions"), new Label("<size=+1><font-weight=700>Manual Expression Layers (Toggled)</font-weight></size>"));
 
-				var p_LayerPost = DrawListAttribute(foldout, serializedObject.FindProperty("LayerPost"), new Label("<size=+1><font-weight=700>Bottom Layers (Always On)</font-weight></size>"));
+				var p_LayerPost = Toolkit.AddList(foldout, serializedObject.FindProperty("LayerPost"), new Label("<size=+1><font-weight=700>Bottom Layers (Always On)</font-weight></size>"));
 			}
 			{
-				var foldoutOuter = AddElement(ui, new Box());
+				var foldoutOuter = Toolkit.AddElement(ui, new Box());
 				foldoutOuter.style.marginTop = 15;
-				var foldout = AddElement(foldoutOuter, new Foldout {text = "<size=+3><font-weight=700>Menus & Parameters</font-weight></size>"});
+				var foldout = Toolkit.AddElement(foldoutOuter, new Foldout { text = "<size=+3><font-weight=700>Menus & Parameters</font-weight></size>", viewDataKey = "menus_parameters_foldout" });
 				foldout.value = false;
 
-				var p_AvatarMenus = DrawListAttribute(foldout, serializedObject.FindProperty("AvatarMenus"), new Label("<size=+1><font-weight=700>Menus</font-weight></size>"));
-				var p_AvatarParameters = DrawListAttribute(foldout, serializedObject.FindProperty("AvatarParameters"), new Label("<size=+1><font-weight=700>Parameters</font-weight></size>"));
+				var p_AvatarMenus = Toolkit.AddList(foldout, serializedObject.FindProperty("AvatarMenus"), new Label("<size=+1><font-weight=700>Menus</font-weight></size>"));
+				var p_AvatarParameters = Toolkit.AddList(foldout, serializedObject.FindProperty("AvatarParameters"), new Label("<size=+1><font-weight=700>Parameters</font-weight></size>"));
 
-				var box = AddElement(foldout, new VisualElement());
+				var box = Toolkit.AddElement(foldout, new VisualElement());
 				box.style.marginLeft = 10;
-				AddElement(box, new Label("<size=+1><font-weight=700>Menus & Parameters Toggled with Face Tracking</font-weight></size>"));
-				var p_AvatarMenusFaceTracking = DrawListAttribute(box, serializedObject.FindProperty("AvatarMenusFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Menus</font-weight></size>"));
-				var p_AvatarParametersFaceTracking = DrawListAttribute(box, serializedObject.FindProperty("AvatarParametersFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Parameters</font-weight></size>"));
+				Toolkit.AddElement(box, new Label("<size=+1><font-weight=700>Menus & Parameters Toggled with Face Tracking</font-weight></size>"));
+				var p_AvatarMenusFaceTracking = Toolkit.AddList(box, serializedObject.FindProperty("AvatarMenusFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Menus</font-weight></size>"));
+				var p_AvatarParametersFaceTracking = Toolkit.AddList(box, serializedObject.FindProperty("AvatarParametersFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Parameters</font-weight></size>"));
 
 				void handle_ft_menu_params()
 				{
@@ -160,13 +161,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 
 			{
-				var spacer = AddElement(ui, new VisualElement());
+				var spacer = Toolkit.AddElement(ui, new VisualElement());
 				spacer.style.marginTop = 10;
 				spacer.style.borderBottomWidth = 5;
 				spacer.style.marginBottom = 5;
 				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
 
-				var b = AddElement(ui, new Button());
+				var b = Toolkit.AddElement(ui, new Button());
 				b.Add(new Label("<size=+3><font-weight=700>Apply the Setup Now!</font-weight></size>"));
 				b.RegisterCallback<ClickEvent>((e) =>
 				{
@@ -185,34 +186,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 
 			return ui;
-		}
-
-		private VisualElement DrawListAttribute(VisualElement Container, SerializedProperty Property, VisualElement Header = null)
-		{
-			var outer = new VisualElement();
-
-			if(Header != null) outer.Add(Header);
-
-			var v = new ListView();
-			outer.Add(v);
-			v.showAddRemoveFooter = true;
-			v.showBoundCollectionSize = false;
-			v.reorderable = true;
-			v.reorderMode = ListViewReorderMode.Animated;
-			v.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-			v.showBorder = true;
-			v.showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly;
-			v.style.borderBottomColor = new StyleColor(Color.green);
-			v.BindProperty(Property);
-
-			Container.Add(outer);
-			return outer;
-		}
-
-		private T AddElement<T>(VisualElement Container, T Element) where T : VisualElement
-		{
-			Container.Add(Element);
-			return Element;
 		}
 	}
 }

@@ -9,7 +9,7 @@ using VRC.SDK3.Avatars.Components;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	public static class AVAExpressionsApplierVRC
+	public static class AVAExpressionBindingsVRCApplier
 	{
 		public static readonly ReadOnlyDictionary<HandGesture, int> HandGestureToParameterIndex = new(new Dictionary<HandGesture, int>()
 		{
@@ -23,7 +23,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{ HandGesture.ThumbsUp, 7 },
 		});
 
-		public static void Apply(AVAExpressionsProducer Setup, bool WriteToDisk = false)
+		public static void Apply(AVAExpressionBindingsVRCProducer Setup, bool WriteToDisk = false)
 		{
 			var avatar = Setup.gameObject.GetComponent<VRCAvatarDescriptor>();
 			var setupState = Setup.GetComponent<AVASetupStateVRC>();
@@ -53,7 +53,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return animatorFX;
 		}
 
-		private static AnimatorState AddSingleSideHandGestureState(AVAExpressionsProducer Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
+		private static AnimatorState AddSingleSideHandGestureState(AVAExpressionBindingsVRCProducer Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
 		{
 			var state = new AnimatorState { name = string.IsNullOrWhiteSpace(OverrideGestureName) ? Gesture.ToString() : OverrideGestureName, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(300, 60 * HandGestureToParameterIndex[Gesture], 0));
@@ -61,9 +61,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			transitionIdle.AddCondition(AnimatorConditionMode.Equals, HandGestureToParameterIndex[Gesture], IsLeft ? "GestureLeft" : "GestureRight");
 			transitionIdle.hasExitTime = false;
 
-			if (Setup.EmoteBindings.Find(b => IsLeft ? b.GuestureLeftHand == Gesture && b.GuestureRightHand == HandGesture.None : b.GuestureRightHand == Gesture && b.GuestureLeftHand == HandGesture.None) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Emote))
+			var expressions = Setup.GetComponent<AVAExpressions>();
+
+			if (Setup.ExpressionBindings.Find(b => IsLeft ? b.GuestureLeftHand == Gesture && b.GuestureRightHand == HandGesture.None : b.GuestureRightHand == Gesture && b.GuestureLeftHand == HandGesture.None) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Expression))
 			{
-				if (Setup.Emotes.Find(e => e.Emote == emoteBinding.Emote) is var emote && emote != null)
+				if (expressions.Expressions.Find(e => e.Expression == emoteBinding.Expression) is var emote && emote != null)
 				{
 					state.motion = emote.Animation;
 					state.timeParameter = emoteBinding.UseTriggerIntensity > 0 ? emoteBinding.UseTriggerIntensity == TriggerIntensity.Left ? "GestureLeftWeight" : "GestureRightWeight" : null;
@@ -72,7 +74,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return state;
 		}
 
-		private static AnimatorState AddHandGestureState(AVAExpressionsProducer Setup, AnimatorControllerLayer Layer, AnimatorState Idle, HandGesture GestureLeft, HandGesture GestureRight, string Name, int Index)
+		private static AnimatorState AddHandGestureState(AVAExpressionBindingsVRCProducer Setup, AnimatorControllerLayer Layer, AnimatorState Idle, HandGesture GestureLeft, HandGesture GestureRight, string Name, int Index)
 		{
 			var state = new AnimatorState { name = Name, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(550, 60 * Index, 0));
@@ -86,9 +88,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var transitionExitRight = state.AddExitTransition(false);
 			transitionExitRight.AddCondition(AnimatorConditionMode.NotEqual, HandGestureToParameterIndex[GestureRight], "GestureRight");
 
-			if (Setup.EmoteBindings.Find(b => b.GuestureLeftHand == GestureLeft && b.GuestureRightHand == GestureRight) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Emote))
+			var expressions = Setup.GetComponent<AVAExpressions>();
+
+			if (Setup.ExpressionBindings.Find(b => b.GuestureLeftHand == GestureLeft && b.GuestureRightHand == GestureRight) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Expression))
 			{
-				if (Setup.Emotes.Find(e => e.Emote == emoteBinding.Emote) is var emote && emote != null)
+				if (expressions.Expressions.Find(e => e.Expression == emoteBinding.Expression) is var emote && emote != null)
 				{
 					state.motion = emote.Animation;
 					state.timeParameter = emoteBinding.UseTriggerIntensity > 0 ? emoteBinding.UseTriggerIntensity == TriggerIntensity.Left ? "GestureLeftWeight" : "GestureRightWeight" : null;
@@ -97,7 +101,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return state;
 		}
 
-		private static void SetupEmotes(AVAExpressionsProducer Setup, AnimatorController animatorFX)
+		private static void SetupEmotes(AVAExpressionBindingsVRCProducer Setup, AnimatorController animatorFX)
 		{
 			var layerHandLeft = new AnimatorControllerLayer { name = "Left Hand", stateMachine = new AnimatorStateMachine(), defaultWeight = 1 };
 			{
@@ -141,11 +145,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				layerHands.stateMachine.AddState(stateIdle, new Vector3(300, 0, 0));
 				animatorFX.AddLayer(layerHands);
 				var index = 0;
-				foreach (var binding in Setup.EmoteBindings)
+				foreach (var binding in Setup.ExpressionBindings)
 				{
-					if (!string.IsNullOrWhiteSpace(binding.Emote))
+					if (!string.IsNullOrWhiteSpace(binding.Expression))
 					{
-						AddHandGestureState(Setup, layerHands, stateIdle, binding.GuestureLeftHand, binding.GuestureRightHand, binding.Emote, index);
+						AddHandGestureState(Setup, layerHands, stateIdle, binding.GuestureLeftHand, binding.GuestureRightHand, binding.Expression, index);
 					}
 					index++;
 				}
@@ -157,11 +161,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				layerHands.stateMachine.AddState(stateIdle, new Vector3(300, 0, 0));
 				animatorFX.AddLayer(layerHands);
 				var index = 0;
-				foreach (var binding in Setup.EmoteBindings)
+				foreach (var binding in Setup.ExpressionBindings)
 				{
-					if (binding.GuestureLeftHand > 0 && binding.GuestureRightHand > 0 && !string.IsNullOrWhiteSpace(binding.Emote))
+					if (binding.GuestureLeftHand > 0 && binding.GuestureRightHand > 0 && !string.IsNullOrWhiteSpace(binding.Expression))
 					{
-						AddHandGestureState(Setup, layerHands, stateIdle, binding.GuestureLeftHand, binding.GuestureRightHand, binding.Emote, index);
+						AddHandGestureState(Setup, layerHands, stateIdle, binding.GuestureLeftHand, binding.GuestureRightHand, binding.Expression, index);
 					}
 					index++;
 				}

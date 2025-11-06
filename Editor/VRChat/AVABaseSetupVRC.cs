@@ -16,7 +16,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	public enum AVA_FT_Setup_Type { Automatic, Manual };
 
 	[AddComponentMenu("AVA/VRChat/AVA Base Setup")]
-	public class AVABaseSetupVRC : IAVABaseSetup, IEditorOnly
+	public class AVABaseSetupVRC : AVABaseSetup, IEditorOnly
 	{
 		public AVA_FT_Setup_Type FaceTrackingSetupType = AVA_FT_Setup_Type.Automatic;
 		public List<VRCExpressionsMenu> AvatarMenus = new();
@@ -24,7 +24,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public List<VRCExpressionParameters> AvatarParameters = new();
 		public List<VRCExpressionParameters> AvatarParametersFaceTracking = new();
 	}
-	
+
 
 	[CustomPropertyDrawer(typeof(ControllerMapping))]
 	public class ControllerMappingDrawer : PropertyDrawer
