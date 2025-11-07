@@ -33,16 +33,17 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		{
 			var ui = new VisualElement();
 			ui.style.flexDirection = FlexDirection.Row;
+
 			var dropdown = new DropdownField(AVAConstants.ControllerTypeToIndex.Keys.ToList(), 4);
 			dropdown.style.minWidth = new StyleLength(100);
-			dropdown.RegisterValueChangedCallback(e => {
-				property.FindPropertyRelative("Mapping").stringValue = e.newValue;
-			});
+			dropdown.BindProperty(property.FindPropertyRelative("Mapping"));
 			ui.Add(dropdown);
+
 			var p_Controller = new PropertyField(property.FindPropertyRelative("Controller"), "");
 			p_Controller.style.minWidth = new StyleLength(150);
 			p_Controller.style.flexGrow = new StyleFloat(1);
 			ui.Add(p_Controller);
+
 			return ui;
 		}
 	}
