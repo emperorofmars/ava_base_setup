@@ -167,8 +167,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				spacer.style.marginBottom = 5;
 				spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
 
-				var b = Toolkit.AddElement(ui, new Button());
-				b.Add(new Label("<size=+3><font-weight=700>Apply the Setup Now!</font-weight></size>"));
+				var h_box = Toolkit.AddElement(ui, new VisualElement());
+				h_box.style.flexDirection = FlexDirection.RowReverse;
+				var h_spacer = Toolkit.AddElement(h_box, new VisualElement());
+
+				var b = Toolkit.AddElement(h_box, new Button());
+				b.Add(new Label("<size=-1><font-weight=700>Apply the Setup Now!</font-weight></size>"));
 				b.RegisterCallback<ClickEvent>((e) =>
 				{
 					AVASetupStateVRC state = null;
@@ -176,6 +180,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					{
 						state = c.gameObject.AddComponent<AVASetupStateVRC>();
 						AVASetupVRCApplier.Apply(c, state);
+						Debug.Log("AVA setup created successfully! Find it under: Packages/com.squirrelbite.ava_base_setup/Output/");
 					}
 					finally
 					{
