@@ -137,7 +137,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				var foldout = Toolkit.AddElement(foldoutOuter, new Foldout { text = "<size=+3><font-weight=700>Menus & Parameters</font-weight></size>", viewDataKey = "menus_parameters_foldout" });
 				foldout.value = false;
 
-				var p_AvatarMenus = Toolkit.AddList(foldout, serializedObject.FindProperty("AvatarMenus"), new Label("<size=+1><font-weight=700>Menus</font-weight></size>"));
+				var p_AvatarMenus = Toolkit.AddList(foldout, serializedObject.FindProperty("AvatarMenus"), new Label("<size=+1><font-weight=700>Top Level Menus</font-weight></size>"));
+				var p_AvatarSubMenus = Toolkit.AddList(foldout, serializedObject.FindProperty("AvatarSubMenus"), new Label("<size=+1><font-weight=700>Sub Menus</font-weight></size>"));
 				var p_AvatarParameters = Toolkit.AddList(foldout, serializedObject.FindProperty("AvatarParameters"), new Label("<size=+1><font-weight=700>Parameters</font-weight></size>"));
 
 				var box = Toolkit.AddElement(foldout, new VisualElement());

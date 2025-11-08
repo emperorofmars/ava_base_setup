@@ -1,20 +1,33 @@
 # Avatar Base Setup
 A small utility that sets up [VRCFT Templates](https://github.com/Adjerry91/VRCFaceTracking-Templates) and your own controllers in an intelligent-ish manner.
 
-**WIP implementation for Unity 2022.3+. Do not use productively!**
-
 Layers not in use will have their weight set to zero, omitting them from being processed by Unity. If a user doesn't use face-tracking, then there is no need to keep those layers enabled.
 
-* Works with or without ModularAvatar and VRCFury
+**WIP implementation for Unity 2022.3+. Do not use productively!**
+
 * Animation repathing is supported
+* Works with or without ModularAvatar and VRCFury
 * Non-destructive, automatically runs on VRChat upload
-* Also works without VRCFT Templates present, to account for any eventuality. (Face tracking won't be applied, everything else will)
+* Setup can be applied in advance. Your users won't have to install this package, if you include the output in your `.unitypackage`.
+* Also works without VRCFT Templates present. (Face tracking won't be applied, everything else will)
 
 ## How To Use
 * Add the `AVA/VRChat/AVA Base Setup` Component to the root of your avatar. (The same GameObject where the VRChatAvatarDescriptor is placed)
 * Split up your animator controller into appropriate pieces.
 * Place the partial controllers in the appropriate slots.
-* Profit
+* Profit!
+
+If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA/VRChat/Face Tracking Producer` component and specify the face mesh.
+
+## FAQ
+* Who is this for?\
+	Avatar base creators.
+* What does this mean for users?\
+	Always up do date VRCFT Templates.
+* Is this useful if I make avatar addons? (Clothing, and what not)\
+	Nope.
+* Does this replace ModularAvatar or VRCFury?\
+	Nope, these operate on top of the setup created by this package.
 
 <!--
 ## Installation

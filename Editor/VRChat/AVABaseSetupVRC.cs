@@ -15,11 +15,19 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 {
 	public enum AVA_FT_Setup_Type { Automatic, Manual };
 
+	[System.Serializable]
+	public class AVAExpressionsMenuTarget
+	{
+		public string Target;
+		public VRCExpressionsMenu Menu;
+	}
+
 	[AddComponentMenu("AVA/VRChat/AVA Base Setup")]
 	public class AVABaseSetupVRC : AVABaseSetup, IEditorOnly
 	{
 		public AVA_FT_Setup_Type FaceTrackingSetupType = AVA_FT_Setup_Type.Automatic;
 		public List<VRCExpressionsMenu> AvatarMenus = new();
+		public List<AVAExpressionsMenuTarget> AvatarSubMenus = new();
 		public List<VRCExpressionsMenu> AvatarMenusFaceTracking = new();
 		public List<VRCExpressionParameters> AvatarParameters = new();
 		public List<VRCExpressionParameters> AvatarParametersFaceTracking = new();

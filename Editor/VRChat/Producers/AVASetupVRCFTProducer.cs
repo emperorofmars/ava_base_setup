@@ -21,7 +21,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public const string VRCFT_TEMPLATES_BASE_PATH = "Packages/adjerry91.vrcft.templates/Animators/";
 
 		public SkinnedMeshRenderer FTMesh;
-		public FT_Type Type = FT_Type.Automatic;
+		public FT_Type FTType = FT_Type.Automatic;
 
 		public override void Apply()
 		{
@@ -38,7 +38,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			try {
 				AnimatorController controllerFX;
 				VRCExpressionsMenu menuFT;
-				var ftKind = Type == FT_Type.Automatic ? FTTypeMatcher.Match(FTMesh) : (int)Type;
+				var ftKind = FTType == FT_Type.Automatic ? FTTypeMatcher.Match(FTMesh) : (int)FTType;
 				if(ftKind == (int)FT_Type.UnifiedExpressions)
 				{
 					controllerFX = AssetDatabase.LoadAssetAtPath<AnimatorController>(VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/FX - Face Tracking - UE Blendshapes.controller");
