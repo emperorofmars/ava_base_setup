@@ -13,6 +13,7 @@ Layers not in use will have their weight set to zero, omitting them from being p
 * Add the `AVA/VRChat/AVA Base Setup` Component to the root of your avatar. (The same GameObject where the VRChatAvatarDescriptor is placed)
 * Split up your animator controller into appropriate pieces.
 * Place the partial controllers in the appropriate slots.
+* Add the expressions menu and parameters below. You can optionally split them up as well. Do not include the Face Tracking menu from VRCFT Templates. It's going to be added automatically.
 * Profit!
 
 If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA/VRChat/Face Tracking Producer` component and specify the face mesh.
