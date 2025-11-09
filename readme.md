@@ -24,9 +24,9 @@ If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA
 * What does this mean for users?\
 	Always up do date VRCFT Templates & better performing avatars.
 * Is this useful if I make avatar addons? (Clothing, and what not)\
-	Nope.
-* Does this replace ModularAvatar or VRCFury?\
-	Nope, these operate on top of the setup created by this package.
+	Nope, use ModularAvatar or VRCFury.
+* Does this replace or compete with ModularAvatar or VRCFury?\
+	Nope, these operate on top of the base setup created by this package.
 
 <!--
 ## Installation
