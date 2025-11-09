@@ -27,6 +27,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(AVABaseSetupVRC))]
 	[RequireComponent(typeof(AVAExpressionsVRC))]
+	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVAExpressionBindingsVRCProducer : IAVAControllerProducer, IEditorOnly
 	{
 		public HandDominance HandDominance = HandDominance.Right;

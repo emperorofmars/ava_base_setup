@@ -16,6 +16,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[AddComponentMenu("AVA/VRChat/Face Tracking Producer")]
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(AVABaseSetupVRC))]
+	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVASetupVRCFTProducer : IAVAControllerProducer, IEditorOnly
 	{
 		public const string VRCFT_TEMPLATES_BASE_PATH = "Packages/adjerry91.vrcft.templates/Animators/";
