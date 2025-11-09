@@ -1,8 +1,8 @@
 {
 	"name": "com.squirrelbite.ava_base_setup",
-	"displayName": "Avatar Facial Tracking Setup",
+	"displayName": "Avatar Base Setup",
 	"version": "0.0.0",
-	"description": "Base Setup for VR & V-Tubing avatars.",
+	"description": "Base Setup for VR & V-Tubing avatars with face tracking.",
 	"unity": "2022.3",
 	"unityRelease": "6f1",
 	"license": "MIT or Apache-2.0",
