@@ -21,10 +21,18 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			public List<AnimatorController> Other = new();
 		}
 
+		[System.Serializable]
+		public class AVAExpressionsMenuControl
+		{
+			public string Target;
+			public List<VRCExpressionsMenu.Control> MenuControls = new();
+		}
+
 		public List<AnimatorControllerLayer> Layers = new() { new(), new(), new(), new(), new() };
 
 		public List<VRCExpressionParameters.Parameter> Parameters = new();
 		public List<VRCExpressionsMenu.Control> AvatarMenuControls = new();
+		public List<AVAExpressionsMenuControl> AvatarSubMenuControls = new();
 		public List<VRCExpressionsMenu.Control> AvatarMenuControlsLast = new();
 
 		public List<Object> UnityResourcesToStoreIfDesired = new();

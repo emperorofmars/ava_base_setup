@@ -2,6 +2,8 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using System.Collections.Generic;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Crmf;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -25,6 +27,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			foreach(var menu in Setup.AvatarMenus)
 				setupState.AvatarMenuControls.AddRange(menu.controls);
+			foreach(var subMenu in Setup.AvatarSubMenus)
+				setupState.AvatarSubMenuControls.Add(new() { Target = subMenu.Target, MenuControls = new List<VRCExpressionsMenu.Control>(subMenu.Menu.controls) });
 			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
 				foreach(var menu in Setup.AvatarMenusFaceTracking)
 					setupState.AvatarMenuControls.AddRange(menu.controls);
@@ -161,7 +165,62 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					type = control.type,
 					value = control.value
 				});
+
+			// sub menus
+			foreach(var subMenu in setupState.AvatarSubMenuControls)
+			{
+				if(string.IsNullOrWhiteSpace(subMenu.Target) || subMenu.MenuControls == null || subMenu.MenuControls.Count == 0) continue;
+				var targetPath = subMenu.Target.Split("/");
+				VRCExpressionsMenu.Control targetControl = null;
+				VRCExpressionsMenu targetMenu = avatar.expressionsMenu;
+				foreach(var targetPathElement in targetPath)
+				{
+					if(targetMenu.controls.Find(c => c.type == VRCExpressionsMenu.Control.ControlType.SubMenu && c.name == targetPathElement) is var next && next != null && next.subMenu != null)
+					{
+						targetControl = next;
+						targetMenu = next.subMenu;
+					}
+				}
+				if(targetMenu && targetControl != null)
+				{
+					var newSubmenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
+					foreach(var control in targetMenu.controls)
+						newSubmenu.controls.Add(new() {
+							icon = control.icon,
+							labels = control.labels,
+							name = control.name,
+							parameter = control.parameter,
+							style = control.style,
+							subMenu = control.subMenu,
+							subParameters = control.subParameters,
+							type = control.type,
+							value = control.value
+						});
+
+					foreach(var control in subMenu.MenuControls)
+						newSubmenu.controls.Add(new() {
+							icon = control.icon,
+							labels = control.labels,
+							name = control.name,
+							parameter = control.parameter,
+							style = control.style,
+							subMenu = control.subMenu,
+							subParameters = control.subParameters,
+							type = control.type,
+							value = control.value
+						});
+					newSubmenu.name = targetMenu.name;
+					targetControl.subMenu = newSubmenu;
+					AssetDatabase.AddObjectToAsset(newSubmenu, outputHolder);
+				}
+				else
+				{
+					Debug.LogWarning("Invalid target path for submenu: " + subMenu.Target);
+				}
+			}
+
 			AssetDatabase.AddObjectToAsset(avatar.expressionsMenu, outputHolder);
+
 
 			// Save other stuff like generated animations
 			foreach(var asset in setupState.UnityResourcesToStoreIfDesired)
