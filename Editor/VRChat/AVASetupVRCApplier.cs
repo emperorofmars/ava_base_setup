@@ -240,6 +240,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			avatar.baseAnimationLayers = animatorLayers;
 
 			EditorUtility.SetDirty(outputHolder);
+			EditorUtility.SetDirty(avatar);
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
 		}
@@ -460,14 +461,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						ftLayerCount += controller.layers.Length;
 					var mutLayerCount = 0;
 					foreach(var controller in State.Layers[Layer].Mut)
-						ftLayerCount += controller.layers.Length;
+						mutLayerCount += controller.layers.Length;
 
-					SetupBehaviour(State, stateOn, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 1);
-					SetupBehaviour(State, stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 1);
-					SetupBehaviour(State, stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 0);
-					SetupBehaviour(State, stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 0);
-					SetupBehaviour(State, stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 1);
-					SetupBehaviour(State, stateOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 0);
+					SetupBehaviour(State, stateOn, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 1f);
+					SetupBehaviour(State, stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 1f);
+					SetupBehaviour(State, stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 0f);
+					SetupBehaviour(State, stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 0f);
+					SetupBehaviour(State, stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 1f);
+					SetupBehaviour(State, stateOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 0f);
 
 					ret.AddLayer(animatorLayer1);
 				}

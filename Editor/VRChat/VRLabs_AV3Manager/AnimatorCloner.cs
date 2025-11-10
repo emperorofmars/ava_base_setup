@@ -144,6 +144,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			{
 				var behaviour = n.AddStateMachineBehaviour(oldb.GetType());
 				CloneBehaviourParameters(oldb, behaviour);
+				SaveAsSubasset?.Add(behaviour);
 			}
 
 			return n;
@@ -170,6 +171,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			{
 				var behaviour = n.state.AddStateMachineBehaviour(oldb.GetType());
 				CloneBehaviourParameters(oldb, behaviour);
+				SaveAsSubasset?.Add(behaviour);
 			}
 
 			return n;
