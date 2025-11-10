@@ -21,7 +21,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var c = (AVABaseSetupVRC)target;
 			SkinnedMeshRenderer ftMesh = null;
 			if(c.gameObject.TryGetComponent<AVASetupVRCFTProducer>(out var ftProducer))
-				ftMesh = ftProducer.FTMesh != null ? ftProducer.FTMesh : FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
+				ftMesh = ftProducer.FTMesh;
+			if(!ftMesh)
+				ftMesh = FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
 			if(ftMesh)
 				FTMatch = FTTypeMatcher.Match(ftMesh);
 		}
@@ -31,7 +33,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var c = (AVABaseSetupVRC)target;
 			VisualElement ui = new();
 
-			Toolkit.AddElement(ui, new HelpBox("Base Setup for Avatar Animator Controllers with Facie Tracking!\nLayers get toggled based on what functionality is enabled at runtime.\nCurrently mapped FX & Gesture Controllers, Parameters and Menus will be replaced!", HelpBoxMessageType.Info)).style.marginBottom = 10;
+			Toolkit.AddElement(ui, new HelpBox("Base Setup for Avatar Animator Controllers with Face Tracking!\nLayers get toggled based on what functionality is enabled at runtime.\nCurrently mapped FX & Gesture Controllers, Parameters and Menus will be replaced!", HelpBoxMessageType.Info)).style.marginBottom = 10;
 
 #if AVA_BASE_SETUP_VRCFTTEMPLATES
 			bool isFTAvailable = true;

@@ -36,6 +36,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public List<VRCExpressionsMenu.Control> AvatarMenuControlsLast = new();
 
 		public List<Object> UnityResourcesToStoreIfDesired = new();
+
+		public Object OutputHolder;
 	}
 }
 

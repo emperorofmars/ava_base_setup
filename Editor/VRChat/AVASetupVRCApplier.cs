@@ -2,8 +2,7 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using System.Collections.Generic;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Crmf;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509;
+using System.Linq;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -22,6 +21,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			var outputHolder = ScriptableObject.CreateInstance<AVAOutputHolder>();
 			outputHolder.name = avatar.name;
+			setupState.OutputHolder = outputHolder;
 			AssetDatabase.DeleteAsset(AVAConstants.OUTPUT_PATH + avatar.name + ".asset");
 			AssetDatabase.CreateAsset(outputHolder, AVAConstants.OUTPUT_PATH + avatar.name + ".asset");
 
@@ -113,30 +113,42 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 			}
 
-			// Setup controllers
+			// Merge controllers
 			if(SetupLayer(Setup, setupState, 4, "FX") is var animatorFX && animatorFX != null)
 			{
 				animatorLayers[4].isDefault = false;
 				animatorLayers[4].isEnabled = true;
-				if(animatorLayers[4].animatorController is AnimatorController existingControllerFX && existingControllerFX != null)
-					animatorLayers[4].animatorController = AnimatorCloner.MergeControllers(animatorFX, existingControllerFX, null, false, 0);
-				else
-					animatorLayers[4].animatorController = animatorFX;
+				animatorLayers[4].animatorController = animatorFX;
 				animatorFX.name = "AVA Base Setup FX";
 
 				AssetDatabase.AddObjectToAsset(animatorFX, outputHolder);
+				/*foreach(var layer in animatorFX.layers)
+					if(!setupState.UnityResourcesToStoreIfDesired.Contains(layer.stateMachine)) setupState.UnityResourcesToStoreIfDesired.Add(layer.stateMachine);
+				foreach(var state in animatorFX.GetAnimatorStates())
+				{
+					if(!setupState.UnityResourcesToStoreIfDesired.Contains(state)) setupState.UnityResourcesToStoreIfDesired.Add(state);
+					//if(state.motion && !setupState.UnityResourcesToStoreIfDesired.Contains(state.motion)) setupState.UnityResourcesToStoreIfDesired.Add(state.motion);
+					foreach(var transition in state.transitions)
+						if(!setupState.UnityResourcesToStoreIfDesired.Contains(transition)) setupState.UnityResourcesToStoreIfDesired.Add(transition);
+				}*/
 			}
-			if(SetupLayer(Setup, setupState, 1, "Gesture") is var animatorGesture && animatorGesture != null)
+			if(SetupLayer(Setup, setupState, 1, "Additive") is var animatorAdditive && animatorAdditive != null)
 			{
 				animatorLayers[1].isDefault = false;
 				animatorLayers[1].isEnabled = true;
-				if(animatorLayers[1].animatorController is AnimatorController existingControllerGesture && existingControllerGesture != null)
-					animatorLayers[1].animatorController = AnimatorCloner.MergeControllers(animatorGesture, existingControllerGesture, null, false, 0);
-				else
-					animatorLayers[1].animatorController = animatorGesture;
-				animatorGesture.name = "AVA Base Setup Gesture";
+				animatorLayers[1].animatorController = animatorAdditive;
+				animatorAdditive.name = "AVA Base Setup Additive";
 
-				AssetDatabase.AddObjectToAsset(animatorGesture, outputHolder);
+				AssetDatabase.AddObjectToAsset(animatorAdditive, outputHolder);
+				/*foreach(var layer in animatorAdditive.layers)
+					if(!setupState.UnityResourcesToStoreIfDesired.Contains(layer.stateMachine)) setupState.UnityResourcesToStoreIfDesired.Add(layer.stateMachine);
+				foreach(var state in animatorAdditive.GetAnimatorStates())
+				{
+					if(!setupState.UnityResourcesToStoreIfDesired.Contains(state)) setupState.UnityResourcesToStoreIfDesired.Add(state);
+					//if(state.motion && !setupState.UnityResourcesToStoreIfDesired.Contains(state.motion)) setupState.UnityResourcesToStoreIfDesired.Add(state.motion);
+					foreach(var transition in state.transitions)
+						if(!setupState.UnityResourcesToStoreIfDesired.Contains(transition)) setupState.UnityResourcesToStoreIfDesired.Add(transition);
+				}*/
 			}
 			// todo other layers perhaps?
 
@@ -147,7 +159,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			AV3ManagerFunctions.AddParameters(avatar, setupState.Parameters, null, true, true);
 			AssetDatabase.AddObjectToAsset(avatar.expressionParameters, outputHolder);
 
-			// Merge all menu entries
+			// Merge top level menus
 			avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
 			avatar.expressionsMenu.name = "AVA Base Setup Menu";
 			var menuList = new List<VRCExpressionsMenu.Control>(setupState.AvatarMenuControls);
@@ -166,7 +178,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					value = control.value
 				});
 
-			// sub menus
+			// Merge submenus
 			foreach(var subMenu in setupState.AvatarSubMenuControls)
 			{
 				if(string.IsNullOrWhiteSpace(subMenu.Target) || subMenu.MenuControls == null || subMenu.MenuControls.Count == 0) continue;
@@ -221,14 +233,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			AssetDatabase.AddObjectToAsset(avatar.expressionsMenu, outputHolder);
 
-
 			// Save other stuff like generated animations
-			foreach(var asset in setupState.UnityResourcesToStoreIfDesired)
+			foreach(var asset in setupState.UnityResourcesToStoreIfDesired.ToHashSet())
 				AssetDatabase.AddObjectToAsset(asset, outputHolder);
 
-			AssetDatabase.SaveAssets();
-
 			avatar.baseAnimationLayers = animatorLayers;
+
+			EditorUtility.SetDirty(outputHolder);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
 		}
 
 		private static AnimatorController SetupLayer(AVABaseSetupVRC Setup, AVASetupStateVRC State, int Layer, string Name)
@@ -237,7 +250,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var animatorLayer0 = new AnimatorControllerLayer
 			{
 				name = "All Parts",
-				stateMachine = new AnimatorStateMachine()
+				stateMachine = new AnimatorStateMachine() { name = Name + " - All Parts" }
 			};
 			ret.AddLayer(animatorLayer0);
 			ret.AddParameter("GestureLeft", AnimatorControllerParameterType.Int);
@@ -246,7 +259,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			ret.AddParameter("GestureRightWeight", AnimatorControllerParameterType.Float);
 
 			foreach(var controller in State.Layers[Layer].Pre_FT)
-				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 
 			if(Setup.UseFaceTracking && State.Layers[Layer].FT.Count > 0)
 			{
@@ -255,7 +268,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					var animatorLayer1 = new AnimatorControllerLayer
 					{
 						name = "Face Tracking Settings",
-						stateMachine = new AnimatorStateMachine(),
+						stateMachine = new AnimatorStateMachine { name = "Face Tracking Settings" },
 						defaultWeight = 1,
 					};
 					var stateFTOff = new AnimatorState { name = "FT Off", writeDefaultValues = true };
@@ -270,6 +283,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 					stateFTOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "FT off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
@@ -278,6 +292,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateFTOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "FT off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
@@ -286,6 +301,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateFTOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "FT off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
@@ -294,6 +310,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateFTOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "FT off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
@@ -302,6 +319,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateFTOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "FT off to All off",
 						destinationState = stateOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
@@ -311,6 +329,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOn.AddTransition(new AnimatorStateTransition
 					{
+						name = "All on to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
@@ -320,6 +339,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOn.AddTransition(new AnimatorStateTransition
 					{
+						name = "All on to All off",
 						destinationState = stateOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
@@ -329,6 +349,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOn.AddTransition(new AnimatorStateTransition
 					{
+						name = "All on to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
@@ -337,6 +358,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOn.AddTransition(new AnimatorStateTransition
 					{
+						name = "All on to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
@@ -345,6 +367,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "All off to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
@@ -353,6 +376,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "All off to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "EyeTrackingActive", threshold = 0.1f },
@@ -361,6 +385,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "All off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
@@ -369,6 +394,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "All off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
@@ -377,6 +403,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "All off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
@@ -385,6 +412,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "All off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
@@ -393,6 +421,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateExpressionsOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "Expressions off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "LipTrackingActive", threshold = 0.9f },
@@ -401,6 +430,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateExpressionsOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "Expressions off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Greater, parameter = "EyeTrackingActive", threshold = 0.9f },
@@ -409,6 +439,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateExpressionsOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "Expressions off to All off",
 						destinationState = stateOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
@@ -418,6 +449,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					});
 					stateExpressionsOff.AddTransition(new AnimatorStateTransition
 					{
+						name = "Expressions off to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
 							new() { mode = AnimatorConditionMode.Less, parameter = "LipTrackingActive", threshold = 0.1f },
@@ -447,22 +479,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 
 				foreach(var controller in State.Layers[Layer].FT)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 				foreach(var controller in State.Layers[Layer].FT_React)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 				foreach(var controller in State.Layers[Layer].Mut)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 				foreach(var controller in State.Layers[Layer].Other)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 
 				return ret;
 			}
 			else if(State.Layers[Layer].Pre_FT.Count > 0 || State.Layers[Layer].Mut.Count > 0 || State.Layers[Layer].Other.Count > 0)
 			{
 				foreach(var controller in State.Layers[Layer].Mut)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 				foreach(var controller in State.Layers[Layer].Other)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
 				return ret;
 			}
 			return null;

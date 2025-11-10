@@ -22,9 +22,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		void OnEnable()
 		{
 			var c = (AVASetupVRCFTProducer)target;
-			SkinnedMeshRenderer ftMesh = null;
-			if(c.gameObject.TryGetComponent<AVASetupVRCFTProducer>(out var ftProducer))
-				ftMesh = ftProducer.FTMesh != null ? ftProducer.FTMesh : FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
+			SkinnedMeshRenderer ftMesh = c.FTMesh;
+			if(!ftMesh)
+				ftMesh = FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
 			if(ftMesh)
 				FTMatch = FTTypeMatcher.Match(ftMesh);
 		}

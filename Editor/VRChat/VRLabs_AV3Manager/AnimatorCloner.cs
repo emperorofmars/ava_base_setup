@@ -21,7 +21,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 		private static Dictionary<string, string> _parametersNewName;
 		private static string _assetPath;
 
-		public static AnimatorController MergeControllers(AnimatorController mainController, AnimatorController controllerToMerge, Dictionary<string, string> paramNameSwap = null, bool saveToNew = false, uint skipLayers = 0, Func<AnimationClip, AnimationClip> AnimationCallback = null)
+		public static AnimatorController MergeControllers(AnimatorController mainController, AnimatorController controllerToMerge, Dictionary<string, string> paramNameSwap = null, bool saveToNew = false, uint skipLayers = 0, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			if (mainController == null)
 			{
@@ -34,8 +34,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			if (saveToNew)
 			{
 				Directory.CreateDirectory(STANDARD_NEW_ANIMATOR_FOLDER);
-				string uniquePath =
-					AssetDatabase.GenerateUniqueAssetPath(STANDARD_NEW_ANIMATOR_FOLDER + Path.GetFileName(_assetPath));
+				string uniquePath = AssetDatabase.GenerateUniqueAssetPath(STANDARD_NEW_ANIMATOR_FOLDER + Path.GetFileName(_assetPath));
 				AssetDatabase.CopyAsset(_assetPath, uniquePath);
 				AssetDatabase.SaveAssets();
 				AssetDatabase.Refresh();
@@ -66,7 +65,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 
 			for (uint i = skipLayers; i < controllerToMerge.layers.Length; i++)
 			{
-				AnimatorControllerLayer newL = CloneLayer(controllerToMerge.layers[i], i == 0, saveToNew, AnimationCallback);
+				AnimatorControllerLayer newL = CloneLayer(controllerToMerge.layers[i], i == 0, saveToNew, AnimationCallback, SaveAsSubasset);
 				newL.name = mainController
 					.MakeUniqueLayerName(newL.name); // MakeLayerNameUnique(newL.name, mainController);
 				newL.stateMachine.name = newL.name;
@@ -104,7 +103,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return name + st;
 		}
 
-		private static AnimatorControllerLayer CloneLayer(AnimatorControllerLayer old, bool isFirstLayer = false, bool saveToNew = false, Func<AnimationClip, AnimationClip> AnimationCallback = null)
+		private static AnimatorControllerLayer CloneLayer(AnimatorControllerLayer old, bool isFirstLayer = false, bool saveToNew = false, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			var n = new AnimatorControllerLayer
 			{
@@ -114,13 +113,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				iKPass = old.iKPass,
 				name = old.name,
 				syncedLayerAffectsTiming = old.syncedLayerAffectsTiming,
-				stateMachine = CloneStateMachine(old.stateMachine, saveToNew, AnimationCallback)
+				stateMachine = CloneStateMachine(old.stateMachine, saveToNew, AnimationCallback, SaveAsSubasset)
 			};
 			CloneTransitions(old.stateMachine, n.stateMachine);
 			return n;
 		}
 
-		private static AnimatorStateMachine CloneStateMachine(AnimatorStateMachine old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
+		private static AnimatorStateMachine CloneStateMachine(AnimatorStateMachine old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			var n = new AnimatorStateMachine
 			{
@@ -130,12 +129,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				hideFlags = old.hideFlags,
 				name = old.name,
 				parentStateMachinePosition = old.parentStateMachinePosition,
-				stateMachines = old.stateMachines.Select(x => CloneChildStateMachine(x, saveToNew)).ToArray(),
-				states = old.states.Select(x => CloneChildAnimatorState(x, saveToNew, AnimationCallback)).ToArray()
+				stateMachines = old.stateMachines.Select(x => CloneChildStateMachine(x, saveToNew, AnimationCallback, SaveAsSubasset)).ToArray(),
+				states = old.states.Select(x => CloneChildAnimatorState(x, saveToNew, AnimationCallback, SaveAsSubasset)).ToArray()
 			};
 
 			if(saveToNew)
 				AssetDatabase.AddObjectToAsset(n, _assetPath);
+			else if(SaveAsSubasset != null && !SaveAsSubasset.Contains(n))
+				SaveAsSubasset.Add(n);
 
 			n.defaultState = FindState(old.defaultState, old, n);
 
@@ -148,22 +149,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return n;
 		}
 
-		private static ChildAnimatorStateMachine CloneChildStateMachine(ChildAnimatorStateMachine old, bool saveToNew)
+		private static ChildAnimatorStateMachine CloneChildStateMachine(ChildAnimatorStateMachine old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			var n = new ChildAnimatorStateMachine
 			{
 				position = old.position,
-				stateMachine = CloneStateMachine(old.stateMachine, saveToNew)
+				stateMachine = CloneStateMachine(old.stateMachine, saveToNew, AnimationCallback, SaveAsSubasset)
 			};
 			return n;
 		}
 
-		private static ChildAnimatorState CloneChildAnimatorState(ChildAnimatorState old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
+		private static ChildAnimatorState CloneChildAnimatorState(ChildAnimatorState old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			var n = new ChildAnimatorState
 			{
 				position = old.position,
-				state = CloneAnimatorState(old.state, saveToNew, AnimationCallback)
+				state = CloneAnimatorState(old.state, saveToNew, AnimationCallback, SaveAsSubasset)
 			};
 			foreach (var oldb in old.state.behaviours)
 			{
@@ -174,18 +175,20 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return n;
 		}
 
-		private static AnimatorState CloneAnimatorState(AnimatorState old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
+		private static AnimatorState CloneAnimatorState(AnimatorState old, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			// Checks if the motion is a blend tree, to avoid accidental blend tree sharing between animator assets
 			Motion motion = old.motion;
 			if (motion is BlendTree oldTree)
 			{
-				var tree = CloneBlendTree(null, oldTree, saveToNew, AnimationCallback);
+				var tree = CloneBlendTree(null, oldTree, saveToNew, AnimationCallback, SaveAsSubasset);
 				motion = tree;
 				// need to save the blend tree into the animator
 				tree.hideFlags = HideFlags.HideInHierarchy;
 				if(saveToNew)
 					AssetDatabase.AddObjectToAsset(motion, _assetPath);
+				else if(SaveAsSubasset != null && !SaveAsSubasset.Contains(motion))
+					SaveAsSubasset.Add(motion);
 			}
 
 			var newMotion = motion;
@@ -216,11 +219,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			};
 			if(saveToNew)
 				AssetDatabase.AddObjectToAsset(n, _assetPath);
+			else if(SaveAsSubasset != null && !SaveAsSubasset.Contains(n))
+				SaveAsSubasset.Add(n);
+			
 			return n;
 		}
 
 		// Taken from here: https://gist.github.com/phosphoer/93ca8dcbf925fc006e4e9f6b799c13b0
-		private static BlendTree CloneBlendTree(BlendTree parentTree, BlendTree oldTree, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null)
+		private static BlendTree CloneBlendTree(BlendTree parentTree, BlendTree oldTree, bool saveToNew, Func<AnimationClip, AnimationClip> AnimationCallback = null, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			// Create a child tree in the destination parent, this seems to be the only way to correctly 
 			// add a child tree as opposed to AddChild(motion)
@@ -260,12 +266,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 
 				if (child.motion is BlendTree tree)
 				{
-					var childTree = CloneBlendTree(pastedTree, tree, saveToNew, AnimationCallback);
+					var childTree = CloneBlendTree(pastedTree, tree, saveToNew, AnimationCallback, SaveAsSubasset);
 					childMotion.motion = childTree;
 					// need to save the blend tree into the animator
 					childTree.hideFlags = HideFlags.HideInHierarchy;
 					if(saveToNew)
 						AssetDatabase.AddObjectToAsset(childTree, _assetPath);
+					else if(SaveAsSubasset != null && !SaveAsSubasset.Contains(childTree))
+						SaveAsSubasset.Add(childTree);
 				}
 				else
 				{
