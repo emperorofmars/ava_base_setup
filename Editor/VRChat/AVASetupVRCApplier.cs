@@ -252,6 +252,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				name = "All Parts",
 				stateMachine = new AnimatorStateMachine() { name = Name + " - All Parts" }
 			};
+			State.UnityResourcesToStoreIfDesired.Add(animatorLayer0.stateMachine);
 			ret.AddLayer(animatorLayer0);
 			ret.AddParameter("GestureLeft", AnimatorControllerParameterType.Int);
 			ret.AddParameter("GestureLeftWeight", AnimatorControllerParameterType.Float);
@@ -271,18 +272,29 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						stateMachine = new AnimatorStateMachine { name = "Face Tracking Settings" },
 						defaultWeight = 1,
 					};
+					State.UnityResourcesToStoreIfDesired.Add(animatorLayer1.stateMachine);
 					var stateFTOff = new AnimatorState { name = "FT Off", writeDefaultValues = true };
 					var stateOn = new AnimatorState { name = "On", writeDefaultValues = true };
 					var stateExpressionsOff = new AnimatorState { name = "Expressions Off", writeDefaultValues = true };
 					var stateOff = new AnimatorState { name = "Off", writeDefaultValues = true };
+
+					State.UnityResourcesToStoreIfDesired.Add(stateFTOff);
+					State.UnityResourcesToStoreIfDesired.Add(stateOn);
+					State.UnityResourcesToStoreIfDesired.Add(stateExpressionsOff);
+					State.UnityResourcesToStoreIfDesired.Add(stateOff);
 
 					animatorLayer1.stateMachine.AddState(stateFTOff, new Vector3(200, 220));
 					animatorLayer1.stateMachine.AddState(stateOn, new Vector3(400, 100));
 					animatorLayer1.stateMachine.AddState(stateExpressionsOff, new Vector3(600, 220));
 					animatorLayer1.stateMachine.AddState(stateOff, new Vector3(400, 340));
 
-					stateFTOff.AddTransition(new AnimatorStateTransition
+					void addTransition(AnimatorState SourceState, AnimatorStateTransition t)
 					{
+						SourceState.AddTransition(t);
+						State.UnityResourcesToStoreIfDesired.Add(t);
+					}
+
+					addTransition(stateFTOff, new AnimatorStateTransition {
 						name = "FT off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
@@ -290,8 +302,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled", threshold = 0 },
 						},
 					});
-					stateFTOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateFTOff, new AnimatorStateTransition {
 						name = "FT off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
@@ -299,8 +310,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled", threshold = 0 },
 						},
 					});
-					stateFTOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateFTOff, new AnimatorStateTransition {
 						name = "FT off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
@@ -308,8 +318,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateFTOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateFTOff, new AnimatorStateTransition {
 						name = "FT off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
@@ -317,8 +326,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateFTOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateFTOff, new AnimatorStateTransition {
 						name = "FT off to All off",
 						destinationState = stateOff,
 						conditions = new AnimatorCondition[] {
@@ -327,8 +335,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOn.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOn, new AnimatorStateTransition {
 						name = "All on to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
@@ -337,8 +344,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOn.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOn, new AnimatorStateTransition {
 						name = "All on to All off",
 						destinationState = stateOff,
 						conditions = new AnimatorCondition[] {
@@ -347,8 +353,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOn.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOn, new AnimatorStateTransition {
 						name = "All on to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
@@ -356,8 +361,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOn.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOn, new AnimatorStateTransition {
 						name = "All on to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
@@ -365,8 +369,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOff, new AnimatorStateTransition {
 						name = "All off to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
@@ -374,8 +377,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOff, new AnimatorStateTransition {
 						name = "All off to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
@@ -383,8 +385,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOff, new AnimatorStateTransition {
 						name = "All off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
@@ -392,8 +393,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOff, new AnimatorStateTransition {
 						name = "All off to Expressions off",
 						destinationState = stateExpressionsOff,
 						conditions = new AnimatorCondition[] {
@@ -401,8 +401,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled",  },
 						},
 					});
-					stateOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOff, new AnimatorStateTransition {
 						name = "All off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
@@ -410,8 +409,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateOff, new AnimatorStateTransition {
 						name = "All off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
@@ -419,8 +417,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateExpressionsOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateExpressionsOff, new AnimatorStateTransition {
 						name = "Expressions off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
@@ -428,8 +425,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateExpressionsOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateExpressionsOff, new AnimatorStateTransition {
 						name = "Expressions off to All on",
 						destinationState = stateOn,
 						conditions = new AnimatorCondition[] {
@@ -437,8 +433,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.IfNot, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateExpressionsOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateExpressionsOff, new AnimatorStateTransition {
 						name = "Expressions off to All off",
 						destinationState = stateOff,
 						conditions = new AnimatorCondition[] {
@@ -447,8 +442,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							new() { mode = AnimatorConditionMode.If, parameter = "FacialExpressionsDisabled" },
 						},
 					});
-					stateExpressionsOff.AddTransition(new AnimatorStateTransition
-					{
+					addTransition(stateExpressionsOff, new AnimatorStateTransition {
 						name = "Expressions off to FT off",
 						destinationState = stateFTOff,
 						conditions = new AnimatorCondition[] {
@@ -468,12 +462,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					foreach(var controller in State.Layers[Layer].Mut)
 						ftLayerCount += controller.layers.Length;
 
-					SetupBehaviour(stateOn, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 1);
-					SetupBehaviour(stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 1);
-					SetupBehaviour(stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 0);
-					SetupBehaviour(stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 0);
-					SetupBehaviour(stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 1);
-					SetupBehaviour(stateOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 0);
+					SetupBehaviour(State, stateOn, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 1);
+					SetupBehaviour(State, stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 1);
+					SetupBehaviour(State, stateExpressionsOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 0);
+					SetupBehaviour(State, stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount, 0);
+					SetupBehaviour(State, stateFTOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer + ftLayerCount, mutLayerCount, 1);
+					SetupBehaviour(State, stateOff, VRC_AnimatorLayerControl.BlendableLayer.FX, startLayer, ftLayerCount + mutLayerCount, 0);
 
 					ret.AddLayer(animatorLayer1);
 				}
@@ -500,14 +494,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return null;
 		}
 
-		private static void SetupBehaviour(AnimatorState State, VRC_AnimatorLayerControl.BlendableLayer Layer, int LayerStart, int LayerCount, float GoalWeight)
+		private static void SetupBehaviour(AVASetupStateVRC State, AnimatorState AnimState, VRC_AnimatorLayerControl.BlendableLayer Layer, int LayerStart, int LayerCount, float GoalWeight)
 		{
 			for(int i = LayerStart; i < LayerStart + LayerCount; i++)
 			{
-				var behaviour = State.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
+				var behaviour = AnimState.AddStateMachineBehaviour<VRCAnimatorLayerControl>();
 				behaviour.playable = Layer;
 				behaviour.layer = i;
 				behaviour.goalWeight = GoalWeight;
+				State.UnityResourcesToStoreIfDesired.Add(behaviour);
 			}
 		}
 	}
