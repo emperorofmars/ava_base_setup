@@ -115,7 +115,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				syncedLayerAffectsTiming = old.syncedLayerAffectsTiming,
 				stateMachine = CloneStateMachine(old.stateMachine, saveToNew, AnimationCallback, SaveAsSubasset)
 			};
-			CloneTransitions(old.stateMachine, n.stateMachine);
+			CloneTransitions(old.stateMachine, n.stateMachine, SaveAsSubasset);
 			return n;
 		}
 
@@ -389,9 +389,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 					break;
 				}
 				default:
-					if (n.GetType() ==
-					    Type.GetType(
-						    "VRC.SDK3.Avatars.Components.VRCAnimatorPlayAudio, VRCSDK3A, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))
+					if (n.GetType() == Type.GetType("VRC.SDK3.Avatars.Components.VRCAnimatorPlayAudio, VRCSDK3A, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"))
 					{
 						dynamic a = n;
 						dynamic o = old;
@@ -496,7 +494,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			return null;
 		}
 
-		private static void CloneTransitions(AnimatorStateMachine old, AnimatorStateMachine n)
+		private static void CloneTransitions(AnimatorStateMachine old, AnimatorStateMachine n, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			List<AnimatorState> oldStates = GetStatesRecursive(old);
 			List<AnimatorState> newStates = GetStatesRecursive(n);
@@ -511,7 +509,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				{
 					AnimatorStateTransition newTransition = null;
 					if (transition.isExit && transition.destinationState == null &&
-					    transition.destinationStateMachine == null)
+						transition.destinationStateMachine == null)
 					{
 						newTransition = newStates[i].AddExitTransition();
 					}
@@ -529,21 +527,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 					}
 
 					if (newTransition != null)
+					{
 						ApplyTransitionSettings(transition, newTransition);
+						if(SaveAsSubasset != null && !SaveAsSubasset.Contains(newTransition))
+							SaveAsSubasset.Add(newTransition);
+					}
 				}
 			}
 
 			for (int i = 0; i < oldStateMachines.Count; i++)
 			{
-				if (oldAnimatorsByChildren.ContainsKey(oldStateMachines[i]) &&
-				    newAnimatorsByChildren.ContainsKey(newStateMachines[i]))
+				if (oldAnimatorsByChildren.ContainsKey(oldStateMachines[i]) && newAnimatorsByChildren.ContainsKey(newStateMachines[i]))
 				{
-					foreach (var transition in oldAnimatorsByChildren[oldStateMachines[i]]
-						         .GetStateMachineTransitions(oldStateMachines[i]))
+					foreach (var transition in oldAnimatorsByChildren[oldStateMachines[i]].GetStateMachineTransitions(oldStateMachines[i]))
 					{
 						AnimatorTransition newTransition = null;
-						if (transition.isExit && transition.destinationState == null &&
-						    transition.destinationStateMachine == null)
+						if (transition.isExit && transition.destinationState == null && transition.destinationStateMachine == null)
 						{
 							newTransition = newAnimatorsByChildren[newStateMachines[i]]
 								.AddStateMachineExitTransition(newStateMachines[i]);
@@ -552,32 +551,30 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 						{
 							var dstState = FindMatchingState(oldStates, newStates, transition);
 							if (dstState != null)
-								newTransition = newAnimatorsByChildren[newStateMachines[i]]
-									.AddStateMachineTransition(newStateMachines[i], dstState);
+								newTransition = newAnimatorsByChildren[newStateMachines[i]].AddStateMachineTransition(newStateMachines[i], dstState);
 						}
 						else if (transition.destinationStateMachine != null)
 						{
 							var dstState = FindMatchingStateMachine(oldStateMachines, newStateMachines, transition);
 							if (dstState != null)
-								newTransition = newAnimatorsByChildren[newStateMachines[i]]
-									.AddStateMachineTransition(newStateMachines[i], dstState);
+								newTransition = newAnimatorsByChildren[newStateMachines[i]].AddStateMachineTransition(newStateMachines[i], dstState);
 						}
 
 						if (newTransition != null)
+						{
 							ApplyTransitionSettings(transition, newTransition);
+							if(SaveAsSubasset != null && !SaveAsSubasset.Contains(newTransition))
+								SaveAsSubasset.Add(newTransition);
+						}
 					}
 				}
 
 				// Generate AnyState transitions
-				GenerateStateMachineBaseTransitions(oldStateMachines[i], newStateMachines[i], oldStates, newStates,
-					oldStateMachines, newStateMachines);
+				GenerateStateMachineBaseTransitions(oldStateMachines[i], newStateMachines[i], oldStates, newStates, oldStateMachines, newStateMachines, SaveAsSubasset);
 			}
 		}
 
-		private static void GenerateStateMachineBaseTransitions(AnimatorStateMachine old, AnimatorStateMachine n,
-			List<AnimatorState> oldStates,
-			List<AnimatorState> newStates, List<AnimatorStateMachine> oldStateMachines,
-			List<AnimatorStateMachine> newStateMachines)
+		private static void GenerateStateMachineBaseTransitions(AnimatorStateMachine old, AnimatorStateMachine n, List<AnimatorState> oldStates, List<AnimatorState> newStates, List<AnimatorStateMachine> oldStateMachines, List<AnimatorStateMachine> newStateMachines, List<UnityEngine.Object> SaveAsSubasset = null)
 		{
 			foreach (var transition in old.anyStateTransitions)
 			{
@@ -596,7 +593,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				}
 
 				if (newTransition != null)
+				{
 					ApplyTransitionSettings(transition, newTransition);
+					if(SaveAsSubasset != null && !SaveAsSubasset.Contains(newTransition))
+						SaveAsSubasset.Add(newTransition);
+				}
 			}
 
 			// Generate EntryState transitions
@@ -617,7 +618,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 				}
 
 				if (newTransition != null)
+				{
 					ApplyTransitionSettings(transition, newTransition);
+					if(SaveAsSubasset != null && !SaveAsSubasset.Contains(newTransition))
+						SaveAsSubasset.Add(newTransition);
+				}
 			}
 		}
 
