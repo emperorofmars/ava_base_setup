@@ -234,7 +234,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			AssetDatabase.AddObjectToAsset(avatar.expressionsMenu, outputHolder);
 
 			// Save other stuff like generated animations
-			foreach(var asset in setupState.UnityResourcesToStoreIfDesired.ToHashSet())
+			foreach(var asset in setupState.UnityResourcesToSave.ToHashSet())
 				AssetDatabase.AddObjectToAsset(asset, outputHolder);
 
 			avatar.baseAnimationLayers = animatorLayers;
@@ -253,7 +253,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				name = "All Parts",
 				stateMachine = new AnimatorStateMachine() { name = Name + " - All Parts" }
 			};
-			State.UnityResourcesToStoreIfDesired.Add(animatorLayer0.stateMachine);
+			State.UnityResourcesToSave.Add(animatorLayer0.stateMachine);
 			ret.AddLayer(animatorLayer0);
 			ret.AddParameter("GestureLeft", AnimatorControllerParameterType.Int);
 			ret.AddParameter("GestureLeftWeight", AnimatorControllerParameterType.Float);
@@ -261,7 +261,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			ret.AddParameter("GestureRightWeight", AnimatorControllerParameterType.Float);
 
 			foreach(var controller in State.Layers[Layer].Pre_FT)
-				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 
 			if(Setup.UseFaceTracking && State.Layers[Layer].FT.Count > 0)
 			{
@@ -273,16 +273,16 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						stateMachine = new AnimatorStateMachine { name = "Face Tracking Settings" },
 						defaultWeight = 1,
 					};
-					State.UnityResourcesToStoreIfDesired.Add(animatorLayer1.stateMachine);
+					State.UnityResourcesToSave.Add(animatorLayer1.stateMachine);
 					var stateFTOff = new AnimatorState { name = "FT Off", writeDefaultValues = true };
 					var stateOn = new AnimatorState { name = "On", writeDefaultValues = true };
 					var stateExpressionsOff = new AnimatorState { name = "Expressions Off", writeDefaultValues = true };
 					var stateOff = new AnimatorState { name = "Off", writeDefaultValues = true };
 
-					State.UnityResourcesToStoreIfDesired.Add(stateFTOff);
-					State.UnityResourcesToStoreIfDesired.Add(stateOn);
-					State.UnityResourcesToStoreIfDesired.Add(stateExpressionsOff);
-					State.UnityResourcesToStoreIfDesired.Add(stateOff);
+					State.UnityResourcesToSave.Add(stateFTOff);
+					State.UnityResourcesToSave.Add(stateOn);
+					State.UnityResourcesToSave.Add(stateExpressionsOff);
+					State.UnityResourcesToSave.Add(stateOff);
 
 					animatorLayer1.stateMachine.AddState(stateFTOff, new Vector3(200, 220));
 					animatorLayer1.stateMachine.AddState(stateOn, new Vector3(400, 100));
@@ -292,7 +292,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					void addTransition(AnimatorState SourceState, AnimatorStateTransition t)
 					{
 						SourceState.AddTransition(t);
-						State.UnityResourcesToStoreIfDesired.Add(t);
+						State.UnityResourcesToSave.Add(t);
 					}
 
 					addTransition(stateFTOff, new AnimatorStateTransition {
@@ -474,22 +474,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 
 				foreach(var controller in State.Layers[Layer].FT)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 				foreach(var controller in State.Layers[Layer].FT_React)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 				foreach(var controller in State.Layers[Layer].Mut)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 				foreach(var controller in State.Layers[Layer].Other)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 
 				return ret;
 			}
 			else if(State.Layers[Layer].Pre_FT.Count > 0 || State.Layers[Layer].Mut.Count > 0 || State.Layers[Layer].Other.Count > 0)
 			{
 				foreach(var controller in State.Layers[Layer].Mut)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 				foreach(var controller in State.Layers[Layer].Other)
-					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToStoreIfDesired);
+					ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 				return ret;
 			}
 			return null;
@@ -503,7 +503,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				behaviour.playable = Layer;
 				behaviour.layer = i;
 				behaviour.goalWeight = GoalWeight;
-				State.UnityResourcesToStoreIfDesired.Add(behaviour);
+				State.UnityResourcesToSave.Add(behaviour);
 			}
 		}
 	}

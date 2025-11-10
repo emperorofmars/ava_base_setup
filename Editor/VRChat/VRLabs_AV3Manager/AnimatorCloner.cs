@@ -197,6 +197,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 			if(AnimationCallback != null && motion is AnimationClip clip && clip != null)
 			{
 				newMotion = AnimationCallback(clip);
+				if(SaveAsSubasset != null && !SaveAsSubasset.Contains(newMotion))
+					SaveAsSubasset.Add(newMotion);
 			}
 
 			var n = new AnimatorState
@@ -283,6 +285,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager
 					if(AnimationCallback != null && child.motion is AnimationClip clip && clip != null)
 					{
 						newMotion = AnimationCallback(clip);
+						if(SaveAsSubasset != null && !SaveAsSubasset.Contains(newMotion))
+							SaveAsSubasset.Add(newMotion);
 					}
 					childMotion.motion = newMotion;
 				}

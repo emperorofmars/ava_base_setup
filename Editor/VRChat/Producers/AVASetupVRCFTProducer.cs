@@ -79,14 +79,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				var AnimationRepather = new System.Func<AnimationClip, AnimationClip>(SourceClip => {
 					var newClip = AnimationPathUtil.RepathClip(SourceClip, motionRetarget, motionMatch);
-					if(!setupState.UnityResourcesToStoreIfDesired.Contains(newClip)) setupState.UnityResourcesToStoreIfDesired.Add(newClip);
+					setupState.UnityResourcesToSave.Add(newClip);
 					return newClip;
 				});
 
-				setupState.Layers[4].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerFX, null, false, 1, AnimationRepather, setupState.UnityResourcesToStoreIfDesired));
+				setupState.Layers[4].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerFX, null, false, 1, AnimationRepather, setupState.UnityResourcesToSave));
 
 				var controllerGesture = AssetDatabase.LoadAssetAtPath<AnimatorController>(VRCFT_TEMPLATES_BASE_PATH + "Eye Rotation/Additive - Eye Tracking - Eye Rotation.controller");
-				setupState.Layers[1].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerGesture, null, false, 1, AnimationRepather, setupState.UnityResourcesToStoreIfDesired));
+				setupState.Layers[1].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerGesture, null, false, 1, AnimationRepather, setupState.UnityResourcesToSave));
 			}
 			catch(System.Exception e)
 			{
