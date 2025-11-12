@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
 
-using System.Linq;
 using com.squirrelbite.ava_base_setup.util;
 using UnityEditor;
 using UnityEditor.UIElements;

@@ -122,15 +122,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				animatorFX.name = "AVA Base Setup FX";
 
 				AssetDatabase.AddObjectToAsset(animatorFX, outputHolder);
-				/*foreach(var layer in animatorFX.layers)
-					if(!setupState.UnityResourcesToStoreIfDesired.Contains(layer.stateMachine)) setupState.UnityResourcesToStoreIfDesired.Add(layer.stateMachine);
-				foreach(var state in animatorFX.GetAnimatorStates())
-				{
-					if(!setupState.UnityResourcesToStoreIfDesired.Contains(state)) setupState.UnityResourcesToStoreIfDesired.Add(state);
-					//if(state.motion && !setupState.UnityResourcesToStoreIfDesired.Contains(state.motion)) setupState.UnityResourcesToStoreIfDesired.Add(state.motion);
-					foreach(var transition in state.transitions)
-						if(!setupState.UnityResourcesToStoreIfDesired.Contains(transition)) setupState.UnityResourcesToStoreIfDesired.Add(transition);
-				}*/
 			}
 			if(SetupLayer(Setup, setupState, 1, "Additive") is var animatorAdditive && animatorAdditive != null)
 			{
@@ -140,15 +131,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				animatorAdditive.name = "AVA Base Setup Additive";
 
 				AssetDatabase.AddObjectToAsset(animatorAdditive, outputHolder);
-				/*foreach(var layer in animatorAdditive.layers)
-					if(!setupState.UnityResourcesToStoreIfDesired.Contains(layer.stateMachine)) setupState.UnityResourcesToStoreIfDesired.Add(layer.stateMachine);
-				foreach(var state in animatorAdditive.GetAnimatorStates())
-				{
-					if(!setupState.UnityResourcesToStoreIfDesired.Contains(state)) setupState.UnityResourcesToStoreIfDesired.Add(state);
-					//if(state.motion && !setupState.UnityResourcesToStoreIfDesired.Contains(state.motion)) setupState.UnityResourcesToStoreIfDesired.Add(state.motion);
-					foreach(var transition in state.transitions)
-						if(!setupState.UnityResourcesToStoreIfDesired.Contains(transition)) setupState.UnityResourcesToStoreIfDesired.Add(transition);
-				}*/
 			}
 			// todo other layers perhaps?
 
@@ -165,18 +147,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var menuList = new List<VRCExpressionsMenu.Control>(setupState.AvatarMenuControls);
 			setupState.AvatarMenuControlsLast.Reverse();
 			menuList.AddRange(setupState.AvatarMenuControlsLast);
-			foreach(var control in menuList)
-				avatar.expressionsMenu.controls.Add(new() {
-					icon = control.icon,
-					labels = control.labels,
-					name = control.name,
-					parameter = control.parameter,
-					style = control.style,
-					subMenu = control.subMenu,
-					subParameters = control.subParameters,
-					type = control.type,
-					value = control.value
-				});
+			AVAVRCUtil.MergeMenuControls(menuList, avatar.expressionsMenu, true, setupState.UnityResourcesToSave);
 
 			// Merge submenus
 			foreach(var subMenu in setupState.AvatarSubMenuControls)
@@ -196,31 +167,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				if(targetMenu && targetControl != null)
 				{
 					var newSubmenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-					foreach(var control in targetMenu.controls)
-						newSubmenu.controls.Add(new() {
-							icon = control.icon,
-							labels = control.labels,
-							name = control.name,
-							parameter = control.parameter,
-							style = control.style,
-							subMenu = control.subMenu,
-							subParameters = control.subParameters,
-							type = control.type,
-							value = control.value
-						});
-
-					foreach(var control in subMenu.MenuControls)
-						newSubmenu.controls.Add(new() {
-							icon = control.icon,
-							labels = control.labels,
-							name = control.name,
-							parameter = control.parameter,
-							style = control.style,
-							subMenu = control.subMenu,
-							subParameters = control.subParameters,
-							type = control.type,
-							value = control.value
-						});
+					AVAVRCUtil.MergeMenuControls(targetMenu.controls, newSubmenu, true, setupState.UnityResourcesToSave);
+					AVAVRCUtil.MergeMenuControls(subMenu.MenuControls, newSubmenu, true, setupState.UnityResourcesToSave);
 					newSubmenu.name = targetMenu.name;
 					targetControl.subMenu = newSubmenu;
 					AssetDatabase.AddObjectToAsset(newSubmenu, outputHolder);

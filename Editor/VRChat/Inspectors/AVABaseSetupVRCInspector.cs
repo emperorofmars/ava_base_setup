@@ -19,13 +19,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		void OnEnable()
 		{
 			var c = (AVABaseSetupVRC)target;
-			SkinnedMeshRenderer ftMesh = null;
-			if(c.gameObject.TryGetComponent<AVASetupVRCFTProducer>(out var ftProducer))
-				ftMesh = ftProducer.FTMesh;
-			if(!ftMesh)
-				ftMesh = FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
-			if(ftMesh)
-				FTMatch = FTTypeMatcher.Match(ftMesh);
+			FTMatch = AVAVRCUtil.MatchFTType(c.gameObject);
 		}
 
 		public override VisualElement CreateInspectorGUI()
@@ -35,11 +29,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			Toolkit.AddElement(ui, new HelpBox("Base Setup for Avatar Animator Controllers with Face Tracking!\nLayers get toggled based on what functionality is enabled at runtime.\nCurrently mapped FX & Gesture Controllers, Parameters and Menus will be replaced!", HelpBoxMessageType.Info)).style.marginBottom = 10;
 
-#if AVA_BASE_SETUP_VRCFTTEMPLATES
-			bool isFTAvailable = true;
-#else
-			bool isFTAvailable = false;
-#endif
+			bool isFTAvailable = AVAVRCUtil.CheckVRCFTTemplates();
 
 			var p_UseFaceTracking = Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("UseFaceTracking")));
 			var p_FaceTrackingSetupType = new PropertyField(serializedObject.FindProperty("FaceTrackingSetupType"));

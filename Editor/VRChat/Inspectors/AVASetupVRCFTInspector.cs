@@ -1,8 +1,6 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
 
-using System.Collections.Generic;
-using System.Linq;
 using com.squirrelbite.ava_base_setup.util;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -22,11 +20,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		void OnEnable()
 		{
 			var c = (AVASetupVRCFTProducer)target;
-			SkinnedMeshRenderer ftMesh = c.FTMesh;
-			if(!ftMesh)
-				ftMesh = FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(c.transform).gameObject);
-			if(ftMesh)
-				FTMatch = FTTypeMatcher.Match(ftMesh);
+			FTMatch = AVAVRCUtil.MatchFTType(c.gameObject);
 		}
 
 		public override VisualElement CreateInspectorGUI()
