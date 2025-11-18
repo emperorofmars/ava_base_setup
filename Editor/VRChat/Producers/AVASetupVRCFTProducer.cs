@@ -1,11 +1,13 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
 
+using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
+using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDKBase;
 
@@ -22,6 +24,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public SkinnedMeshRenderer FTMesh;
 		public FT_Type FTType = FT_Type.Automatic;
+		public bool RemoveEyetrackingDrivers = false;
 
 		public override void Apply()
 		{
@@ -85,10 +88,16 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					return newClip;
 				});
 
-				setupState.Layers[4].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerFX, null, false, 1, AnimationRepather, setupState.UnityResourcesToSave));
+				var mergedFX = AnimatorCloner.MergeControllers(new AnimatorController(), controllerFX, null, false, 1, AnimationRepather, setupState.UnityResourcesToSave);
+				if(RemoveEyetrackingDrivers)
+					RemoveUnwantedDrivers<VRCAnimatorTrackingControl>(mergedFX, "Tracking_State", new() { "Eye Tracking Enabled", "Eye Tracking Disabled" });
+				setupState.Layers[4].FT.Add(mergedFX);
 
 				var controllerGesture = AssetDatabase.LoadAssetAtPath<AnimatorController>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Eye Rotation/Additive - Eye Tracking - Eye Rotation.controller");
-				setupState.Layers[1].FT.Add(AnimatorCloner.MergeControllers(new AnimatorController(), controllerGesture, null, false, 1, AnimationRepather, setupState.UnityResourcesToSave));
+				var mergedGesture = AnimatorCloner.MergeControllers(new AnimatorController(), controllerGesture, null, false, 1, AnimationRepather, setupState.UnityResourcesToSave);
+				if(RemoveEyetrackingDrivers)
+					RemoveUnwantedDrivers<VRCAnimatorTrackingControl>(mergedGesture, "Eye_Tracking_State", new() { "Native Eye Tracking", "VRCFT Eye Tracking" });
+				setupState.Layers[1].FT.Add(mergedGesture);
 			}
 			catch(System.Exception e)
 			{
@@ -98,6 +107,21 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 #else
 			Debug.LogWarning("FT_Setup: face tracking templates are not installed!");
 #endif
+		}
+
+		private static void RemoveUnwantedDrivers<T>(AnimatorController Controller, string LayerName, List<string> StateNames)
+		{
+			if(Controller.layers.FirstOrDefault(l => l.name == LayerName) is var layer && layer != null)
+				foreach(var state in layer.stateMachine.states)
+					if(StateNames.Contains(state.state.name))
+						for(int i = 0; i < state.state.behaviours.Length; i++)
+							if(state.state.behaviours[i] is T)
+							{
+								var behaviours = state.state.behaviours;
+								ArrayUtility.RemoveAt(ref behaviours, i);
+								state.state.behaviours = behaviours;
+								i--;
+							}
 		}
 	}
 }

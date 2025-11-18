@@ -183,7 +183,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			// Save other stuff like generated animations
 			foreach(var asset in setupState.UnityResourcesToSave.ToHashSet())
-				AssetDatabase.AddObjectToAsset(asset, outputHolder);
+				if(asset)
+					AssetDatabase.AddObjectToAsset(asset, outputHolder);
 
 			avatar.baseAnimationLayers = animatorLayers;
 

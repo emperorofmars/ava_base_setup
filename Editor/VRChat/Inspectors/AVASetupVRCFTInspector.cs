@@ -32,6 +32,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTMesh"), "Face Tracking MeshRenderer"));
 			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTType"), "Face Tracking Setup"));
+			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("RemoveEyetrackingDrivers"), "Remove Eyetracking Drivers"));
 
 			return ui;
 		}
