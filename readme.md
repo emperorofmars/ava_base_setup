@@ -22,18 +22,16 @@ If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA
 * Who is this for?\
 	Avatar base creators.
 * What does this mean for users?\
-	Always up do date VRCFT Templates & better performing avatars.
-* Is this useful if I make avatar addons? (Clothing, and what not)\
+	Always up do date face-tracking setup & better performance.
+* Is this useful if I make avatar addons? (Clothing and such)\
 	Nope, use ModularAvatar or VRCFury.
 * Does this replace or compete with ModularAvatar or VRCFury?\
 	Nope, these operate on top of the base setup created by this package.
 
-<!--
 ## Installation
 * VRChat Creator Companion: https://squirrelbite.github.io/vpm/
 * Unity Package Manager: `Window` -> `Package Manager` -> `+` -> `Add package from git URL...`
-Add the following URL: `https://github.com/emperorofmars/ava_base_setup.git#upm`
--->
+Add the following URL: `https://codeberg.org/emperorofmars/ava_base_setup.git#upm`
 
 ## License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
