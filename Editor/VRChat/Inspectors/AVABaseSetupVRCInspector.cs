@@ -69,7 +69,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				var foldout = Toolkit.AddElement(foldoutOuter, new Foldout {text = "<size=+3><font-weight=700>Animator Controller Setup</font-weight></size>", viewDataKey = "animator_controller_foldout"});
 				foldout.value = false;
 
-				Toolkit.AddList(foldout, serializedObject.FindProperty("LayerPreFT"), new Label("<size=+1><font-weight=700>Layers before Face Tracking (Always On)</font-weight></size>"));
+				{
+					var l = new Label("<size=+1><font-weight=700>Layers before Face Tracking (Always On)</font-weight></size>");
+					Toolkit.AddList(foldout, serializedObject.FindProperty("LayerPreFT"), l);
+					p_UseFaceTracking.RegisterValueChangeCallback(e => {
+						if(c.UseFaceTracking) l.text = "<size=+1><font-weight=700>Layers before Face Tracking (Always On)</font-weight></size>";
+						else l.text = "<size=+1><font-weight=700>Top Layers</font-weight></size>";
+					});
+				}
 
 				{
 					var outer = Toolkit.AddElement(foldout, new VisualElement());
@@ -119,9 +126,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					p_LayerFTReact.style.marginLeft = 10;
 				}
 
-				var p_LayerManualExpressions = Toolkit.AddList(foldout, serializedObject.FindProperty("LayerManualExpressions"), new Label("<size=+1><font-weight=700>Manual Expression Layers (Toggled)</font-weight></size>"));
-
-				var p_LayerPost = Toolkit.AddList(foldout, serializedObject.FindProperty("LayerPost"), new Label("<size=+1><font-weight=700>Bottom Layers (Always On)</font-weight></size>"));
+				{
+					var l = new Label("<size=+1><font-weight=700>Manual Expression Layers (Toggled)</font-weight></size>");
+					Toolkit.AddList(foldout, serializedObject.FindProperty("LayerManualExpressions"), l);
+					p_UseFaceTracking.RegisterValueChangeCallback(e => {
+						if(c.UseFaceTracking) l.text = "<size=+1><font-weight=700>Manual Expression Layers (Toggled)</font-weight></size>";
+						else l.text = "<size=+1><font-weight=700>Manual Expression Layers</font-weight></size>";
+					});
+				}
+				{
+					var l = new Label("<size=+1><font-weight=700>Bottom Layers (Always On)</font-weight></size>");
+					Toolkit.AddList(foldout, serializedObject.FindProperty("LayerPost"), l);
+					p_UseFaceTracking.RegisterValueChangeCallback(e => {
+						if(c.UseFaceTracking) l.text = "<size=+1><font-weight=700>Bottom Layers (Always On)</font-weight></size>";
+						else l.text = "<size=+1><font-weight=700>Bottom Layers</font-weight></size>";
+					});
+				}
 			}
 			{
 				var foldoutOuter = Toolkit.AddElement(ui, new Box());
@@ -136,8 +156,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				var box = Toolkit.AddElement(foldout, new VisualElement());
 				box.style.marginLeft = 10;
 				Toolkit.AddElement(box, new Label("<size=+1><font-weight=700>Menus & Parameters Toggled with Face Tracking</font-weight></size>"));
-				var p_AvatarMenusFaceTracking = Toolkit.AddList(box, serializedObject.FindProperty("AvatarMenusFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Menus</font-weight></size>"));
-				var p_AvatarParametersFaceTracking = Toolkit.AddList(box, serializedObject.FindProperty("AvatarParametersFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Parameters</font-weight></size>"));
+				Toolkit.AddList(box, serializedObject.FindProperty("AvatarMenusFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Menus</font-weight></size>"));
+				Toolkit.AddList(box, serializedObject.FindProperty("AvatarParametersFaceTracking"), new Label("<size=+1><font-weight=700>Face Tracking Parameters</font-weight></size>"));
 
 				void handle_ft_menu_params()
 				{
