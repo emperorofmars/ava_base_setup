@@ -13,13 +13,13 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	public enum FT_Type { Automatic = -1, UnifiedExpressions = 0, SRanipal = 1, ARKit = 2 };
+	public enum FT_Type { Automatic = -1, UnifiedExpressions = 0, UnifiedExpressionsTongueSteps = 1, SRanipal = 2, ARKit = 3 };
 
 	[AddComponentMenu("AVA/VRChat/Face Tracking Producer")]
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(AVABaseSetupVRC))]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
-	public class AVASetupVRCFTProducer : IAVAControllerProducer, IEditorOnly
+	public class AVAVRCFTProducer : IAVAControllerProducer, IEditorOnly
 	{
 
 		public SkinnedMeshRenderer FTMesh;
@@ -46,6 +46,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				{
 					controllerFX = AssetDatabase.LoadAssetAtPath<AnimatorController>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/FX - Face Tracking - UE Blendshapes.controller");
 					setupState.Parameters.AddRange(AssetDatabase.LoadAssetAtPath<VRCExpressionParameters>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/Parameters - Face Tracking - UE Blendshapes.asset").parameters.ToList());
+					menuFT = AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/Face Tracking Control - UE Blendshapes.asset");
+				}
+				else if(ftKind == (int)FT_Type.UnifiedExpressionsTongueSteps)
+				{
+					controllerFX = AssetDatabase.LoadAssetAtPath<AnimatorController>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/FX - Face Tracking - UE Blendshapes TongueSteps.controller");
+					setupState.Parameters.AddRange(AssetDatabase.LoadAssetAtPath<VRCExpressionParameters>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/Parameters - Face Tracking - UE Blendshapes TongueSteps.asset").parameters.ToList());
 					menuFT = AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/Face Tracking Control - UE Blendshapes.asset");
 				}
 				else if(ftKind == (int)FT_Type.SRanipal)

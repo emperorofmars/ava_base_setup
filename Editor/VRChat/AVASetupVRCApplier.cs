@@ -51,8 +51,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{
 				if(Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic)
 				{
-					if(!Setup.gameObject.TryGetComponent<AVASetupVRCFTProducer>(out var autoFT))
-						autoFT = Setup.gameObject.AddComponent<AVASetupVRCFTProducer>();
+					if(!Setup.gameObject.TryGetComponent<AVAVRCFTProducer>(out var autoFT))
+						autoFT = Setup.gameObject.AddComponent<AVAVRCFTProducer>();
 					autoFT.Apply();
 				}
 				else
