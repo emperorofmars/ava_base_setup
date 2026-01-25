@@ -1,6 +1,8 @@
 # Avatar Base Setup
 A small utility that sets up [VRCFT Templates](https://github.com/Adjerry91/VRCFaceTracking-Templates) and your own controllers in an intelligent-ish manner.
 
+🌰 **[Report Issues](https://codeberg.org/emperorofmars/ava_base_setup/issues)**
+
 Layers not in use will have their weight set to zero, omitting them from being processed by Unity. If a user doesn't use face-tracking, then there is no need to keep those layers enabled.
 
 * Animation repathing is supported
@@ -30,7 +32,7 @@ If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA
 
 ## Installation
 * VRChat Creator Companion: https://squirrelbite.github.io/vpm/
-* Unity Package Manager: `Window` -> `Package Manager` -> `+` -> `Add package from git URL...`
+* Unity Package Manager: `Window` → `Package Manager` → `+` → `Add package from git URL...`
 Add the following URL: `https://codeberg.org/emperorofmars/ava_base_setup.git#upm`
 
 ## License

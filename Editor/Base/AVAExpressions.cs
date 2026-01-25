@@ -13,7 +13,7 @@ namespace com.squirrelbite.ava_base_setup
 	}
 
 	[DisallowMultipleComponent]
-	[AddComponentMenu("AVA/Generic/Expressions")]
+	//[AddComponentMenu("AVA/Generic/Expressions")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVAExpressions : MonoBehaviour
 	{
