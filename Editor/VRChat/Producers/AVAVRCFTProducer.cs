@@ -13,7 +13,6 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	public enum FT_Type { Automatic = -1, UnifiedExpressions = 0, UnifiedExpressionsTongueSteps = 1, SRanipal = 2, ARKit = 3 };
 
 	[AddComponentMenu("AVA/VRChat/Face Tracking Producer")]
 	[DisallowMultipleComponent]
@@ -23,7 +22,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	{
 
 		public SkinnedMeshRenderer FTMesh;
-		public FT_Type FTType = FT_Type.Automatic;
+		public FT_Setup FTSetup = FT_Setup.Automatic;
+		public FT_Type FTType = FT_Type.Unknown;
 		public bool RemoveEyetrackingDrivers = false;
 
 		public override void Apply()
@@ -41,7 +41,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			try {
 				AnimatorController controllerFX;
 				VRCExpressionsMenu menuFT;
-				var ftKind = FTType == FT_Type.Automatic ? FTTypeMatcher.Match(FTMesh) : (int)FTType;
+				var ftKind = FTSetup == FT_Setup.Automatic ? FTTypeMatcher.Match(FTMesh) : (int)FTType;
 				if(ftKind == (int)FT_Type.UnifiedExpressions)
 				{
 					controllerFX = AssetDatabase.LoadAssetAtPath<AnimatorController>(AVAVRCUtil.VRCFT_TEMPLATES_BASE_PATH + "Unified Expressions Blendshapes/FX - Face Tracking - UE Blendshapes.controller");

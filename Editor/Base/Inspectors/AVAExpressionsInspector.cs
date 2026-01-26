@@ -41,8 +41,6 @@ namespace com.squirrelbite.ava_base_setup
 	{
 		static readonly Color SpacerColor = new(0.17f, 0.17f, 0.17f);
 
-		private int FTMatch = -1;
-
 		void OnEnable()
 		{
 		}

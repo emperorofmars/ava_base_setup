@@ -50,7 +50,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				void handleHelp()
 				{
-					if(c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic) p_helpBox.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					if(c.UseFaceTracking && c.FaceTrackingSetupType == FT_Setup.Automatic) p_helpBox.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
 					else p_helpBox.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 				}
 				handleHelp();
@@ -106,7 +106,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 					void handle_ft()
 					{
-						if (c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
+						if (c.UseFaceTracking && c.FaceTrackingSetupType == FT_Setup.Manual)
 						{
 							l_ftInfo.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 							p_LayerFT.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
@@ -161,7 +161,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 				void handle_ft_menu_params()
 				{
-					if(c.UseFaceTracking && c.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual) box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+					if(c.UseFaceTracking && c.FaceTrackingSetupType == FT_Setup.Manual) box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
 					else box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
 				}
 				handle_ft_menu_params();

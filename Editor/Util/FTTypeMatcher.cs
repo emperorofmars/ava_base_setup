@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace com.squirrelbite.ava_base_setup
 {
-	public enum FT_Type { UnifiedExpressions = 0, UnifiedExpressionsTongueSteps = 1, SRanipal = 2, ARKit = 4 };
+	public enum FT_Type { Unknown = -1, UnifiedExpressions = 0, UnifiedExpressionsTongueSteps = 1, SRanipal = 2, ARKit = 4 };
+	public enum FT_Setup { Automatic, Manual };
 
 	public static class FTTypeMatcher
 	{
@@ -34,7 +35,7 @@ namespace com.squirrelbite.ava_base_setup
 			}
 			if(MatchArray(ARKit, Smr) is var matchARKit && matchSRanipal > bestMatch)
 				matchKind = (int)FT_Type.ARKit;
-			
+
 			if(matchKind == (int)FT_Type.UnifiedExpressions && MatchArray(UnifiedExpressionsTongueSteps, Smr) is var matchTongeSteps && matchTongeSteps == 1)
 				matchKind = (int)FT_Type.UnifiedExpressionsTongueSteps;
 

@@ -13,8 +13,6 @@ using VRC.SDKBase.Editor.BuildPipeline;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	public enum AVA_FT_Setup_Type { Automatic, Manual };
-
 	[System.Serializable]
 	public class AVAExpressionsMenuTarget
 	{
@@ -26,7 +24,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVABaseSetupVRC : AVABaseSetup, IEditorOnly
 	{
-		public AVA_FT_Setup_Type FaceTrackingSetupType = AVA_FT_Setup_Type.Automatic;
+		public FT_Setup FaceTrackingSetupType = FT_Setup.Automatic;
 		public List<VRCExpressionsMenu> AvatarMenus = new();
 		public List<AVAExpressionsMenuTarget> AvatarSubMenus = new();
 		public List<VRCExpressionsMenu> AvatarMenusFaceTracking = new();

@@ -29,12 +29,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				setupState.AvatarMenuControls.AddRange(menu.controls);
 			foreach(var subMenu in Setup.AvatarSubMenus)
 				setupState.AvatarSubMenuControls.Add(new() { Target = subMenu.Target, MenuControls = new List<VRCExpressionsMenu.Control>(subMenu.Menu.controls) });
-			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
+			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == FT_Setup.Manual)
 				foreach(var menu in Setup.AvatarMenusFaceTracking)
 					setupState.AvatarMenuControls.AddRange(menu.controls);
 			foreach(var parameter in Setup.AvatarParameters)
 				setupState.Parameters.AddRange(parameter.parameters);
-			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Manual)
+			if(Setup.UseFaceTracking && Setup.FaceTrackingSetupType == FT_Setup.Manual)
 				foreach(var parameter in Setup.AvatarParametersFaceTracking)
 					setupState.Parameters.AddRange(parameter.parameters);
 
@@ -49,7 +49,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			// Run setup for all layers
 			if(Setup.UseFaceTracking)
 			{
-				if(Setup.FaceTrackingSetupType == AVA_FT_Setup_Type.Automatic)
+				if(Setup.FaceTrackingSetupType == FT_Setup.Automatic)
 				{
 					if(!Setup.gameObject.TryGetComponent<AVAVRCFTProducer>(out var autoFT))
 						autoFT = Setup.gameObject.AddComponent<AVAVRCFTProducer>();
