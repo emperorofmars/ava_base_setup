@@ -18,9 +18,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(AVABaseSetupVRC))]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
-	public class AVAVRCFTProducer : IAVAControllerProducer, IEditorOnly
+	public class AVAFaceTrackingProducerVRC : IAVAControllerProducer, IEditorOnly
 	{
-
 		public SkinnedMeshRenderer FTMesh;
 		public FT_Setup FTSetup = FT_Setup.Automatic;
 		public FT_Type FTType = FT_Type.Unknown;

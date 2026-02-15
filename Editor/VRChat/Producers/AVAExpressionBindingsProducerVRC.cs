@@ -6,9 +6,65 @@ using System.Collections.ObjectModel;
 using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
+using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
+	public enum TriggerIntensity { None = 0, Left = 1, Right = 2 };
+	public enum HandDominance { Explicit, Left, Right };
+	public enum HandGesture { None, Fist, Open, Point, Peace, RockNRoll, Gun, ThumbsUp };
+
+	[System.Serializable]
+	public class AvatarExpressionBinding
+	{
+		public string Expression;
+		public HandGesture GuestureLeftHand = HandGesture.None;
+		public HandGesture GuestureRightHand = HandGesture.None;
+		public TriggerIntensity UseTriggerIntensity = TriggerIntensity.None;
+	}
+
+	/// <summary>
+	/// Opinionated base setup for VR & V-Tubing avatar expressions.
+	/// </summary>
+	[AddComponentMenu("AVA/VRChat/Expression Bindings Producer")]
+	[DisallowMultipleComponent]
+	[RequireComponent(typeof(AVABaseSetupVRC))]
+	[RequireComponent(typeof(AVAExpressionsVRC))]
+	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
+	public class AVAExpressionBindingsProducerVRC : IAVAControllerProducer, IEditorOnly
+	{
+		public HandDominance HandDominance = HandDominance.Right;
+		public List<AvatarExpressionBinding> ExpressionBindings = new();
+
+		public bool CreateEyeJoystickPuppet = true;
+
+		// TODO Toggles, JoystickPuppets, Other stuff, here or in a set of other components
+
+		public void InitBindings()
+		{
+			var expressions = GetComponent<AVAExpressions>();
+			foreach(var expression in expressions.Expressions)
+			{
+				// Set default bindings
+				// TODO vastly expand this logic
+				switch (expression.Expression)
+				{
+					case "smile": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureLeftHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Left }); break;
+					case "blep": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureRightHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Right }); break;
+					case "sad": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureLeftHand = HandGesture.Gun }); break;
+					case "angry": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureLeftHand = HandGesture.RockNRoll }); break;
+					default: ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression }); break;
+				}
+			}
+		}
+
+		public override void Apply()
+		{
+			AVAExpressionBindingsVRCApplier.Apply(this);
+		}
+	}
+
+
 	public static class AVAExpressionBindingsVRCApplier
 	{
 		public static readonly ReadOnlyDictionary<HandGesture, int> HandGestureToParameterIndex = new(new Dictionary<HandGesture, int>()
@@ -23,7 +79,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{ HandGesture.ThumbsUp, 7 },
 		});
 
-		public static void Apply(AVAExpressionBindingsVRCProducer Setup, bool WriteToDisk = false)
+		public static void Apply(AVAExpressionBindingsProducerVRC Setup, bool WriteToDisk = false)
 		{
 			var avatar = Setup.gameObject.GetComponent<VRCAvatarDescriptor>();
 			var setupState = Setup.GetComponent<AVASetupStateVRC>();
@@ -53,7 +109,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return animatorFX;
 		}
 
-		private static AnimatorState AddSingleSideHandGestureState(AVAExpressionBindingsVRCProducer Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
+		private static AnimatorState AddSingleSideHandGestureState(AVAExpressionBindingsProducerVRC Setup, AnimatorControllerLayer Layer, HandGesture Gesture, bool IsLeft, string OverrideGestureName = null)
 		{
 			var state = new AnimatorState { name = string.IsNullOrWhiteSpace(OverrideGestureName) ? Gesture.ToString() : OverrideGestureName, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(300, 60 * HandGestureToParameterIndex[Gesture], 0));
@@ -74,7 +130,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return state;
 		}
 
-		private static AnimatorState AddHandGestureState(AVAExpressionBindingsVRCProducer Setup, AnimatorControllerLayer Layer, AnimatorState Idle, HandGesture GestureLeft, HandGesture GestureRight, string Name, int Index)
+		private static AnimatorState AddHandGestureState(AVAExpressionBindingsProducerVRC Setup, AnimatorControllerLayer Layer, AnimatorState Idle, HandGesture GestureLeft, HandGesture GestureRight, string Name, int Index)
 		{
 			var state = new AnimatorState { name = Name, writeDefaultValues = true, timeParameterActive = true };
 			Layer.stateMachine.AddState(state, new Vector3(550, 60 * Index, 0));
@@ -101,7 +157,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return state;
 		}
 
-		private static void SetupEmotes(AVAExpressionBindingsVRCProducer Setup, AnimatorController animatorFX)
+		private static void SetupEmotes(AVAExpressionBindingsProducerVRC Setup, AnimatorController animatorFX)
 		{
 			var layerHandLeft = new AnimatorControllerLayer { name = "Left Hand", stateMachine = new AnimatorStateMachine(), defaultWeight = 1 };
 			{
@@ -172,7 +228,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 		}
 	}
-
 }
 
 #endif

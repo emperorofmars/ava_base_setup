@@ -54,7 +54,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public static int MatchFTType(GameObject Root)
 		{
 			SkinnedMeshRenderer ftMesh = null;
-			if(Root.TryGetComponent<AVAVRCFTProducer>(out var ftProducer))
+			if(Root.TryGetComponent<AVAFaceTrackingProducerVRC>(out var ftProducer))
 				ftMesh = ftProducer.FTMesh;
 			if(!ftMesh)
 				ftMesh = FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(Root.transform).gameObject);

@@ -22,7 +22,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 	[AddComponentMenu("AVA/VRChat/AVA Base Setup")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
-	public class AVABaseSetupVRC : AVABaseSetup, IEditorOnly
+	public class AVABaseSetupVRC : IAVABaseSetup, IEditorOnly
 	{
 		public FT_Setup FaceTrackingSetupType = FT_Setup.Automatic;
 		public List<VRCExpressionsMenu> AvatarMenus = new();

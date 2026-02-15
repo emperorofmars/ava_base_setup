@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
 
-	[CustomEditor(typeof(AVAVRCFTProducer))]
+	[CustomEditor(typeof(AVAFaceTrackingProducerVRC))]
 	public class AVAVRCFTInspector : Editor
 	{
 		static readonly Color SpacerColor = new(0.17f, 0.17f, 0.17f);
@@ -19,13 +19,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		void OnEnable()
 		{
-			var c = (AVAVRCFTProducer)target;
+			var c = (AVAFaceTrackingProducerVRC)target;
 			FTMatch = AVAVRCUtil.MatchFTType(c.gameObject);
 		}
 
 		public override VisualElement CreateInspectorGUI()
 		{
-			var c = (AVAVRCFTProducer)target;
+			var c = (AVAFaceTrackingProducerVRC)target;
 			VisualElement ui = new();
 
 			Toolkit.AddElement(ui, FTMatch >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)FTMatch).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning));

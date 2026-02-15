@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[CustomEditor(typeof(AVAExpressionBindingsVRCProducer))]
+	[CustomEditor(typeof(AVAExpressionBindingsProducerVRC))]
 	public class AVAExpressionBindingsVRCInspector : Editor
 	{
 		static readonly Color SpacerColor = new(0.17f, 0.17f, 0.17f);
@@ -20,7 +20,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public override VisualElement CreateInspectorGUI()
 		{
-			var c = (AVAExpressionBindingsVRCProducer)target;
+			var c = (AVAExpressionBindingsProducerVRC)target;
 			VisualElement ui = new();
 
 			var l = Toolkit.AddElement(ui, new Label("<size=+1><font-weight=700>Bind Avatar Expressions to Hand-Gestures</font-weight></size>"));

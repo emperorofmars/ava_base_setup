@@ -30,7 +30,7 @@ namespace com.squirrelbite.ava_base_setup
 	[DisallowMultipleComponent]
 	//[AddComponentMenu("AVA/Generic/AVA Base Setup")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
-	public abstract class AVABaseSetup : MonoBehaviour
+	public abstract class IAVABaseSetup : MonoBehaviour
 	{
 		public bool UseFaceTracking = true;
 
