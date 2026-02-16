@@ -99,7 +99,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					var ftLayerHolder = Toolkit.AddElement(box, new VisualElement());
 					ftLayerHolder.style.marginLeft = 10;
 
-					var l_ftInfo = Toolkit.AddElement(ftLayerHolder, new HelpBox("Face Tracking Setup will be handled automatically", HelpBoxMessageType.Info));
+					var l_ftInfo = Toolkit.AddElement(ftLayerHolder, new HelpBox("The face tracking setup will be handled, by the <b>FaceTrackingProducer</b> Component", HelpBoxMessageType.Info));
 					l_ftInfo.style.marginBottom = 5;
 
 					var p_LayerFT = Toolkit.AddList(ftLayerHolder, serializedObject.FindProperty("LayerFT"));

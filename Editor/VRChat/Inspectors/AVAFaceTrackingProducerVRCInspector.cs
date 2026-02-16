@@ -9,9 +9,8 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-
 	[CustomEditor(typeof(AVAFaceTrackingProducerVRC))]
-	public class AVAVRCFTInspector : Editor
+	public class AVAFaceTrackingProducerVRCInspector : Editor
 	{
 		static readonly Color SpacerColor = new(0.17f, 0.17f, 0.17f);
 
@@ -30,9 +29,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			Toolkit.AddElement(ui, FTMatch >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)FTMatch).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning));
 
-			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTMesh"), "Face Tracking MeshRenderer"));
-			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTSetup"), "Face Tracking Setup"));
-			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTType"), "Face Tracking Type"));
+			var p_setup = Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTSetup"), "Face Tracking Setup"));
+			var p_type = Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTType"), "Face Tracking Type"));
+			var p_mesh = Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("FTMesh"), "Face Tracking MeshRenderer"));
+
+			void handle() {
+				if(c.FTSetup == FT_Setup.Automatic)
+					p_type.style.display = p_mesh.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+				else
+					p_type.style.display = p_mesh.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+			};
+
+			p_setup.RegisterValueChangeCallback(e => {
+				handle();
+			});
+			handle();
+
 			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("RemoveEyetrackingDrivers"), "Remove Eyetracking Drivers"));
 
 			return ui;
