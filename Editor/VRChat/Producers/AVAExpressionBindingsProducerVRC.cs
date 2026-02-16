@@ -95,12 +95,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		private static AnimatorController SetupBaseFX()
 		{
 			var animatorFX = new AnimatorController { name = "FX" };
-			var animatorFXLayer0 = new AnimatorControllerLayer
-			{
-				name = "All Parts",
-				stateMachine = new AnimatorStateMachine()
-			};
-			animatorFX.AddLayer(animatorFXLayer0);
 			animatorFX.AddParameter("GestureLeft", AnimatorControllerParameterType.Int);
 			animatorFX.AddParameter("GestureLeftWeight", AnimatorControllerParameterType.Float);
 			animatorFX.AddParameter("GestureRight", AnimatorControllerParameterType.Int);
