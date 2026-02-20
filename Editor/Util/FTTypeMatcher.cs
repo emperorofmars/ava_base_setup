@@ -16,7 +16,7 @@ namespace com.squirrelbite.ava_base_setup
 			SkinnedMeshRenderer match = null;
 			foreach(var candidate in Root.GetComponentsInChildren<SkinnedMeshRenderer>())
 			{
-				if(candidate.name.ToLower() == "body" && match == null || AnimationPathUtil.GetParentDepth(match.transform) > AnimationPathUtil.GetParentDepth(candidate.transform))
+				if(candidate.name.ToLower() == "body" && (match == null || AnimationPathUtil.GetParentDepth(match.transform) > AnimationPathUtil.GetParentDepth(candidate.transform)))
 					match = candidate;
 			}
 			return match;
