@@ -30,6 +30,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public List<VRCExpressionsMenu> AvatarMenusFaceTracking = new();
 		public List<VRCExpressionParameters> AvatarParameters = new();
 		public List<VRCExpressionParameters> AvatarParametersFaceTracking = new();
+		public bool UseLayerWeightDrivers = true;
 	}
 
 

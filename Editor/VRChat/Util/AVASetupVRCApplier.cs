@@ -214,7 +214,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			if(Setup.UseFaceTracking && State.Layers[Layer].FT.Count > 0)
 			{
-				if(Layer == 4)
+				if(Layer == 4 && Setup.UseLayerWeightDrivers)
 				{
 					var animatorLayer1 = new AnimatorControllerLayer
 					{

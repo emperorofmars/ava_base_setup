@@ -38,6 +38,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				box.Add(p_FaceTrackingSetupType);
 				HelpBox p_helpBox = Toolkit.AddElement(ui, FTMatch >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)FTMatch).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning));
 
+				Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("UseLayerWeightDrivers")));
+
 				void handleBox()
 				{
 					if(c.UseFaceTracking) box.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
