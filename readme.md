@@ -31,7 +31,7 @@ If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA
 	Nope, these operate on top of the base setup created by this package.
 
 ## Installation
-* VRChat Creator Companion: https://squirrelbite.github.io/vpm/
+* VRChat Creator Companion: https://vpm.squirrelbite.com/
 * Unity Package Manager: `Window` → `Package Manager` → `+` → `Add package from git URL...`
 Add the following URL: `https://codeberg.org/emperorofmars/ava_base_setup.git#upm`
 
