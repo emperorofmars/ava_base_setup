@@ -38,6 +38,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			public List<VRCExpressionsMenu.Control> MenuControls = new();
 		}
 
+		public enum LogicLayer { Top, FaceTracking, FaceTrackingReact, Expressions, After, Additive }
+
 		public bool FaceTrackingEnabled = false;
 		public bool UseLayerWeightDrivers = false;
 

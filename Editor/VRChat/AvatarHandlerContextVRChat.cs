@@ -41,6 +41,20 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			State.MenuControls.Add((TargetPath, Order, MenuControl));
 		}
 
+		public void RegisterController(VRCAvatarDescriptor.AnimLayerType Layer, SetupStateVRC.LogicLayer Order, AnimatorController Controller)
+		{
+			var layer = State.GetLayer(Layer);
+			switch(Order)
+			{
+				case SetupStateVRC.LogicLayer.Top: layer.ControllersPre.Add(Controller); break;
+				case SetupStateVRC.LogicLayer.FaceTracking: layer.ControllersFaceTracking.Add(Controller); break;
+				case SetupStateVRC.LogicLayer.FaceTrackingReact: layer.ControllersFaceTrackingReact.Add(Controller); break;
+				case SetupStateVRC.LogicLayer.Expressions: layer.ControllersExpression.Add(Controller); break;
+				case SetupStateVRC.LogicLayer.After: layer.ControllersAfter.Add(Controller); break;
+				case SetupStateVRC.LogicLayer.Additive: layer.ControllersAdditive.Add(Controller); break;
+			}
+		}
+
 	}
 }
 
