@@ -17,6 +17,22 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	{
 	}
 
+	public static class InitAvatarBaseSetupVRChat
+	{
+		public static AvatarBaseSetupVRChat Init(VRCAvatarDescriptor Avatar)
+		{
+			var baseSetup = Avatar.gameObject.GetComponentInChildren<AvatarBaseSetupVRChat>();
+			if(!baseSetup)
+			{
+				var baseSetupGo = new GameObject("Avatar Base Setup");
+				baseSetupGo.transform.SetParent(Avatar.gameObject.transform);
+				baseSetup = baseSetupGo.AddComponent<AvatarBaseSetupVRChat>();
+				while(UnityEditorInternal.ComponentUtility.MoveComponentUp(baseSetup));
+			}
+			return baseSetup;
+		}
+	}
+
 	[InitializeOnLoad]
 	public class AvatarSetupVRChatCallback : IVRCSDKPreprocessAvatarCallback
 	{
