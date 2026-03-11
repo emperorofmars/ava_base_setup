@@ -2,6 +2,7 @@
 
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace com.squirrelbite.ava_base_setup.util
@@ -33,6 +34,16 @@ namespace com.squirrelbite.ava_base_setup.util
 
 			Container.Add(outer);
 			return outer;
+		}
+
+		public static VisualElement AddSpacer(VisualElement Container)
+		{
+			var spacer = Toolkit.AddElement(Container, new VisualElement());
+			spacer.style.marginTop = 10;
+			spacer.style.borderBottomWidth = 5;
+			spacer.style.marginBottom = 5;
+			spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));
+			return spacer;
 		}
 	}
 }

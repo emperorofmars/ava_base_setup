@@ -1,9 +1,7 @@
 {
-    "name": "ava_base_setup_editor",
+    "name": "ava_base_setup_runtime",
     "rootNamespace": "com.squirrelbite.ava_base_setup",
-    "references": [
-        "GUID:1dedfb4c92e4181948fbbfadf66dd074"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

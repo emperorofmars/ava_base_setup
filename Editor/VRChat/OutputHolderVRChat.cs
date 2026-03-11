@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace com.squirrelbite.ava_base_setup
 {
-	public abstract class IAVAControllerProducer : MonoBehaviour
+	public class OutputHolderVRChat : ScriptableObject
 	{
-		public abstract void Apply();
 	}
+
 }
 
 #endif

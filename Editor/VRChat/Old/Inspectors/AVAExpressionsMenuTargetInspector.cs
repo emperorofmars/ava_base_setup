@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[CustomPropertyDrawer(typeof(AVAExpressionsMenuTarget))]
+	[CustomPropertyDrawer(typeof(VRCExpressionsMenuTarget))]
 	public class AVAExpressionsMenuTargetDrawer : PropertyDrawer
 	{
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)

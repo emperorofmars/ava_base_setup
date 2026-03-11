@@ -6,7 +6,7 @@ using UnityEngine;
 namespace com.squirrelbite.ava_base_setup
 {
 	[System.Serializable]
-	public class AvatarExpression
+	public class AvatarExpressionOld
 	{
 		public string Expression = "";
 		public AnimationClip Animation = null;
@@ -17,7 +17,7 @@ namespace com.squirrelbite.ava_base_setup
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVAExpressions : MonoBehaviour
 	{
-		public List<AvatarExpression> Expressions = new();
+		public List<AvatarExpressionOld> Expressions = new();
 	}
 }
 

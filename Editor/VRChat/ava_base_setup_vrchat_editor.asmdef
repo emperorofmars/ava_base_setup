@@ -2,6 +2,7 @@
     "name": "ava_base_setup_vrchat_editor",
     "rootNamespace": "com.squirrelbite.ava_base_setup.vrchat",
     "references": [
+        "GUID:1dedfb4c92e4181948fbbfadf66dd074",
         "GUID:0e8855e3cbcc4bd4b92433dafa6fee67",
         "GUID:3456780c4fb2d324ab9c633d6f1b0ddb",
         "GUID:5718fb738711cd34ea54e9553040911d",

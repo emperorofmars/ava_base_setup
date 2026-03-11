@@ -25,12 +25,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public FT_Type FTType = FT_Type.Unknown;
 		public bool RemoveEyetrackingDrivers = false;
 
-		public override void Apply()
+		public override void Apply(GameObject Root)
 		{
 #if AVA_BASE_SETUP_VRCFTTEMPLATES
-			var setupState = gameObject.GetComponent<AVASetupStateVRC>();
+			var setupState = Root.GetComponent<AVASetupStateVRC>();
 
-			FTMesh = FTMesh != null ? FTMesh : FTTypeMatcher.DetectFaceMesh(AnimationPathUtil.GetRoot(transform).gameObject);
+			FTMesh = FTMesh != null ? FTMesh : FTTypeMatcher.DetectFaceMesh(Root);
 			if(FTMesh == null)
 			{
 				Debug.LogError("FT_Setup: Could not determine SkinnedMeshRenderer for face tracking!");

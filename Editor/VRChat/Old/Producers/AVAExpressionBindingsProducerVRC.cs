@@ -58,9 +58,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 		}
 
-		public override void Apply()
+		public override void Apply(GameObject Root)
 		{
-			AVAExpressionBindingsVRCApplier.Apply(this);
+			AVAExpressionBindingsVRCApplier.Apply(Root, this);
 		}
 	}
 
@@ -79,7 +79,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{ HandGesture.ThumbsUp, 7 },
 		});
 
-		public static void Apply(AVAExpressionBindingsProducerVRC Setup, bool WriteToDisk = false)
+		public static void Apply(GameObject Root, AVAExpressionBindingsProducerVRC Setup, bool WriteToDisk = false)
 		{
 			var avatar = Setup.gameObject.GetComponent<VRCAvatarDescriptor>();
 			var setupState = Setup.GetComponent<AVASetupStateVRC>();
