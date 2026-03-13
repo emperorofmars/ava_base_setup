@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace com.squirrelbite.ava_base_setup
+namespace com.squirrelbite.ava_base_setup.oooold
 {
 	public class AVAOutputHolder : ScriptableObject
 	{

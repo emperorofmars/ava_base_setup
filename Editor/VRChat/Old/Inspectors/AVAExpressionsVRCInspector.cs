@@ -1,12 +1,13 @@
 #if UNITY_EDITOR
 #if AVA_BASE_SETUP_VRCHAT
 
+using com.squirrelbite.ava_base_setup.oooold;
 using com.squirrelbite.ava_base_setup.util;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 
 	[CustomEditor(typeof(AVAExpressionsVRC))]
@@ -39,7 +40,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			v.reorderMode = ListViewReorderMode.Animated;
 			v.showBorder = true;
 			v.showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly;
-			
+
 			v.itemsSource = c.Expressions;
 
 			v.itemsAdded += (e) => {

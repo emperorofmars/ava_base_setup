@@ -13,7 +13,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[AddComponentMenu("AVA/VRChat/Avatar Setup")]
 	[DisallowMultipleComponent]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
-	public class AvatarBaseSetupVRChat : IAVABaseSetup, IEditorOnly
+	public class AvatarBaseSetupVRChat : MonoBehaviour, IEditorOnly
 	{
 	}
 

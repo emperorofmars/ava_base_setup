@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	public static class AVAConstantsVRC
 	{

@@ -9,12 +9,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[AddComponentMenu("AVA/VRChat/Expression Bindings")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	[DisallowMultipleComponent]
-	[RequireComponent(typeof(AVAExpressionsVRC))]
+	[RequireComponent(typeof(AvatarExpressionsVRC))]
 	public class AvatarExpressionBindingsVRC : AvatarExpressionBindings, IEditorOnly
 	{
 		public void InitBindings()
 		{
-			var expressions = GetComponent<AVAExpressions>();
+			var expressions = GetComponent<AvatarExpressionsVRC>();
 			foreach(var expression in expressions.Expressions)
 			{
 				// Set default bindings

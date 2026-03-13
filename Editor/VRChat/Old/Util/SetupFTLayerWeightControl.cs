@@ -6,7 +6,7 @@ using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDKBase;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	public static class SetupFTLayerWeightControl
 	{

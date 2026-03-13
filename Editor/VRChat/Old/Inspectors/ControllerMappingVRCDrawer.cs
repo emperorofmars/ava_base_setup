@@ -2,11 +2,12 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using System.Linq;
+using com.squirrelbite.ava_base_setup.oooold;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	[CustomPropertyDrawer(typeof(ControllerMapping))]
 	public class ControllerMappingVRCDrawer : PropertyDrawer

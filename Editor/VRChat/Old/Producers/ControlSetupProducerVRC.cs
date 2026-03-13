@@ -2,10 +2,11 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using System.Collections.Generic;
+using com.squirrelbite.ava_base_setup.oooold;
 using UnityEngine;
 using VRC.SDKBase;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	[AddComponentMenu("AVA/VRChat/Control Setup Producer")]
 	[RequireComponent(typeof(AVABaseSetupVRC))]

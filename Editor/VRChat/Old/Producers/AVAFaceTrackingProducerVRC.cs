@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using com.squirrelbite.ava_base_setup.oooold;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -11,7 +12,7 @@ using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDKBase;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 
 	[AddComponentMenu("AVA/VRChat/Face Tracking Producer")]

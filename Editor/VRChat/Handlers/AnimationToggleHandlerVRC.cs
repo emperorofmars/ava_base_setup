@@ -33,10 +33,10 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				blendType = BlendTreeType.Simple1D,
 				blendParameter = ToParam(toggleBehaviour)
 			};
-			blendtree.AddChild(toggleBehaviour.Off ? toggleBehaviour.Off : AssetDatabase.LoadAssetAtPath<AnimationClip>(AVAConstantsVRC.ASSET_PATH + "_Empty.anim"), new Vector2(0, 0));
-			blendtree.AddChild(toggleBehaviour.On ? toggleBehaviour.On : AssetDatabase.LoadAssetAtPath<AnimationClip>(AVAConstantsVRC.ASSET_PATH + "_Empty.anim"), new Vector2(1, 0));
+			blendtree.AddChild(toggleBehaviour.Off ? toggleBehaviour.Off : AssetDatabase.LoadAssetAtPath<AnimationClip>(Constants.ASSET_PATH + "_Empty.anim"), new Vector2(0, 0));
+			blendtree.AddChild(toggleBehaviour.On ? toggleBehaviour.On : AssetDatabase.LoadAssetAtPath<AnimationClip>(Constants.ASSET_PATH + "_Empty.anim"), new Vector2(1, 0));
 
-			Context.RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType.FX, blendtree, true);
+			Context.RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType.FX, blendtree, toggleBehaviour.IsOverridable);
 			Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, parameter, 0, true);
 			Context.RegisterMenu("Toggles", 0, new VRCExpressionsMenu.Control {
 				name = toggleBehaviour.Name,

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace com.squirrelbite.ava_base_setup
+namespace com.squirrelbite.ava_base_setup.oooold
 {
 	[System.Serializable]
 	public class ControllerMapping

@@ -6,7 +6,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.ScriptableObjects;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	// To be added during build time, and removed after.
 	// Holds the manually added and programmatically produced controllers which are to be combined.

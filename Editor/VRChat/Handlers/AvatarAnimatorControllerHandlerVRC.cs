@@ -25,6 +25,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			if(controllerBehaviour.Controller)
 				Context.RegisterController(controllerBehaviour.VRChatLayer, controllerBehaviour.Order, controllerBehaviour.Controller);
+			if(controllerBehaviour.Menu)
+				foreach(var control in controllerBehaviour.Menu.controls)
+					Context.RegisterMenu("", 0, control); // todo vastly improve this
+			if(controllerBehaviour.Parameters)
+				Context.RegisterParameters(controllerBehaviour.Parameters.parameters.ToList());
 		}
 
 		public override List<(string Parameter, VRCExpressionParameters.ValueType ValueType)> GetParameters(IAvatarBehaviour Behaviour)

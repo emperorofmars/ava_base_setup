@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	[CustomEditor(typeof(AVAExpressionBindingsProducerVRC))]
 	public class AVAExpressionBindingsVRCInspector : Editor

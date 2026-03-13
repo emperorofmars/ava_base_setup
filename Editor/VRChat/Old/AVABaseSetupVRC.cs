@@ -2,13 +2,14 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using System.Collections.Generic;
+using com.squirrelbite.ava_base_setup.oooold;
 using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDKBase;
 using VRC.SDKBase.Editor.BuildPipeline;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	[System.Serializable]
 	public class VRCExpressionsMenuTarget

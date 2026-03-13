@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.squirrelbite.ava_base_setup
+namespace com.squirrelbite.ava_base_setup.oooold
 {
 	[CustomPropertyDrawer(typeof(AvatarExpressions))]
 	public class AvatarExpressionDrawer : PropertyDrawer

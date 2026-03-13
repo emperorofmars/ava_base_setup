@@ -3,12 +3,13 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using com.squirrelbite.ava_base_setup.oooold;
 using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDKBase;
 
-namespace com.squirrelbite.ava_base_setup.vrchat
+namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
 	public enum TriggerIntensity { None = 0, Left = 1, Right = 2 };
 	public enum HandDominance { Explicit, Left, Right };
