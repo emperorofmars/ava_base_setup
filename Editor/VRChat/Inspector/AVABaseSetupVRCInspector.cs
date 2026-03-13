@@ -50,7 +50,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						var box = Toolkit.AddElement(behaviourList, new Box());
 						box.style.marginTop = box.style.marginBottom = 5;
 						box.style.paddingTop = box.style.paddingBottom = box.style.paddingLeft = 5;
-						var behaviourLabel = Toolkit.AddElement(box, new Label($"<font-weight=700>{handler.Label}</font-weight>: {behaviour.Name}"));
+						var behaviourLabel = Toolkit.AddElement(box, new Label($"<font-weight=700>{handler.Label}</font-weight>{(!string.IsNullOrWhiteSpace(behaviour.Name) ? ": " + behaviour.Name : "")}"));
 						behaviourLabel.style.marginBottom = 5;
 
 						var parameters = handler.GetParameters(behaviour);
@@ -58,12 +58,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						{
 							allParameters.AddRange(parameters);
 
-							Toolkit.AddElement(box, new Label($"{parameters.Count} Parameter{(parameters.Count > 1 ? "s" : "")}"));
-							var paramBox = Toolkit.AddElement(box, new VisualElement());
+							var foldout = Toolkit.AddElement(box, new Foldout{ text = $"{parameters.Count} Parameter{(parameters.Count > 1 ? "s" : "")}", value = false, viewDataKey = $"ava_base_behaviour_parameters_{behaviour.name}_{behaviour.Name}" });
+							var paramBox = Toolkit.AddElement(foldout, new VisualElement());
 							paramBox.style.marginLeft = 10;
-							foreach(var parameter in parameters)
+							foreach(var (Parameter, ValueType) in parameters)
 							{
-								Toolkit.AddElement(paramBox, new Label($"<size=-2>{parameter.Parameter}: {parameter.ValueType} ({(parameter.ValueType == VRCExpressionParameters.ValueType.Bool ? 1 : 8)} Bit)</size>"));
+								Toolkit.AddElement(paramBox, new Label($"<size=-2>{Parameter}: {ValueType} ({(ValueType == VRCExpressionParameters.ValueType.Bool ? 1 : 8)} Bit)</size>"));
 							}
 						}
 

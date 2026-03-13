@@ -74,7 +74,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				if(!controllerFX || !parameters || !menuFT)
 					return;
 
-				Context.RegisterParameters(parameters.parameters.ToList());
+				Context.RegisterParameters(parameters);
 
 				var motionMatch = "Body";
 				var motionRetarget = AnimationPathUtil.GetPath(Context.Avatar.transform, FTMesh.transform, true);

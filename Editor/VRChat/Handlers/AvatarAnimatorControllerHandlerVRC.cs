@@ -29,7 +29,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				foreach(var control in controllerBehaviour.Menu.controls)
 					Context.RegisterMenu("", 0, control); // todo vastly improve this
 			if(controllerBehaviour.Parameters)
-				Context.RegisterParameters(controllerBehaviour.Parameters.parameters.ToList());
+				Context.RegisterParameters(controllerBehaviour.Parameters);
 		}
 
 		public override List<(string Parameter, VRCExpressionParameters.ValueType ValueType)> GetParameters(IAvatarBehaviour Behaviour)

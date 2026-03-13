@@ -2,6 +2,7 @@
 #if AVA_BASE_SETUP_VRCHAT
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
@@ -11,9 +12,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 {
 	public class AvatarHandlerContextVRChat
 	{
-		public VRCAvatarDescriptor Avatar { get; private set; }
-		public AvatarBaseSetupVRChat Setup { get; private set; }
-		private SetupStateVRC State;
+		public readonly VRCAvatarDescriptor Avatar;
+		public readonly AvatarBaseSetupVRChat Setup;
+		private readonly SetupStateVRC State;
 
 		public AvatarHandlerContextVRChat(VRCAvatarDescriptor Avatar, AvatarBaseSetupVRChat Setup, SetupStateVRC State)
 		{
@@ -39,6 +40,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public void RegisterParameters(List<VRCExpressionParameters.Parameter> Parameters)
 		{
 			State.Parameters.AddRange(Parameters);
+		}
+
+		public void RegisterParameters(VRCExpressionParameters Parameters)
+		{
+			State.Parameters.AddRange(Parameters.parameters.ToList());
 		}
 
 		public void RegisterMenu(string TargetPath, int Order, VRCExpressionsMenu.Control MenuControl)
