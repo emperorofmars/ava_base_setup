@@ -35,6 +35,20 @@ If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA
 * Unity Package Manager: `Window` → `Package Manager` → `+` → `Add package from git URL...`
 Add the following URL: `https://codeberg.org/emperorofmars/ava_base_setup.git#upm`
 
+Please open issues for any bugs or misbehavior you notice. Feel free to open issues for feature requests.
+
+## Contributing
+Human made contributions via pull-requests are welcome.
+
+### Guidelines
+* Any form of LLM contribution is prohibited, this also includes issues and PRs.
+* Please open an issue first for larger changes.
+
+### Development
+* Clone the repository into the `Packages` directory of a Unity 2022.3+ project set up with the VRChat SDK for Avatars.
+* Preferably setup Unity to use VSCode with the [recommended extensions](./.vscode/extensions.json).
+* Use Unity to open the C# project.
+
 ## License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
 

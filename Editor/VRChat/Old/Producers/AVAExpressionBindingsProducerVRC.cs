@@ -47,13 +47,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{
 				// Set default bindings
 				// TODO vastly expand this logic
-				switch (expression.Expression)
+				switch (expression.Mapping)
 				{
-					case "smile": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureLeftHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Left }); break;
-					case "blep": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureRightHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Right }); break;
-					case "sad": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureLeftHand = HandGesture.Gun }); break;
-					case "angry": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression, GuestureLeftHand = HandGesture.RockNRoll }); break;
-					default: ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Expression }); break;
+					case "smile": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureLeftHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Left }); break;
+					case "blep": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureRightHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Right }); break;
+					case "sad": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureLeftHand = HandGesture.Gun }); break;
+					case "angry": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureLeftHand = HandGesture.RockNRoll }); break;
+					default: ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping }); break;
 				}
 			}
 		}
@@ -115,7 +115,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			if (Setup.ExpressionBindings.Find(b => IsLeft ? b.GuestureLeftHand == Gesture && b.GuestureRightHand == HandGesture.None : b.GuestureRightHand == Gesture && b.GuestureLeftHand == HandGesture.None) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Expression))
 			{
-				if (expressions.Expressions.Find(e => e.Expression == emoteBinding.Expression) is var emote && emote != null)
+				if (expressions.Expressions.Find(e => e.Mapping == emoteBinding.Expression) is var emote && emote != null)
 				{
 					state.motion = emote.Animation;
 					state.timeParameter = emoteBinding.UseTriggerIntensity > 0 ? emoteBinding.UseTriggerIntensity == TriggerIntensity.Left ? "GestureLeftWeight" : "GestureRightWeight" : null;
@@ -142,7 +142,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			if (Setup.ExpressionBindings.Find(b => b.GuestureLeftHand == GestureLeft && b.GuestureRightHand == GestureRight) is var emoteBinding && emoteBinding != null && !string.IsNullOrWhiteSpace(emoteBinding.Expression))
 			{
-				if (expressions.Expressions.Find(e => e.Expression == emoteBinding.Expression) is var emote && emote != null)
+				if (expressions.Expressions.Find(e => e.Mapping == emoteBinding.Expression) is var emote && emote != null)
 				{
 					state.motion = emote.Animation;
 					state.timeParameter = emoteBinding.UseTriggerIntensity > 0 ? emoteBinding.UseTriggerIntensity == TriggerIntensity.Left ? "GestureLeftWeight" : "GestureRightWeight" : null;

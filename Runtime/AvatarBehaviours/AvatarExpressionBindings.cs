@@ -9,20 +9,20 @@ namespace com.squirrelbite.ava_base_setup
 	[DisallowMultipleComponent]
 	public class AvatarExpressionBindings : IAvatarBehaviour
 	{
-		public enum EnumTriggerIntensity { None = 0, Left = 1, Right = 2 };
-		public enum EnumHandDominance { Explicit, Left, Right };
-		public enum EnumHandGesture { None, Fist, Open, Point, Peace, RockNRoll, Gun, ThumbsUp };
+		public enum TriggerIntensity { None = 0, Left = 1, Right = 2 };
+		public enum HandDominance { Explicit, Left, Right };
+		public enum HandGesture { None, Fist, Open, Point, Peace, RockNRoll, Gun, ThumbsUp };
 
 		[System.Serializable]
 		public class AvatarExpressionBinding
 		{
 			public string Expression;
-			public EnumHandGesture GuestureLeftHand = EnumHandGesture.None;
-			public EnumHandGesture GuestureRightHand = EnumHandGesture.None;
-			public EnumTriggerIntensity UseTriggerIntensity = EnumTriggerIntensity.None;
+			public HandGesture GuestureLeftHand = HandGesture.None;
+			public HandGesture GuestureRightHand = HandGesture.None;
+			public TriggerIntensity UseTriggerIntensity = TriggerIntensity.None;
 		}
 
-		public EnumHandDominance HandDominance = EnumHandDominance.Right;
+		public HandDominance UseHandDominance = HandDominance.Right;
 		public List<AvatarExpressionBinding> ExpressionBindings = new();
 	}
 }

@@ -9,8 +9,26 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[AddComponentMenu("AVA/VRChat/Expression Bindings")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	[DisallowMultipleComponent]
+	[RequireComponent(typeof(AVAExpressionsVRC))]
 	public class AvatarExpressionBindingsVRC : AvatarExpressionBindings, IEditorOnly
 	{
+		public void InitBindings()
+		{
+			var expressions = GetComponent<AVAExpressions>();
+			foreach(var expression in expressions.Expressions)
+			{
+				// Set default bindings
+				// TODO vastly expand this logic
+				switch (expression.Mapping)
+				{
+					case "smile": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureLeftHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Left }); break;
+					case "blep": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureRightHand = HandGesture.Fist, UseTriggerIntensity = TriggerIntensity.Right }); break;
+					case "sad": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureLeftHand = HandGesture.Gun }); break;
+					case "angry": ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping, GuestureLeftHand = HandGesture.RockNRoll }); break;
+					default: ExpressionBindings.Add(new AvatarExpressionBinding() { Expression = expression.Mapping }); break;
+				}
+			}
+		}
 	}
 }
 

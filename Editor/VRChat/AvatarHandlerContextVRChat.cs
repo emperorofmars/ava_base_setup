@@ -53,11 +53,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public void RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType Layer, string Parameter, float Default, bool Saved)
 		{
-			State.Parameters.Add(new VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionParameters.Parameter {
+			State.Parameters.Add(new VRCExpressionParameters.Parameter {
 				name = Parameter,
 				defaultValue = Default,
 				saved = Saved,
-				valueType = VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionParameters.ValueType.Bool
+				valueType = VRCExpressionParameters.ValueType.Bool
 			});
 			State.GetLayer(Layer).ControllerParameters.Add((Parameter, AnimatorControllerParameterType.Float));
 		}

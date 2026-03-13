@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace com.squirrelbite.ava_base_setup
 {
-	[CustomPropertyDrawer(typeof(AvatarExpression))]
+	[CustomPropertyDrawer(typeof(AvatarExpressions))]
 	public class AvatarExpressionDrawer : PropertyDrawer
 	{
 		public override VisualElement CreatePropertyGUI(SerializedProperty property)
