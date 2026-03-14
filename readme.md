@@ -5,7 +5,7 @@ A small utility that sets up [VRCFT Templates](https://github.com/Adjerry91/VRCF
 
 Layers not in use will have their weight set to zero, omitting them from being processed by Unity. If a user doesn't use face-tracking, then there is no need to keep those layers enabled.
 
-* Animation repathing is supported
+* Animation repathing for the VRCFT templates is supported
 * Works with or without ModularAvatar and VRCFury
 * Non-destructive, automatically runs on VRChat upload
 * Setup can be applied in advance. Your users won't have to install this package, if you include the output in your `.unitypackage`.
@@ -17,8 +17,6 @@ Layers not in use will have their weight set to zero, omitting them from being p
 * Split up your animator controllers, menus and parameters into appropriate pieces.
 * For each partial controller, create a `AVA/VRChat/Behaviours/Animator Controller` Component and reference the relevant bits there.
 * Profit!
-
-If the mesh with the face-tracking blendshapes is not named `Body`, add the `AVA/VRChat/Face Tracking Producer` component and specify the face mesh.
 
 ## FAQ
 * Who is this for?\
