@@ -4,10 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using com.squirrelbite.ava_base_setup.util;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 
@@ -153,6 +155,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 								state.state.behaviours = behaviours;
 								i--;
 							}
+		}
+
+		public override VisualElement CreateGUI(IAvatarBehaviour Behaviour)
+		{
+			var ftBehaviour = Behaviour as FaceTrackingVRC;
+
+			var ftKind = ftBehaviour.FTSetup == FT_Setup.Automatic ? FTTypeMatcher.Match(ftBehaviour.FTMesh) : (int)ftBehaviour.FTType;
+
+			return ftKind >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)ftKind).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning);
 		}
 	}
 }
