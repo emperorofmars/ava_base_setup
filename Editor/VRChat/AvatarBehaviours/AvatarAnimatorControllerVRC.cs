@@ -8,7 +8,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[AddComponentMenu("AVA/VRChat/Animator Controller")]
+	[AddComponentMenu("AVA/VRChat/Behaviours/Animator Controller")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AvatarAnimatorControllerVRC : AvatarAnimatorController, IEditorOnly
 	{

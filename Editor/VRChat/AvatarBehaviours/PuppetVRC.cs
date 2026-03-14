@@ -6,7 +6,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[AddComponentMenu("AVA/VRChat/Puppet")]
+	[AddComponentMenu("AVA/VRChat/Behaviours/Puppet")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class PuppetVRC : Puppet, IEditorOnly
 	{

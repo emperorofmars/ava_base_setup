@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
-	[AddComponentMenu("AVA/VRChat/Expressions")]
+	[AddComponentMenu("")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVAExpressionsVRC : AVAExpressions, VRC.SDKBase.IEditorOnly
 	{

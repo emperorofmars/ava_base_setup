@@ -27,7 +27,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 	/// <summary>
 	/// Opinionated base setup for VR & V-Tubing avatar expressions.
 	/// </summary>
-	[AddComponentMenu("AVA/VRChat/Expression Bindings Producer")]
+	[AddComponentMenu("")]
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(AVABaseSetupVRC))]
 	[RequireComponent(typeof(AVAExpressionsVRC))]

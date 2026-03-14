@@ -19,17 +19,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var state = new SetupStateVRC();
 			var context = new AvatarHandlerContextVRChat(Avatar, Setup, state);
 
-			// TODO
-			/*if(Setup.UseFaceTracking)
-			{
-				if(Setup.FaceTrackingSetupType == FT_Setup.Automatic)
-				{
-					if(!Setup.gameObject.TryGetComponent<AVAFaceTrackingProducerVRC>(out var autoFT))
-						autoFT = Setup.gameObject.AddComponent<AVAFaceTrackingProducerVRC>();
-					autoFT.Apply(Root.gameObject);
-				}
-			}*/
-
 			foreach(var handler in AvatarHandlerRegistryVRChat.Handlers)
 			{
 				foreach(IAvatarBehaviour behaviour in Setup.GetComponentsInChildren(handler.HandlesBehaviour).Cast<IAvatarBehaviour>())

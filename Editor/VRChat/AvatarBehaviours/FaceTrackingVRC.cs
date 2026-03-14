@@ -6,7 +6,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[AddComponentMenu("AVA/VRChat/Face Tracking")]
+	[AddComponentMenu("AVA/VRChat/Behaviours/Face Tracking")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	[DisallowMultipleComponent]
 	public class FaceTrackingVRC : IAvatarBehaviour, IEditorOnly

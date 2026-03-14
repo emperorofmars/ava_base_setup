@@ -6,7 +6,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[AddComponentMenu("AVA/VRChat/Expression Bindings")]
+	[AddComponentMenu("AVA/VRChat/Behaviours/Expression Bindings")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(AvatarExpressionsVRC))]

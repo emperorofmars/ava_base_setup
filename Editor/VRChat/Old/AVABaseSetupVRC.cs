@@ -18,7 +18,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 		public VRCExpressionsMenu Menu;
 	}
 
-	[AddComponentMenu("AVA/VRChat/AVA Base Setup")]
+	[AddComponentMenu("")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AVABaseSetupVRC : IAVABaseSetup, IEditorOnly
 	{

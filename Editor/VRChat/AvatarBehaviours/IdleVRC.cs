@@ -6,7 +6,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[AddComponentMenu("AVA/VRChat/Idle")]
+	[AddComponentMenu("AVA/VRChat/Behaviours/Idle")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class IdleVRC : Idle, IEditorOnly
 	{

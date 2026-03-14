@@ -8,7 +8,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat.oooold
 {
-	[AddComponentMenu("AVA/VRChat/Control Setup Producer")]
+	[AddComponentMenu("")]
 	[RequireComponent(typeof(AVABaseSetupVRC))]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class ControlSetupProducerVRC : IAVAControllerProducer, IEditorOnly
