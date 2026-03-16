@@ -55,9 +55,10 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			State.Menus[target].MenuControls[Order].Add(MenuControl);
 		}
 
-		public void RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType Layer, BlendTree Blendtree, bool Overridable, string Parameter = null)
+		public void RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType Layer, BlendTree Blendtree, bool Overridable, string Parameter = "_weight")
 		{
 			(Overridable ? State.GetLayer(Layer).DirectBlendPre : State.GetLayer(Layer).DirectBlendAfter).Add((Blendtree, Parameter));
+			State.GetLayer(Layer).ControllerParameters.Add((Parameter, AnimatorControllerParameterType.Float));
 		}
 
 		public void RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType Layer, string Parameter, VRCExpressionParameters.ValueType ValueType, float Default, bool Saved)

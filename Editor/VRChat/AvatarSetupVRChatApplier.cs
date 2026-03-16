@@ -179,20 +179,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			};
 			State.UnityResourcesToSave.Add(animatorLayer0.stateMachine);
 			ret.AddLayer(animatorLayer0);
-			var _weight = "_weight";
-			ret.AddParameter(new AnimatorControllerParameter {
-				name = _weight,
-				type = AnimatorControllerParameterType.Float,
-				defaultFloat = 1,
-			});
 			foreach(var (Name, Type) in State.GetLayer(Layer).ControllerParameters)
-			{
 				if(ret.parameters.FirstOrDefault(p => p.name == Name) == null)
 					ret.AddParameter(Name, Type);
-			}
 
 			if(Layer == VRCAvatarDescriptor.AnimLayerType.FX && State.GetLayer(Layer).DirectBlendPre.Count > 0)
-				ret = AnimatorCloner.MergeControllers(ret, MergeDirectBlendTrees(State, State.GetLayer(Layer).DirectBlendPre, "DirectBlend Pre", _weight), null, false, 0, null, State.UnityResourcesToSave);
+				ret = AnimatorCloner.MergeControllers(ret, MergeDirectBlendTrees(State, State.GetLayer(Layer).DirectBlendPre, "DirectBlend Pre"), null, false, 0, null, State.UnityResourcesToSave);
 
 			foreach(var controller in State.GetLayer(Layer).ControllersPre)
 				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
@@ -212,7 +204,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
 
 			if(Layer == VRCAvatarDescriptor.AnimLayerType.FX && State.GetLayer(Layer).DirectBlendAfter.Count > 0)
-				ret = AnimatorCloner.MergeControllers(ret, MergeDirectBlendTrees(State, State.GetLayer(Layer).DirectBlendAfter, "DirectBlend After", _weight), null, false, 0, null, State.UnityResourcesToSave);
+				ret = AnimatorCloner.MergeControllers(ret, MergeDirectBlendTrees(State, State.GetLayer(Layer).DirectBlendAfter, "DirectBlend After"), null, false, 0, null, State.UnityResourcesToSave);
 
 			foreach(var controller in State.GetLayer(Layer).ControllersAfter)
 				ret = AnimatorCloner.MergeControllers(ret, controller, null, false, 0, null, State.UnityResourcesToSave);
@@ -222,7 +214,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return ret;
 		}
 
-		private static AnimatorController MergeDirectBlendTrees(SetupStateVRC State, List<(BlendTree Blendtree, string Parameter)> Blendtrees, string Name, string WeightParam)
+		private static AnimatorController MergeDirectBlendTrees(SetupStateVRC State, List<(BlendTree Blendtree, string Parameter)> Blendtrees, string Name)
 		{
 			var ret = new AnimatorController { name = Name };
 			var animatorLayer = new AnimatorControllerLayer
@@ -244,7 +236,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			{
 				childMotions.Add(new ChildMotion {
 					motion = Blendtree,
-					directBlendParameter = Parameter ?? WeightParam,
+					directBlendParameter = Parameter,
 					timeScale = 1,
 				});
 			}
