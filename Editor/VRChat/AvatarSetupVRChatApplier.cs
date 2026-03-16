@@ -90,43 +90,58 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			AV3ManagerFunctions.AddParameters(Avatar, State.Parameters, null, true, true);
 			AssetDatabase.AddObjectToAsset(Avatar.expressionParameters, outputHolder);
 
-			// Merge top level menus
+
+			// Merge top level menu
 			Avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
 			Avatar.expressionsMenu.name = "Menu Root";
-			/*var menuList = new List<VRCExpressionsMenu.Control>(State.AvatarMenuControls);
-			State.AvatarMenuControlsLast.Reverse();
-			menuList.AddRange(State.AvatarMenuControlsLast);
-			AVAVRCUtil.MergeMenuControls(menuList, Avatar.expressionsMenu, true, State.UnityResourcesToSave);
+			if(Setup.BaseMenu && Setup.BaseMenu.controls != null)
+				AVAVRCUtil.MergeMenuControls(Setup.BaseMenu.controls, Avatar.expressionsMenu, true, State.UnityResourcesToSave);
 
-			// Merge submenus
-			foreach(var subMenu in State.AvatarSubMenuControls)
+			// Merge registered menu controls
+			foreach(var (target, menuControls) in State.Menus)
 			{
-				if(string.IsNullOrWhiteSpace(subMenu.Target) || subMenu.MenuControls == null || subMenu.MenuControls.Count == 0) continue;
-				var targetPath = subMenu.Target.Split("/");
+				if(string.IsNullOrEmpty(target) || target == "/")
+				{
+					var sortedRoot = menuControls.MenuControls.ToList().OrderBy(c => c.Key).SelectMany(c => c.Value).ToList();
+					AVAVRCUtil.MergeMenuControls(sortedRoot, Avatar.expressionsMenu, true, State.UnityResourcesToSave);
+					continue;
+				}
+				var targetPath = target.Split("/");
 				VRCExpressionsMenu.Control targetControl = null;
 				VRCExpressionsMenu targetMenu = Avatar.expressionsMenu;
 				foreach(var targetPathElement in targetPath)
 				{
-					if(targetMenu.controls.Find(c => c.type == VRCExpressionsMenu.Control.ControlType.SubMenu && c.name == targetPathElement) is var next && next != null && next.subMenu != null)
+					var next = targetMenu.controls.Find(c => c.type == VRCExpressionsMenu.Control.ControlType.SubMenu && c.name.ToLower() == targetPathElement.ToLower());
+					if(next != null && next.subMenu != null)
 					{
 						targetControl = next;
 						targetMenu = next.subMenu;
 					}
+					else
+					{
+						targetControl = new VRCExpressionsMenu.Control {
+							type = VRCExpressionsMenu.Control.ControlType.SubMenu,
+							name = targetPathElement,
+							subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>()
+						};
+						targetControl.subMenu.name = targetPathElement;
+						targetMenu.controls.Add(targetControl);
+						targetMenu = targetControl.subMenu;
+					}
 				}
-				if(targetMenu && targetControl != null)
+				if(!targetMenu || targetControl == null)
 				{
-					var newSubmenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-					AVAVRCUtil.MergeMenuControls(targetMenu.controls, newSubmenu, true, State.UnityResourcesToSave);
-					AVAVRCUtil.MergeMenuControls(subMenu.MenuControls, newSubmenu, true, State.UnityResourcesToSave);
-					newSubmenu.name = targetMenu.name;
-					targetControl.subMenu = newSubmenu;
-					AssetDatabase.AddObjectToAsset(newSubmenu, outputHolder);
+					Debug.LogWarning("Invalid target path for submenu: " + target);
+					continue;
 				}
-				else
-				{
-					Debug.LogWarning("Invalid target path for submenu: " + subMenu.Target);
-				}
-			}*/
+				var sorted = menuControls.MenuControls.ToList().OrderBy(c => c.Key).SelectMany(c => c.Value).ToList();
+				var newSubmenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
+				AVAVRCUtil.MergeMenuControls(targetMenu.controls, newSubmenu, true, State.UnityResourcesToSave);
+				AVAVRCUtil.MergeMenuControls(sorted, newSubmenu, true, State.UnityResourcesToSave);
+				newSubmenu.name = targetMenu.name;
+				targetControl.subMenu = newSubmenu;
+				AssetDatabase.AddObjectToAsset(newSubmenu, outputHolder);
+			}
 
 			if(Avatar.expressionsMenu)
 				AssetDatabase.AddObjectToAsset(Avatar.expressionsMenu, outputHolder);

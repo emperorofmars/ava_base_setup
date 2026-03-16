@@ -7,6 +7,7 @@ using VRC.SDKBase;
 using VRC.SDKBase.Editor.BuildPipeline;
 using VRC.SDK3.Avatars.Components;
 using System.Linq;
+using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
@@ -15,6 +16,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AvatarBaseSetupVRChat : MonoBehaviour, IEditorOnly
 	{
+		public VRCExpressionsMenu BaseMenu;
 	}
 
 	public static class InitAvatarBaseSetupVRChat

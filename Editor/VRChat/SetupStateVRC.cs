@@ -32,11 +32,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		}
 
 		[System.Serializable]
-		public class MenuControlVRC
+		public class MenuVRC
 		{
-			public string Target;
-			public List<VRCExpressionsMenu.Control> MenuControls = new();
+			public Dictionary<int, List<VRCExpressionsMenu.Control>> MenuControls = new();
 		}
+
 
 		public enum LogicLayer { Top, FaceTracking, FaceTrackingReact, Expressions, After, Additive }
 
@@ -54,7 +54,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		}
 
 		public List<VRCExpressionParameters.Parameter> Parameters = new();
-		public List<(string TargetPath, int Order, VRCExpressionsMenu.Control MenuControl)> MenuControls = new();
+		public Dictionary<string, MenuVRC> Menus = new();
 
 		public List<Object> UnityResourcesToSave = new();
 

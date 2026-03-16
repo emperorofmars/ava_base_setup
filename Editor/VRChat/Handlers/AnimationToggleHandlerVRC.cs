@@ -38,7 +38,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			Context.RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType.FX, blendtree, toggleBehaviour.IsOverridable);
 			Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, parameter, 0, true);
-			Context.RegisterMenu("Toggles", 0, new VRCExpressionsMenu.Control {
+			Context.RegisterMenuControl("Toggles", 0, new VRCExpressionsMenu.Control {
 				name = toggleBehaviour.Name,
 				icon = toggleBehaviour.Icon,
 				parameter = new VRCExpressionsMenu.Control.Parameter {

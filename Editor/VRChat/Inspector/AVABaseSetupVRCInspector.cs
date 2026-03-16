@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.squirrelbite.ava_base_setup.util;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VRC.SDK3.Avatars.Components;
@@ -31,6 +32,10 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			VisualElement ui = new();
 
 			Toolkit.AddElement(ui, new Label("<size=+2><font-weight=700>VRChat Avatar Base Setup</font-weight></size>"));
+
+			Toolkit.AddSpacer(ui);
+
+			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("BaseMenu")));
 
 			Toolkit.AddSpacer(ui);
 

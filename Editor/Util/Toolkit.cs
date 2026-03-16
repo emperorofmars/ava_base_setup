@@ -38,8 +38,8 @@ namespace com.squirrelbite.ava_base_setup.util
 
 		public static VisualElement AddSpacer(VisualElement Container)
 		{
-			var spacer = Toolkit.AddElement(Container, new VisualElement());
-			spacer.style.marginTop = 10;
+			var spacer = AddElement(Container, new VisualElement());
+			spacer.style.marginTop = 5;
 			spacer.style.borderBottomWidth = 5;
 			spacer.style.marginBottom = 5;
 			spacer.style.borderBottomColor = new StyleColor(new Color(0.17f, 0.17f, 0.17f));

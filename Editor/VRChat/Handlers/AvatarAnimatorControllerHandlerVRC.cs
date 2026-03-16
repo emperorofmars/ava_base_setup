@@ -27,7 +27,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				Context.RegisterController(controllerBehaviour.VRChatLayer, controllerBehaviour.Order, controllerBehaviour.Controller);
 			if(controllerBehaviour.Menu)
 				foreach(var control in controllerBehaviour.Menu.controls)
-					Context.RegisterMenu("", 0, control); // todo vastly improve this
+					Context.RegisterMenuControl("", 0, control); // todo vastly improve this
 			if(controllerBehaviour.Parameters)
 				Context.RegisterParameters(controllerBehaviour.Parameters);
 		}

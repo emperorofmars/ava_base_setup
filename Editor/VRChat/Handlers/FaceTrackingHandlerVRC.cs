@@ -94,7 +94,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				});
 
 				foreach(var control in tmpMenu.controls)
-					Context.RegisterMenu("", 1000, control);
+					Context.RegisterMenuControl("", 1000, control);
 
 				var AnimationRepather = new System.Func<AnimationClip, AnimationClip>(SourceClip => {
 					var newClip = AnimationPathUtil.RepathClip(SourceClip, motionRetarget, motionMatch);
