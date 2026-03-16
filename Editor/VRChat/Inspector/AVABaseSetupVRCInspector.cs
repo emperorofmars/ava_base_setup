@@ -37,15 +37,23 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("BaseMenu")));
 
+			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("BaseParameters")));
+
 			Toolkit.AddSpacer(ui);
 
 			var behaviourListParentParent = Toolkit.AddElement(ui, new VisualElement());
-
 			var behaviourListParent = new VisualElement();
 
 			void drawBehaviours()
 			{
+				var behaviourHeader = new VisualElement();
 				var allParameters = new List<(string Parameter, VRCExpressionParameters.ValueType ValueType)>();
+				if(c.BaseParameters && c.BaseParameters.parameters != null && c.BaseParameters.parameters.Count() > 0)
+				{
+					Toolkit.AddElement(behaviourHeader, new Label($"{c.BaseParameters.parameters.Count()} Base Parameters ({c.BaseParameters.CalcTotalCost()} Bits)"));
+					foreach(var param in c.BaseParameters.parameters)
+						allParameters.Add((param.name, param.valueType));
+				}
 
 				var behaviourList = new VisualElement();
 				foreach(var handler in AvatarHandlerRegistryVRChat.Handlers)
@@ -63,7 +71,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						{
 							allParameters.AddRange(parameters);
 
-							var foldout = Toolkit.AddElement(box, new Foldout{ text = $"{parameters.Count} Parameter{(parameters.Count > 1 ? "s" : "")}", value = false, viewDataKey = $"ava_base_behaviour_parameters_{behaviour.name}_{behaviour.Name}" });
+							var foldout = Toolkit.AddElement(box, new Foldout{ text = $"{parameters.Count()} Parameter{(parameters.Count() > 1 ? "s" : "")}", value = false, viewDataKey = $"ava_base_behaviour_parameters_{behaviour.name}_{behaviour.Name}" });
 							var paramBox = Toolkit.AddElement(foldout, new VisualElement());
 							paramBox.style.marginLeft = 10;
 							foreach(var (Parameter, ValueType) in parameters)
@@ -96,8 +104,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					}
 				}
 
-				var behaviourHeader = new VisualElement();
-				var paramSizeLabel = Toolkit.AddElement(behaviourHeader, new Label($"Parameters Size: {totalSize} / 256 Bits"));
+				var paramSizeLabel = Toolkit.AddElement(behaviourHeader, new Label($"Total Parameters Size: {totalSize} / 256 Bits"));
 				paramSizeLabel.style.marginTop = behaviourHeader.style.marginBottom = 5;
 
 				behaviourListParent.Clear();

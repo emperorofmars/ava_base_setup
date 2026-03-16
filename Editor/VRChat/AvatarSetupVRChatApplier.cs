@@ -88,6 +88,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			Avatar.expressionParameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
 			Avatar.expressionParameters.parameters = System.Array.Empty<VRCExpressionParameters.Parameter>();
 			Avatar.expressionParameters.name = "Parameters";
+			if(Setup.BaseParameters && Setup.BaseParameters.parameters != null)
+				AV3ManagerFunctions.AddParameters(Avatar, Setup.BaseParameters.parameters, null, true, true);
 			AV3ManagerFunctions.AddParameters(Avatar, State.Parameters, null, true, true);
 			AssetDatabase.AddObjectToAsset(Avatar.expressionParameters, outputHolder);
 

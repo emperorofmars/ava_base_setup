@@ -17,6 +17,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	public class AvatarBaseSetupVRChat : MonoBehaviour, IEditorOnly
 	{
 		public VRCExpressionsMenu BaseMenu;
+		public VRCExpressionParameters BaseParameters;
 	}
 
 	public static class InitAvatarBaseSetupVRChat
