@@ -10,6 +10,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AnimationToggleVRC : AnimationToggle, IEditorOnly
 	{
+		public string ForceParameterName;
+		public string ParameterName => string.IsNullOrWhiteSpace(ForceParameterName) ? "toggle_" + Name.Replace(" ", "_") + GetInstanceID() : ForceParameterName;
 	}
 }
 

@@ -163,7 +163,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			var ftKind = ftBehaviour.FTSetup == FT_Setup.Automatic ? FTTypeMatcher.Match(ftBehaviour.FTMesh) : (int)ftBehaviour.FTType;
 
-			return ftKind >= 0 ? new HelpBox("Detected Face Fracking Setup: " + ((FT_Type)ftKind).ToString(), HelpBoxMessageType.Info) : new HelpBox("Avatar doesn't support known face tracking method!", HelpBoxMessageType.Warning);
+			return ftKind >= 0 ? new Label("Face Fracking Setup: " + ((FT_Type)ftKind).ToString()) : new Label("Avatar doesn't support known face tracking method!");
 		}
 	}
 }

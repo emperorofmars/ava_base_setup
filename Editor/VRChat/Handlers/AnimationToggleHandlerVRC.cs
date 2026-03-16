@@ -21,7 +21,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		private string ToParam(AnimationToggleVRC Behaviour)
 		{
-			return "toggle_" + Behaviour.Name.Replace(" ", "_");
+			return Behaviour.ParameterName;
 		}
 
 		public override void Handle(AvatarHandlerContextVRChat Context, IAvatarBehaviour Behaviour)
@@ -59,8 +59,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public override VisualElement CreateGUI(IAvatarBehaviour Behaviour)
 		{
+			var toggleBehaviour = Behaviour as AnimationToggleVRC;
 			var ret = new VisualElement();
-			var label = new Label("Foo");
+			var label = new Label("Parameter: " + ToParam(toggleBehaviour));
 			ret.Add(label);
 			return ret;
 		}
