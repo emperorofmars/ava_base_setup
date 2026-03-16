@@ -9,6 +9,7 @@ using VRC.SDK3.Avatars.ScriptableObjects;
 using UnityEditor.Animations;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
@@ -119,12 +120,13 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					}
 					else
 					{
+						var controlName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(targetPathElement);
 						targetControl = new VRCExpressionsMenu.Control {
 							type = VRCExpressionsMenu.Control.ControlType.SubMenu,
-							name = targetPathElement,
+							name = controlName,
 							subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>()
 						};
-						targetControl.subMenu.name = targetPathElement;
+						targetControl.subMenu.name = controlName;
 						targetMenu.controls.Add(targetControl);
 						targetMenu = targetControl.subMenu;
 					}
