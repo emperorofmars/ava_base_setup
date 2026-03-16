@@ -18,14 +18,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		{
 			public List<(string Name, AnimatorControllerParameterType Type)> ControllerParameters = new();
 
-			public List<BlendTree> DirectBlendPre = new();
+			public List<(BlendTree, string)> DirectBlendPre = new();
 			public List<AnimatorController> ControllersPre = new();
 
 			public List<AnimatorController> ControllersFaceTracking = new();
 			public List<AnimatorController> ControllersFaceTrackingReact = new();
 			public List<AnimatorController> ControllersExpression = new();
 
-			public List<BlendTree> DirectBlendAfter = new();
+			public List<(BlendTree Blendtree, string Parameter)> DirectBlendAfter = new();
 			public List<AnimatorController> ControllersAfter = new();
 
 			public List<AnimatorController> ControllersAdditive = new();

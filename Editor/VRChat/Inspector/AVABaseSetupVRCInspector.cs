@@ -56,7 +56,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 
 				var behaviourList = new VisualElement();
-				foreach(var handler in AvatarHandlerRegistryVRChat.Handlers)
+				foreach(var handler in HandlerRegistryVRChat.Handlers)
 				{
 					foreach(IAvatarBehaviour behaviour in c.GetComponentsInChildren(handler.HandlesBehaviour).Cast<IAvatarBehaviour>())
 					{

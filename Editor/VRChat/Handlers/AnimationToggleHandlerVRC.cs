@@ -17,7 +17,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public override Type HandlesBehaviour => typeof(AnimationToggleVRC);
 		public override uint Priority => 1;
 		public override uint Order => 100;
-		public override string Label => "VRChat Animation Toggle";
+		public override string Label => "Animation Toggle";
 
 		private string ToParam(AnimationToggleVRC Behaviour)
 		{
@@ -37,15 +37,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			blendtree.AddChild(toggleBehaviour.On ? toggleBehaviour.On : AssetDatabase.LoadAssetAtPath<AnimationClip>(Constants.ASSET_PATH + "_Empty.anim"), new Vector2(1, 0));
 
 			Context.RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType.FX, blendtree, toggleBehaviour.IsOverridable);
-			Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, parameter, 0, true);
-			Context.RegisterMenuControl("Toggles", 0, new VRCExpressionsMenu.Control {
+			Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, parameter, VRCExpressionParameters.ValueType.Bool, toggleBehaviour.DefaultOn ? 1 : 0, true);
+			Context.RegisterMenuControl(toggleBehaviour.SubMenuPath ?? "Toggles", 0, new VRCExpressionsMenu.Control {
 				name = toggleBehaviour.Name,
 				icon = toggleBehaviour.Icon,
 				parameter = new VRCExpressionsMenu.Control.Parameter {
 					name = parameter,
 				},
 				type = VRCExpressionsMenu.Control.ControlType.Toggle,
-				value = 0,
+				value = toggleBehaviour.DefaultOn ? 1 : 0,
 			});
 		}
 

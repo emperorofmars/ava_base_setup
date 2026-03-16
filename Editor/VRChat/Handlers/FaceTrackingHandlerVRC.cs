@@ -20,7 +20,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public override Type HandlesBehaviour => typeof(FaceTrackingVRC);
 		public override uint Priority => 1;
 		public override uint Order => 100;
-		public override string Label => "VRChat Face Tracking";
+		public override string Label => "Face Tracking";
 
 		public static (AnimatorController Controller, VRCExpressionParameters Parameters, VRCExpressionsMenu Menu) LoadTemplates(FaceTrackingVRC Behaviour)
 		{

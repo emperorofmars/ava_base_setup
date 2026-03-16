@@ -12,6 +12,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	{
 		public string ForceParameterName;
 		public string ParameterName => string.IsNullOrWhiteSpace(ForceParameterName) ? "toggle_" + Name.Replace(" ", "_") + GetInstanceID() : ForceParameterName;
+		
+		public string SubMenuPath = "Toggles";
 	}
 }
 

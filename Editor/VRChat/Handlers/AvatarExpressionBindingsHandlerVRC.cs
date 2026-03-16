@@ -19,7 +19,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public override Type HandlesBehaviour => typeof(AvatarExpressionBindingsVRC);
 		public override uint Priority => 1;
 		public override uint Order => 100;
-		public override string Label => "VRChat Expressions";
+		public override string Label => "Expression Bindings";
 
 		public override void Handle(AvatarHandlerContextVRChat Context, IAvatarBehaviour Behaviour)
 		{

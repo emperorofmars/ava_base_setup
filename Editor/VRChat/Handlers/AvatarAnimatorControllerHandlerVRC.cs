@@ -14,7 +14,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public override Type HandlesBehaviour => typeof(AvatarAnimatorControllerVRC);
 		public override uint Priority => 1;
 		public override uint Order => 100;
-		public override string Label => "VRChat Animator Controller";
+		public override string Label => "Animator Controller";
 
 		public override void Handle(AvatarHandlerContextVRChat Context, IAvatarBehaviour Behaviour)
 		{

@@ -20,7 +20,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var state = new SetupStateVRC();
 			var context = new AvatarHandlerContextVRChat(Avatar, Setup, state);
 
-			foreach(var handler in AvatarHandlerRegistryVRChat.Handlers)
+			foreach(var handler in HandlerRegistryVRChat.Handlers)
 			{
 				foreach(IAvatarBehaviour behaviour in Setup.GetComponentsInChildren(handler.HandlesBehaviour).Cast<IAvatarBehaviour>())
 				{
@@ -114,15 +114,21 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				VRCExpressionsMenu targetMenu = Avatar.expressionsMenu;
 				foreach(var targetPathElement in targetPath)
 				{
+					var controlName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(targetPathElement);
 					var next = targetMenu.controls.Find(c => c.type == VRCExpressionsMenu.Control.ControlType.SubMenu && c.name.ToLower() == targetPathElement.ToLower());
-					if(next != null && next.subMenu != null)
+					if(next != null)
 					{
 						targetControl = next;
-						targetMenu = next.subMenu;
+						if(next.subMenu != null)
+							targetMenu = next.subMenu;
+						else
+						{
+							targetMenu = next.subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
+							targetMenu.name = controlName;
+						}
 					}
 					else
 					{
-						var controlName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(targetPathElement);
 						targetControl = new VRCExpressionsMenu.Control {
 							type = VRCExpressionsMenu.Control.ControlType.SubMenu,
 							name = controlName,
@@ -179,10 +185,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				type = AnimatorControllerParameterType.Float,
 				defaultFloat = 1,
 			});
-			ret.AddParameter("GestureLeft", AnimatorControllerParameterType.Int);
-			ret.AddParameter("GestureLeftWeight", AnimatorControllerParameterType.Float);
-			ret.AddParameter("GestureRight", AnimatorControllerParameterType.Int);
-			ret.AddParameter("GestureRightWeight", AnimatorControllerParameterType.Float);
+			foreach(var (Name, Type) in State.GetLayer(Layer).ControllerParameters)
+			{
+				if(ret.parameters.FirstOrDefault(p => p.name == Name) == null)
+					ret.AddParameter(Name, Type);
+			}
 
 			if(Layer == VRCAvatarDescriptor.AnimLayerType.FX && State.GetLayer(Layer).DirectBlendPre.Count > 0)
 				ret = AnimatorCloner.MergeControllers(ret, MergeDirectBlendTrees(State, State.GetLayer(Layer).DirectBlendPre, "DirectBlend Pre", _weight), null, false, 0, null, State.UnityResourcesToSave);
@@ -215,7 +222,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			return ret;
 		}
 
-		private static AnimatorController MergeDirectBlendTrees(SetupStateVRC State, List<BlendTree> Blendtrees, string Name, string WeightParam)
+		private static AnimatorController MergeDirectBlendTrees(SetupStateVRC State, List<(BlendTree Blendtree, string Parameter)> Blendtrees, string Name, string WeightParam)
 		{
 			var ret = new AnimatorController { name = Name };
 			var animatorLayer = new AnimatorControllerLayer
@@ -233,11 +240,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			animatorState.motion = directBlend;
 
 			var childMotions = new List<ChildMotion>();
-			foreach(var blendtree in Blendtrees)
+			foreach(var (Blendtree, Parameter) in Blendtrees)
 			{
 				childMotions.Add(new ChildMotion {
-					motion = blendtree,
-					directBlendParameter = WeightParam,
+					motion = Blendtree,
+					directBlendParameter = Parameter ?? WeightParam,
 					timeScale = 1,
 				});
 			}

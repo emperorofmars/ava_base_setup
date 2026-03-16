@@ -18,12 +18,8 @@ namespace com.squirrelbite.ava_base_setup
 		}
 
 		public PuppetType Type;
-		public string Name;
 		public bool IsPersistent = false;
 		public bool IsOverridable = false;
-		public string ParameterEnabled;
-		public string ParameterX;
-		public string ParameterY;
 		public Texture2D Icon;
 		public List<AnimationMapping> Blendtree = new();
 	}

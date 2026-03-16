@@ -10,6 +10,7 @@ namespace com.squirrelbite.ava_base_setup
 		public Texture2D Icon;
 		public AnimationClip On;
 		public AnimationClip Off;
+		public bool DefaultOn = false;
 		public bool IsOverridable;
 	}
 }
