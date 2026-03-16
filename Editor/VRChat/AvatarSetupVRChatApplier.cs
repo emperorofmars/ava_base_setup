@@ -132,7 +132,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						targetControl = new VRCExpressionsMenu.Control {
 							type = VRCExpressionsMenu.Control.ControlType.SubMenu,
 							name = controlName,
-							subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>()
+							subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>(),
+							subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
 						};
 						targetControl.subMenu.name = controlName;
 						targetMenu.controls.Add(targetControl);
@@ -179,9 +180,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			};
 			State.UnityResourcesToSave.Add(animatorLayer0.stateMachine);
 			ret.AddLayer(animatorLayer0);
-			foreach(var (Name, Type) in State.GetLayer(Layer).ControllerParameters)
+			foreach(var (Name, Type, DefaultWeight) in State.GetLayer(Layer).ControllerParameters)
 				if(ret.parameters.FirstOrDefault(p => p.name == Name) == null)
-					ret.AddParameter(Name, Type);
+					ret.AddParameter(new AnimatorControllerParameter {
+						name = Name,
+						type = Type,
+						defaultFloat = DefaultWeight,
+						defaultInt = (int)DefaultWeight,
+						defaultBool = DefaultWeight > 0.5,
+					});
 
 			if(Layer == VRCAvatarDescriptor.AnimLayerType.FX && State.GetLayer(Layer).DirectBlendPre.Count > 0)
 				ret = AnimatorCloner.MergeControllers(ret, MergeDirectBlendTrees(State, State.GetLayer(Layer).DirectBlendPre, "DirectBlend Pre"), null, false, 0, null, State.UnityResourcesToSave);

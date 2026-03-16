@@ -91,6 +91,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					name = "Face Tracking",
 					type = VRCExpressionsMenu.Control.ControlType.SubMenu,
 					subMenu = ftSubMenu,
+					subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
 				});
 
 				foreach(var control in tmpMenu.controls)

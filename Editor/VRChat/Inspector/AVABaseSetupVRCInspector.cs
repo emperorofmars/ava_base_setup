@@ -33,10 +33,27 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			Toolkit.AddElement(ui, new Label("<size=+2><font-weight=700>VRChat Avatar Base Setup</font-weight></size>"));
 
+			var h_box = Toolkit.AddElement(ui, new VisualElement());
+			h_box.style.flexDirection = FlexDirection.RowReverse;
+			var h_spacer = Toolkit.AddElement(h_box, new VisualElement());
+
+			var b = Toolkit.AddElement(h_box, new Button());
+			b.Add(new Label("<size=+1><font-weight=700>Apply the Setup Now!</font-weight></size>"));
+			b.RegisterCallback<ClickEvent>((e) =>
+			{
+				try
+				{
+					AvatarSetupVRChatApplier.Apply(AnimationPathUtil.GetRoot(c.transform).GetComponent<VRCAvatarDescriptor>(), c);
+					Debug.Log("AVA setup created successfully! Find it under: Packages/com.squirrelbite.ava_base_setup/Output/");
+				}
+				finally
+				{
+				}
+			});
+
 			Toolkit.AddSpacer(ui);
 
 			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("BaseMenu")));
-
 			Toolkit.AddElement(ui, new PropertyField(serializedObject.FindProperty("BaseParameters")));
 
 			Toolkit.AddSpacer(ui);
@@ -119,26 +136,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				drawBehaviours();
 			});
 			behaviourListParentParent.Add(behaviourListParent);
-
-			Toolkit.AddSpacer(ui);
-
-			var h_box = Toolkit.AddElement(ui, new VisualElement());
-			h_box.style.flexDirection = FlexDirection.RowReverse;
-			var h_spacer = Toolkit.AddElement(h_box, new VisualElement());
-
-			var b = Toolkit.AddElement(h_box, new Button());
-			b.Add(new Label("<size=+1><font-weight=700>Apply the Setup Now!</font-weight></size>"));
-			b.RegisterCallback<ClickEvent>((e) =>
-			{
-				try
-				{
-					AvatarSetupVRChatApplier.Apply(AnimationPathUtil.GetRoot(c.transform).GetComponent<VRCAvatarDescriptor>(), c);
-					Debug.Log("AVA setup created successfully! Find it under: Packages/com.squirrelbite.ava_base_setup/Output/");
-				}
-				finally
-				{
-				}
-			});
 
 			return ui;
 		}

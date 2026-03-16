@@ -26,37 +26,30 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public override void Handle(AvatarHandlerContextVRChat Context, IAvatarBehaviour Behaviour)
 		{
 			var puppetBehaviour = Behaviour as PuppetVRC;
+			var paramX = puppetBehaviour.IsPersistent ? puppetBehaviour.ParameterXName : ParameterXNonPersistent;
+			var paramY = puppetBehaviour.IsPersistent ? puppetBehaviour.ParameterYName : ParameterYNonPersistent;
+
 			var blendtree = new BlendTree {
 				name = puppetBehaviour.Name,
 				blendType = puppetBehaviour.Type == Puppet.PuppetType.D1 ? BlendTreeType.Simple1D : BlendTreeType.FreeformDirectional2D,
-				blendParameter = puppetBehaviour.ParameterXName
+				blendParameter = paramX,
 			};
 			if(puppetBehaviour.Type == Puppet.PuppetType.D2)
-				blendtree.blendParameterY = puppetBehaviour.ParameterYName;
+				blendtree.blendParameterY = paramY;
 
 			foreach(var mapping in puppetBehaviour.Blendtree)
 			{
 				blendtree.AddChild(mapping.Animation ? mapping.Animation : AssetDatabase.LoadAssetAtPath<AnimationClip>(Constants.ASSET_PATH + "_Empty.anim"), mapping.Position);
 			}
-			Context.RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType.FX, blendtree, puppetBehaviour.IsOverridable, puppetBehaviour.ParameterEnabledName);
+			Context.RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType.FX, blendtree, puppetBehaviour.IsOverridable, puppetBehaviour.ParameterEnabledName, 0);
 
-			if(puppetBehaviour.IsPersistent)
-			{
-				Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, puppetBehaviour.ParameterEnabledName, VRCExpressionParameters.ValueType.Bool, 0, true);
-				Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, puppetBehaviour.ParameterXName, VRCExpressionParameters.ValueType.Float, 0, true);
-				if(puppetBehaviour.Type == Puppet.PuppetType.D2)
-					Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, puppetBehaviour.ParameterYName, VRCExpressionParameters.ValueType.Float, 0, true);
-			}
-			else
-			{
-				Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, puppetBehaviour.ParameterEnabledName, VRCExpressionParameters.ValueType.Bool, 0, true);
-				Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, ParameterXNonPersistent, VRCExpressionParameters.ValueType.Float, 0, true);
-				if(puppetBehaviour.Type == Puppet.PuppetType.D2)
-					Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, ParameterYNonPersistent, VRCExpressionParameters.ValueType.Float, 0, true);
-			}
+			Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, puppetBehaviour.ParameterEnabledName, VRCExpressionParameters.ValueType.Bool, 0, puppetBehaviour.IsPersistent);
+			Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, paramX, VRCExpressionParameters.ValueType.Float, 0, puppetBehaviour.IsPersistent);
+			if(puppetBehaviour.Type == Puppet.PuppetType.D2)
+				Context.RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType.FX, paramY, VRCExpressionParameters.ValueType.Float, 0, puppetBehaviour.IsPersistent);
 
-			var subParameters = new List<VRCExpressionsMenu.Control.Parameter>() { new() { name = puppetBehaviour.IsPersistent ? puppetBehaviour.ParameterXName : ParameterXNonPersistent } };
-			if(puppetBehaviour.Type == Puppet.PuppetType.D2) subParameters.Add(new() { name = puppetBehaviour.IsPersistent ? puppetBehaviour.ParameterYName : ParameterYNonPersistent });
+			var subParameters = new List<VRCExpressionsMenu.Control.Parameter>() { new() { name = paramX } };
+			if(puppetBehaviour.Type == Puppet.PuppetType.D2) subParameters.Add(new() { name = paramY });
 			Context.RegisterMenuControl("Puppets", 0, new VRCExpressionsMenu.Control {
 				name = puppetBehaviour.Name,
 				icon = puppetBehaviour.Icon,
@@ -73,6 +66,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					parameter = new VRCExpressionsMenu.Control.Parameter { name = puppetBehaviour.ParameterEnabledName },
 					type = VRCExpressionsMenu.Control.ControlType.Toggle,
 					value = 0,
+					subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
 				});
 			}
 		}

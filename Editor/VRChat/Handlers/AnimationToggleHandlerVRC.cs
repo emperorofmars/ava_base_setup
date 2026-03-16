@@ -19,19 +19,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public override uint Order => 100;
 		public override string Label => "Animation Toggle";
 
-		private string ToParam(AnimationToggleVRC Behaviour)
-		{
-			return Behaviour.ParameterName;
-		}
-
 		public override void Handle(AvatarHandlerContextVRChat Context, IAvatarBehaviour Behaviour)
 		{
 			var toggleBehaviour = Behaviour as AnimationToggleVRC;
-			var parameter = ToParam(toggleBehaviour);
+			var parameter = toggleBehaviour.ParameterName;
 			var blendtree = new BlendTree {
 				name = toggleBehaviour.Name,
 				blendType = BlendTreeType.Simple1D,
-				blendParameter = ToParam(toggleBehaviour)
+				blendParameter = parameter
 			};
 			blendtree.AddChild(toggleBehaviour.Off ? toggleBehaviour.Off : AssetDatabase.LoadAssetAtPath<AnimationClip>(Constants.ASSET_PATH + "_Empty.anim"), new Vector2(0, 0));
 			blendtree.AddChild(toggleBehaviour.On ? toggleBehaviour.On : AssetDatabase.LoadAssetAtPath<AnimationClip>(Constants.ASSET_PATH + "_Empty.anim"), new Vector2(1, 0));
@@ -41,11 +36,10 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			Context.RegisterMenuControl(toggleBehaviour.SubMenuPath ?? "Toggles", 0, new VRCExpressionsMenu.Control {
 				name = toggleBehaviour.Name,
 				icon = toggleBehaviour.Icon,
-				parameter = new VRCExpressionsMenu.Control.Parameter {
-					name = parameter,
-				},
+				parameter = new VRCExpressionsMenu.Control.Parameter { name = parameter },
 				type = VRCExpressionsMenu.Control.ControlType.Toggle,
 				value = toggleBehaviour.DefaultOn ? 1 : 0,
+				subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
 			});
 		}
 
@@ -53,7 +47,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		{
 			var toggleBehaviour = Behaviour as AnimationToggleVRC;
 			return new() {
-				(ToParam(toggleBehaviour), VRCExpressionParameters.ValueType.Bool)
+				(toggleBehaviour.ParameterName, VRCExpressionParameters.ValueType.Bool)
 			};
 		}
 
@@ -61,7 +55,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		{
 			var toggleBehaviour = Behaviour as AnimationToggleVRC;
 			var ret = new VisualElement();
-			var label = new Label("Parameter: " + ToParam(toggleBehaviour));
+			var label = new Label("Parameter: " + toggleBehaviour.ParameterName);
 			ret.Add(label);
 			return ret;
 		}

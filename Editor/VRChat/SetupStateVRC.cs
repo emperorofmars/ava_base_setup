@@ -16,7 +16,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		[System.Serializable]
 		public class AnimatorControllerVRCLayer
 		{
-			public List<(string Name, AnimatorControllerParameterType Type)> ControllerParameters = new();
+			public List<(string Name, AnimatorControllerParameterType Type, float DefaultValue)> ControllerParameters = new();
 
 			public List<(BlendTree, string)> DirectBlendPre = new();
 			public List<AnimatorController> ControllersPre = new();
