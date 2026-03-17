@@ -71,7 +71,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				animatorLayers[4].animatorController = animatorFX;
 				animatorFX.name = "FX";
 
-				AssetDatabase.AddObjectToAsset(animatorFX, outputHolder);
+				State.UnityResourcesToSave.Add(animatorFX);
 			}
 			if(SetupLayer(State, VRCAvatarDescriptor.AnimLayerType.Additive) is var animatorAdditive && animatorAdditive != null)
 			{
@@ -80,7 +80,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				animatorLayers[1].animatorController = animatorAdditive;
 				animatorAdditive.name = "Additive";
 
-				AssetDatabase.AddObjectToAsset(animatorAdditive, outputHolder);
+				State.UnityResourcesToSave.Add(animatorAdditive);
 			}
 			// todo other layers perhaps?
 
@@ -91,11 +91,12 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			if(Setup.BaseParameters && Setup.BaseParameters.parameters != null)
 				AV3ManagerFunctions.AddParameters(Avatar, Setup.BaseParameters.parameters, null, true, true);
 			AV3ManagerFunctions.AddParameters(Avatar, State.Parameters, null, true, true);
-			AssetDatabase.AddObjectToAsset(Avatar.expressionParameters, outputHolder);
+			State.UnityResourcesToSave.Add(Avatar.expressionParameters);
 
 
 			// Merge top level menu
 			Avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
+			State.UnityResourcesToSave.Add(Avatar.expressionsMenu);
 			Avatar.expressionsMenu.name = "Menu Root";
 			if(Setup.BaseMenu && Setup.BaseMenu.controls != null)
 				AVAVRCUtil.MergeMenuControls(Setup.BaseMenu.controls, Avatar.expressionsMenu, true, State.UnityResourcesToSave);
@@ -126,7 +127,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						{
 							targetMenu = next.subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
 							targetMenu.name = controlName;
-							AssetDatabase.AddObjectToAsset(next.subMenu, outputHolder);
+							State.UnityResourcesToSave.Add(next.subMenu);
 						}
 					}
 					else
@@ -140,7 +141,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						targetControl.subMenu.name = controlName;
 						targetMenu.controls.Add(targetControl);
 						targetMenu = targetControl.subMenu;
-						AssetDatabase.AddObjectToAsset(targetControl.subMenu, outputHolder);
+						State.UnityResourcesToSave.Add(targetControl.subMenu);
 					}
 				}
 				if(!targetMenu || targetControl == null)
@@ -154,13 +155,10 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				AVAVRCUtil.MergeMenuControls(sorted, newSubmenu, true, State.UnityResourcesToSave);
 				newSubmenu.name = targetMenu.name;
 				targetControl.subMenu = newSubmenu;
-				AssetDatabase.AddObjectToAsset(newSubmenu, outputHolder);
+				State.UnityResourcesToSave.Add(newSubmenu);
 			}
 
-			if(Avatar.expressionsMenu)
-				AssetDatabase.AddObjectToAsset(Avatar.expressionsMenu, outputHolder);
-
-			// Save other stuff like generated animations
+			// Save all created assets
 			foreach(var asset in State.UnityResourcesToSave.ToHashSet())
 				if(asset)
 					AssetDatabase.AddObjectToAsset(asset, outputHolder);
