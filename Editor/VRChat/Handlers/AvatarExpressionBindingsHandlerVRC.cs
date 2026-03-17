@@ -36,10 +36,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public override VisualElement CreateGUI(IAvatarBehaviour Behaviour)
 		{
-			var ret = new VisualElement();
-			var label = new Label("Foo");
-			ret.Add(label);
-			return ret;
+			// TODO
+			return null;
 		}
 
 
