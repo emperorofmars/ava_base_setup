@@ -126,6 +126,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						{
 							targetMenu = next.subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
 							targetMenu.name = controlName;
+							AssetDatabase.AddObjectToAsset(next.subMenu, outputHolder);
 						}
 					}
 					else
@@ -139,6 +140,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						targetControl.subMenu.name = controlName;
 						targetMenu.controls.Add(targetControl);
 						targetMenu = targetControl.subMenu;
+						AssetDatabase.AddObjectToAsset(targetControl.subMenu, outputHolder);
 					}
 				}
 				if(!targetMenu || targetControl == null)
