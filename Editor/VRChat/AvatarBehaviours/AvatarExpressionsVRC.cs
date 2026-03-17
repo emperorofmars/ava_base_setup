@@ -6,7 +6,7 @@ using VRC.SDKBase;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
-	[AddComponentMenu("AVA/VRChat/Behaviours/Expressions")]
+	[AddComponentMenu("AVA/VRChat/Behaviours/Experimental/Expressions")]
 	[HelpURL("https://codeberg.org/emperorofmars/ava_base_setup")]
 	public class AvatarExpressionsVRC : AvatarExpressions, IEditorOnly
 	{
