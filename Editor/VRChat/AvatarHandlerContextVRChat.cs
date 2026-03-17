@@ -58,18 +58,21 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public void RegisterDirectBlendTree(VRCAvatarDescriptor.AnimLayerType Layer, BlendTree Blendtree, bool Overridable, string Parameter = "_weight", float Default = 1)
 		{
 			(Overridable ? State.GetLayer(Layer).DirectBlendPre : State.GetLayer(Layer).DirectBlendAfter).Add((Blendtree, Parameter));
-			State.GetLayer(Layer).ControllerParameters.Add((Parameter, AnimatorControllerParameterType.Float, Default));
+			if(State.GetLayer(Layer).ControllerParameters.Find(p => p.Name == Parameter) == null)
+				State.GetLayer(Layer).ControllerParameters.Add(new () { Name = Parameter, Type = AnimatorControllerParameterType.Float, DefaultValue = Default });
 		}
 
 		public void RegisterDirectBlendParameter(VRCAvatarDescriptor.AnimLayerType Layer, string Parameter, VRCExpressionParameters.ValueType ValueType, float Default, bool Saved)
 		{
-			State.Parameters.Add(new VRCExpressionParameters.Parameter {
-				name = Parameter,
-				defaultValue = Default,
-				saved = Saved,
-				valueType = ValueType
-			});
-			State.GetLayer(Layer).ControllerParameters.Add((Parameter, AnimatorControllerParameterType.Float, Default));
+			if(State.Parameters.Find(p => p.name == Parameter) == null)
+				State.Parameters.Add(new VRCExpressionParameters.Parameter {
+					name = Parameter,
+					defaultValue = Default,
+					saved = Saved,
+					valueType = ValueType
+				});
+			if(State.GetLayer(Layer).ControllerParameters.Find(p => p.Name == Parameter) == null)
+				State.GetLayer(Layer).ControllerParameters.Add(new () { Name = Parameter, Type = AnimatorControllerParameterType.Float, DefaultValue = Default });
 		}
 
 		public void SaveResource(UnityEngine.Object Resource) { State.UnityResourcesToSave.Add(Resource); }

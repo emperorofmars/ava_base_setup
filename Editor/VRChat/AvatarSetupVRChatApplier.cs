@@ -181,14 +181,14 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			};
 			State.UnityResourcesToSave.Add(animatorLayer0.stateMachine);
 			ret.AddLayer(animatorLayer0);
-			foreach(var (Name, Type, DefaultWeight) in State.GetLayer(Layer).ControllerParameters)
-				if(ret.parameters.FirstOrDefault(p => p.name == Name) == null)
+			foreach(var param in State.GetLayer(Layer).ControllerParameters)
+				if(ret.parameters.FirstOrDefault(p => p.name == param.Name) == null)
 					ret.AddParameter(new AnimatorControllerParameter {
-						name = Name,
-						type = Type,
-						defaultFloat = DefaultWeight,
-						defaultInt = (int)DefaultWeight,
-						defaultBool = DefaultWeight > 0.5,
+						name = param.Name,
+						type = param.Type,
+						defaultFloat = param.DefaultValue,
+						defaultInt = (int)param.DefaultValue,
+						defaultBool = param.DefaultValue > 0.5,
 					});
 
 			if(Layer == VRCAvatarDescriptor.AnimLayerType.FX && State.GetLayer(Layer).DirectBlendPre.Count > 0)
