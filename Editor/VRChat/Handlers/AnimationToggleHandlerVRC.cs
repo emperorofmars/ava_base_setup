@@ -38,8 +38,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				icon = toggleBehaviour.Icon,
 				parameter = new VRCExpressionsMenu.Control.Parameter { name = parameter },
 				type = VRCExpressionsMenu.Control.ControlType.Toggle,
-				value = toggleBehaviour.DefaultOn ? 1 : 0,
 				subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
+				value = 1,
 			});
 		}
 

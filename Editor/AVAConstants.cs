@@ -5,5 +5,6 @@ namespace com.squirrelbite.ava_base_setup
 	{
 		public const string OUTPUT_PATH = "Packages/com.squirrelbite.ava_base_setup/Output/";
 		public const string ASSET_PATH = "Packages/com.squirrelbite.ava_base_setup/Assets/";
+		public const string PARAMETER_PREFIX = "BaseSetup";
 	}
 }

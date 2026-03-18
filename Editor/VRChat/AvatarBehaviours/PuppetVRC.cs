@@ -11,11 +11,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	public class PuppetVRC : Puppet, IEditorOnly
 	{
 		public string ForceParameterEnabledName;
-		public string ParameterEnabledName => string.IsNullOrWhiteSpace(ForceParameterEnabledName) ? "puppet_enabled_" + Name.Replace(" ", "_") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterEnabledName;
+		public string ParameterEnabledName => string.IsNullOrWhiteSpace(ForceParameterEnabledName) ? AVAConstants.PARAMETER_PREFIX + "/PuppetEnabled" + Name.Replace(" ", "") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterEnabledName;
 		public string ForceParameterXName;
-		public string ParameterXName => string.IsNullOrWhiteSpace(ForceParameterXName) ? "puppet_x_" + Name.Replace(" ", "_") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterXName;
+		public string ParameterXName => string.IsNullOrWhiteSpace(ForceParameterXName) ? AVAConstants.PARAMETER_PREFIX + "/PuppetX" + Name.Replace(" ", "") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterXName;
 		public string ForceParameterYName;
-		public string ParameterYName => string.IsNullOrWhiteSpace(ForceParameterYName) ? "puppet_y_" + Name.Replace(" ", "_") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterYName;
+		public string ParameterYName => string.IsNullOrWhiteSpace(ForceParameterYName) ? AVAConstants.PARAMETER_PREFIX + "/PuppetY" + Name.Replace(" ", "") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterYName;
 	}
 }
 

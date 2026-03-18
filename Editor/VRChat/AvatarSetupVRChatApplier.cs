@@ -10,6 +10,7 @@ using UnityEditor.Animations;
 using com.squirrelbite.ava_base_setup.vrchat.VRLabs.AV3Manager;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
@@ -33,11 +34,25 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public static void CreateOutput(VRCAvatarDescriptor Avatar, AvatarBaseSetupVRChat Setup, SetupStateVRC State)
 		{
+			var useSubDir = false;
+
 			var outputHolder = ScriptableObject.CreateInstance<OutputHolderVRChat>();
 			outputHolder.name = Avatar.name;
 			State.OutputHolder = outputHolder;
-			AssetDatabase.DeleteAsset(AVAConstants.OUTPUT_PATH + Avatar.name + ".asset");
-			AssetDatabase.CreateAsset(outputHolder, AVAConstants.OUTPUT_PATH + Avatar.name + ".asset");
+
+			if(useSubDir)
+			{
+				var outputPath = Path.Join(Path.GetFullPath(AVAConstants.OUTPUT_PATH), Avatar.name);
+				if(Directory.Exists(outputPath)) Directory.Delete(outputPath, true);
+				Directory.CreateDirectory(outputPath);
+				AssetDatabase.SaveAssets();
+				AssetDatabase.Refresh();
+				AssetDatabase.CreateAsset(outputHolder, Path.Join(AVAConstants.OUTPUT_PATH, Avatar.name, Avatar.name + ".asset"));
+			}
+			else
+			{
+				AssetDatabase.CreateAsset(outputHolder, Path.Join(AVAConstants.OUTPUT_PATH, Avatar.name + ".asset"));
+			}
 
 			// Ensure controller layers on avatar descriptor
 			Avatar.customizeAnimationLayers = true;
@@ -91,15 +106,15 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			if(Setup.BaseParameters && Setup.BaseParameters.parameters != null)
 				AV3ManagerFunctions.AddParameters(Avatar, Setup.BaseParameters.parameters, null, true, true);
 			AV3ManagerFunctions.AddParameters(Avatar, State.Parameters, null, true, true);
-			State.UnityResourcesToSave.Add(Avatar.expressionParameters);
+			State.UnityResourcesToSaveInDir.Add(Avatar.expressionParameters);
 
 
 			// Merge top level menu
 			Avatar.expressionsMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-			State.UnityResourcesToSave.Add(Avatar.expressionsMenu);
+			State.UnityResourcesToSaveInDir.Add(Avatar.expressionsMenu);
 			Avatar.expressionsMenu.name = "Menu Root";
 			if(Setup.BaseMenu && Setup.BaseMenu.controls != null)
-				AVAVRCUtil.MergeMenuControls(Setup.BaseMenu.controls, Avatar.expressionsMenu, true, State.UnityResourcesToSave);
+				AVAVRCUtil.MergeMenuControls(Setup.BaseMenu.controls, Avatar.expressionsMenu, true, State.UnityResourcesToSaveInDir);
 
 			// Merge registered menu controls
 			foreach(var (target, menuControls) in State.Menus)
@@ -108,7 +123,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				if(string.IsNullOrEmpty(target) || target == "/")
 				{
 					var sortedRoot = menuControls.MenuControls.ToList().OrderBy(c => c.Key).SelectMany(c => c.Value).ToList();
-					AVAVRCUtil.MergeMenuControls(sortedRoot, Avatar.expressionsMenu, true, State.UnityResourcesToSave);
+					AVAVRCUtil.MergeMenuControls(sortedRoot, Avatar.expressionsMenu, true, State.UnityResourcesToSaveInDir);
 					continue;
 				}
 				var targetPath = target.Split("/");
@@ -127,7 +142,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 						{
 							targetMenu = next.subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
 							targetMenu.name = controlName;
-							State.UnityResourcesToSave.Add(next.subMenu);
 						}
 					}
 					else
@@ -137,11 +151,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 							name = controlName,
 							subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>(),
 							subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
+							value = 1,
 						};
 						targetControl.subMenu.name = controlName;
 						targetMenu.controls.Add(targetControl);
 						targetMenu = targetControl.subMenu;
-						State.UnityResourcesToSave.Add(targetControl.subMenu);
 					}
 				}
 				if(!targetMenu || targetControl == null)
@@ -151,24 +165,47 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 				var sorted = menuControls.MenuControls.ToList().OrderBy(c => c.Key).SelectMany(c => c.Value).ToList();
 				var newSubmenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-				AVAVRCUtil.MergeMenuControls(targetMenu.controls, newSubmenu, true, State.UnityResourcesToSave);
-				AVAVRCUtil.MergeMenuControls(sorted, newSubmenu, true, State.UnityResourcesToSave);
+				State.UnityResourcesToSaveInDir.Add(newSubmenu);
+				AVAVRCUtil.MergeMenuControls(targetMenu.controls, newSubmenu, true, State.UnityResourcesToSaveInDir);
+				AVAVRCUtil.MergeMenuControls(sorted, newSubmenu, true, State.UnityResourcesToSaveInDir);
 				newSubmenu.name = targetMenu.name;
 				targetControl.subMenu = newSubmenu;
-				State.UnityResourcesToSave.Add(newSubmenu);
 			}
 
 			// Save all created assets
+			foreach(var asset in State.UnityResourcesToSaveInDir)
+			{
+				if(asset)
+				{
+					if(useSubDir)
+						AssetDatabase.CreateAsset(asset, Path.Join(AVAConstants.OUTPUT_PATH, Avatar.name, AssetNameWithSuffix(asset)));
+					else
+						AssetDatabase.AddObjectToAsset(asset, outputHolder);
+				}
+			}
+
 			foreach(var asset in State.UnityResourcesToSave.ToHashSet())
 				if(asset)
 					AssetDatabase.AddObjectToAsset(asset, outputHolder);
 
 			Avatar.baseAnimationLayers = animatorLayers;
 
+
 			EditorUtility.SetDirty(outputHolder);
 			EditorUtility.SetDirty(Avatar);
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
+		}
+
+		private static string AssetNameWithSuffix(Object Asset)
+		{
+			var name = Asset.name.Replace("/", "_").Trim();
+			if (Asset is Material) return name + ".mat";
+			if (Asset is Mesh) return name + ".mesh";
+			if (Asset is Texture2D) return name + ".texture";
+			if (Asset is AnimationClip) return name + ".anim";
+			if (Asset is AnimatorController) return name + ".controller";
+			return name + ".asset";
 		}
 
 		private static AnimatorController SetupLayer(SetupStateVRC State, VRCAvatarDescriptor.AnimLayerType Layer)

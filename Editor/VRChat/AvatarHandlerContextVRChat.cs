@@ -79,6 +79,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public void SaveResource(List<UnityEngine.Object> Resource) { State.UnityResourcesToSave.AddRange(Resource); }
 
 		public List<UnityEngine.Object> UnityResourcesToSave => State.UnityResourcesToSave;
+		public List<UnityEngine.Object> UnityResourcesToSaveInDir => State.UnityResourcesToSaveInDir;
 
 		public void SetFaceTrackingEnabled(bool Enabled) { State.FaceTrackingEnabled = Enabled; }
 		public void SetUseLayerWeightDrivers(bool Enabled) { State.UseLayerWeightDrivers = Enabled; }

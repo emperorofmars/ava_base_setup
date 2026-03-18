@@ -11,7 +11,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	public class AnimationToggleVRC : AnimationToggle, IEditorOnly
 	{
 		public string ForceParameterName;
-		public string ParameterName => string.IsNullOrWhiteSpace(ForceParameterName) ? "toggle_" + Name.Replace(" ", "_") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterName;
+		public string ParameterName => string.IsNullOrWhiteSpace(ForceParameterName) ? AVAConstants.PARAMETER_PREFIX + "/Toggle" + Name.Replace(" ", "") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterName;
 
 		public string SubMenuPath = "Toggles";
 	}

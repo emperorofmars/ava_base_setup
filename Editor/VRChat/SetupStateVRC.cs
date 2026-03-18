@@ -64,6 +64,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public Dictionary<string, MenuVRC> Menus = new();
 
 		public List<Object> UnityResourcesToSave = new();
+		public List<Object> UnityResourcesToSaveInDir = new();
 
 		public Object OutputHolder;
 	}

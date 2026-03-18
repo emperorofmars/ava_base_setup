@@ -15,8 +15,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 {
 	public class PuppetHandlerVRC : IAvatarBehaviourHandlerVRChat
 	{
-		public const string ParameterXNonPersistent = "override_puppet_x";
-		public const string ParameterYNonPersistent = "override_puppet_y";
+		public const string ParameterXNonPersistent = AVAConstants.PARAMETER_PREFIX + "/OverridePuppetX";
+		public const string ParameterYNonPersistent = AVAConstants.PARAMETER_PREFIX + "/OverridePuppetY";
 
 		public override Type HandlesBehaviour => typeof(PuppetVRC);
 		public override uint Priority => 1;
@@ -55,8 +55,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				icon = puppetBehaviour.Icon,
 				parameter = puppetBehaviour.IsPersistent ? null : new VRCExpressionsMenu.Control.Parameter { name = puppetBehaviour.ParameterEnabledName },
 				type = puppetBehaviour.Type == Puppet.PuppetType.D2 ? VRCExpressionsMenu.Control.ControlType.TwoAxisPuppet : VRCExpressionsMenu.Control.ControlType.RadialPuppet,
-				value = 0,
 				subParameters = subParameters.ToArray(),
+				value = 1,
 			});
 			if(puppetBehaviour.IsPersistent)
 			{
@@ -65,8 +65,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 					icon = puppetBehaviour.Icon,
 					parameter = new VRCExpressionsMenu.Control.Parameter { name = puppetBehaviour.ParameterEnabledName },
 					type = VRCExpressionsMenu.Control.ControlType.Toggle,
-					value = 0,
 					subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
+					value = 1,
 				});
 			}
 		}

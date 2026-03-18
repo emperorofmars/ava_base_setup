@@ -82,7 +82,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				var motionRetarget = AnimationPathUtil.GetPath(Context.Avatar.transform, FTMesh.transform, true);
 
 				var tmpMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
-				var ftSubMenu = AVAVRCUtil.MergeMenuControls(menuFT.controls, ScriptableObject.CreateInstance<VRCExpressionsMenu>(), true, Context.UnityResourcesToSave);
+				var ftSubMenu = AVAVRCUtil.MergeMenuControls(menuFT.controls, ScriptableObject.CreateInstance<VRCExpressionsMenu>(), true, Context.UnityResourcesToSaveInDir);
 				ftSubMenu.name = menuFT.name;
 				Context.SaveResource(ftSubMenu);
 				tmpMenu.controls.Add(new()
