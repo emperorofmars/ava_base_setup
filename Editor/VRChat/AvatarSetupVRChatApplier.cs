@@ -119,7 +119,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			// Merge registered menu controls
 			foreach(var (target, menuControls) in State.Menus)
 			{
-				// TODO handle root entries after all have been created
 				if(string.IsNullOrEmpty(target) || target == "/")
 				{
 					var sortedRoot = menuControls.MenuControls.ToList().OrderBy(c => c.Key).SelectMany(c => c.Value).ToList();

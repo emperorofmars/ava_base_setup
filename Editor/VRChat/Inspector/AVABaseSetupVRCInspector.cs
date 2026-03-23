@@ -16,16 +16,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	[CustomEditor(typeof(AvatarBaseSetupVRChat))]
 	public class AvatarBaseSetupVRChatInspector : Editor
 	{
-		static readonly Color SpacerColor = new(0.17f, 0.17f, 0.17f);
-
-		private int FTMatch = -1;
-
-		void OnEnable()
-		{
-			var c = (AvatarBaseSetupVRChat)target;
-			FTMatch = AVAVRCUtil.MatchFTType(c.gameObject);
-		}
-
 		public override VisualElement CreateInspectorGUI()
 		{
 			var c = (AvatarBaseSetupVRChat)target;
