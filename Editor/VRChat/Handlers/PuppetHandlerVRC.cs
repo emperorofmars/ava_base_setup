@@ -50,22 +50,42 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 			var subParameters = new List<VRCExpressionsMenu.Control.Parameter>() { new() { name = paramX } };
 			if(puppetBehaviour.Type == Puppet.PuppetType.D2) subParameters.Add(new() { name = paramY });
-			Context.RegisterMenuControl("Puppets", 0, new VRCExpressionsMenu.Control {
-				name = puppetBehaviour.Name,
-				icon = puppetBehaviour.Icon,
-				parameter = puppetBehaviour.IsPersistent ? null : new VRCExpressionsMenu.Control.Parameter { name = puppetBehaviour.ParameterEnabledName },
-				type = puppetBehaviour.Type == Puppet.PuppetType.D2 ? VRCExpressionsMenu.Control.ControlType.TwoAxisPuppet : VRCExpressionsMenu.Control.ControlType.RadialPuppet,
-				subParameters = subParameters.ToArray(),
-				value = 1,
-			});
-			if(puppetBehaviour.IsPersistent)
+
+			if(puppetBehaviour.IsPersistent) // Group the puppet and enabled controls into their own submenu
 			{
-				Context.RegisterMenuControl("Puppets", 0, new VRCExpressionsMenu.Control {
-					name = "Enable " + puppetBehaviour.Name,
+				var menu = new VRCExpressionsMenu.Control {
+					name = puppetBehaviour.Name,
 					icon = puppetBehaviour.Icon,
+					type = VRCExpressionsMenu.Control.ControlType.SubMenu,
+					value = 1,
+					subMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>(),
+				};
+				menu.subMenu.name = puppetBehaviour.Name + "_Submenu";
+				Context.RegisterMenuControl("Puppets", 0, menu);
+
+				menu.subMenu.controls.Add(new VRCExpressionsMenu.Control {
+					name = puppetBehaviour.Name,
+					icon = puppetBehaviour.Icon,
+					type = puppetBehaviour.Type == Puppet.PuppetType.D2 ? VRCExpressionsMenu.Control.ControlType.TwoAxisPuppet : VRCExpressionsMenu.Control.ControlType.RadialPuppet,
+					subParameters = subParameters.ToArray(),
+					value = 1,
+				});
+				menu.subMenu.controls.Add(new VRCExpressionsMenu.Control {
+					name = "Enable " + puppetBehaviour.Name,
 					parameter = new VRCExpressionsMenu.Control.Parameter { name = puppetBehaviour.ParameterEnabledName },
 					type = VRCExpressionsMenu.Control.ControlType.Toggle,
 					subParameters = new VRCExpressionsMenu.Control.Parameter[] {},
+					value = 1,
+				});
+			}
+			else // Just the puppet control
+			{
+				Context.RegisterMenuControl("Puppets", 0, new VRCExpressionsMenu.Control {
+					name = puppetBehaviour.Name,
+					icon = puppetBehaviour.Icon,
+					parameter = new VRCExpressionsMenu.Control.Parameter { name = puppetBehaviour.ParameterEnabledName },
+					type = puppetBehaviour.Type == Puppet.PuppetType.D2 ? VRCExpressionsMenu.Control.ControlType.TwoAxisPuppet : VRCExpressionsMenu.Control.ControlType.RadialPuppet,
+					subParameters = subParameters.ToArray(),
 					value = 1,
 				});
 			}
