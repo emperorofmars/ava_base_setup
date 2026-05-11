@@ -13,6 +13,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 		public string ForceParameterName;
 		public string ParameterName => string.IsNullOrWhiteSpace(ForceParameterName) ? AVAConstants.PARAMETER_PREFIX + "/Toggle" + Name.Replace(" ", "") + GetInstanceID().ToString().Replace("-", "_") : ForceParameterName;
 
+		[Tooltip("Parent menu path (e.g. Toggles/Clothing)")]
 		public string SubMenuPath = "Toggles";
 	}
 }

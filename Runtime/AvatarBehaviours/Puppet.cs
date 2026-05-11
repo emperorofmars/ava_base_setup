@@ -18,8 +18,11 @@ namespace com.squirrelbite.ava_base_setup
 		}
 
 		public PuppetType Type;
+		[Tooltip("Will the joystick state be persisted once the player exits the blendtree")]
 		public bool IsPersistent = false;
+		[Tooltip("Can other behaviours override this setting")]
 		public bool IsOverridable = false;
+		[Tooltip("Menu icon")]
 		public Texture2D Icon;
 		public List<AnimationMapping> Blendtree = new();
 	}
