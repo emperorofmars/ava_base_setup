@@ -5,7 +5,7 @@ A small utility that sets up [VRCFT Templates](https://github.com/Adjerry91/VRCF
 
 Layers not in use will have their weight set to zero, omitting them from being processed by Unity. If a user doesn't use face-tracking, then there is no need to keep those layers enabled.
 
-* Animation repathing for the VRCFT templates is supported
+* Animation re-pathing for the VRCFT templates is supported
 * Works with or without ModularAvatar and VRCFury
 * Non-destructive, automatically runs on VRChat upload
 * Setup can be applied in advance. Your users won't have to install this package, if you include the output in your `.unitypackage`.
@@ -35,17 +35,15 @@ Add the following URL: `https://codeberg.org/emperorofmars/ava_base_setup.git#up
 
 Please open issues for any bugs or misbehavior you notice. Feel free to open issues for feature requests.
 
-## Contributing
-Human made contributions via pull-requests are welcome.
-
-### Guidelines
-* Any form of LLM contribution is prohibited, this also includes issues and PRs.
-* Please open an issue first for larger changes.
-
-### Development
+### Development Setup
 * Clone the repository into the `Packages` directory of a Unity 2022.3+ project set up with the VRChat SDK for Avatars.
 * Preferably setup Unity to use VSCode with the [recommended extensions](./.vscode/extensions.json).
 * Use Unity to open the C# project.
+
+## Contributing
+Human made contributions via pull-requests are welcome.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## License
 All source-code in this repository, except when noted in individual files and/or directories, is licensed under either:
