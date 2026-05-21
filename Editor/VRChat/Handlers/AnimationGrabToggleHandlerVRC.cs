@@ -46,6 +46,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				value = 1,
 			});
 
+			// Manual toggle is done, handle the grab contact setup
+
 			// ensure contact
 
 			var contact = toggleBehaviour.Contact;
@@ -153,8 +155,6 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 			};
 			stateIdle.AddTransition(transitionNoHandGrab);
-
-			Debug.Log("PARAM: " + parameter);
 
 			var vrcBehaviourGrab = stateGrab.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
 			vrcBehaviourGrab.parameters.Add(new () {
