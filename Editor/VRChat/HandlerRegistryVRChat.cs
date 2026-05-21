@@ -15,6 +15,7 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			new AnimationToggleHandlerVRC(),
 			new IdleHandlerVRC(),
 			new AvatarExpressionBindingsHandlerVRC(),
+			new AnimationGrabToggleHandlerVRC(),
 		};
 		private static readonly List<IAvatarBehaviourHandlerVRChat> RegisteredHandlers = new();
 

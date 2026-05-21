@@ -13,7 +13,9 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	{
 		public VRCContactReceiver Contact;
 		public VRCPhysBoneCollider Collider;
-		public string Hand = "both";
+		public string Hand = "right";
+
+		public string GrabEnabledParameter => ParameterName + "_enabled";
 	}
 }
 
