@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 
 namespace com.squirrelbite.ava_base_setup.vrchat
 {
@@ -42,6 +43,17 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			}
 			return ret.Values.OrderBy(e => e.Order).ToList();
 		} }
+
+		public static IAvatarBehaviourHandlerVRChat GetHandler(IAvatarBehaviour Behaviour)
+		{
+			if(Handlers.FindAll(h => h.HandlesBehaviour == Behaviour.GetType()) is List<IAvatarBehaviourHandlerVRChat> handlers && handlers.Count > 0)
+			{
+				handlers.Sort((a, b) => (int)a.Priority - (int)b.Priority);
+				return handlers[0];
+			}
+			else
+				return null;
+		}
 
 	}
 }

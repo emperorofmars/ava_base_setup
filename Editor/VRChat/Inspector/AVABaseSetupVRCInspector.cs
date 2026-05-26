@@ -63,9 +63,10 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 				}
 
 				var behaviourList = new VisualElement();
-				foreach(var handler in HandlerRegistryVRChat.Handlers)
+
+				foreach(IAvatarBehaviour behaviour in c.GetComponentsInChildren<IAvatarBehaviour>())
 				{
-					foreach(IAvatarBehaviour behaviour in c.GetComponentsInChildren(handler.HandlesBehaviour).Cast<IAvatarBehaviour>())
+					if(HandlerRegistryVRChat.GetHandler(behaviour) is IAvatarBehaviourHandlerVRChat handler)
 					{
 						var box = Toolkit.AddElement(behaviourList, new Box());
 						box.style.marginTop = box.style.marginBottom = 5;

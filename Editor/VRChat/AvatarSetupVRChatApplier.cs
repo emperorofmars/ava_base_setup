@@ -21,13 +21,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 			var state = new SetupStateVRC();
 			var context = new AvatarHandlerContextVRChat(Avatar, Setup, state);
 
-			foreach(var handler in HandlerRegistryVRChat.Handlers)
-			{
-				foreach(IAvatarBehaviour behaviour in Setup.GetComponentsInChildren(handler.HandlesBehaviour).Cast<IAvatarBehaviour>())
-				{
+			foreach(IAvatarBehaviour behaviour in Setup.GetComponentsInChildren<IAvatarBehaviour>())
+				if(HandlerRegistryVRChat.GetHandler(behaviour) is IAvatarBehaviourHandlerVRChat handler)
 					handler.Handle(context, behaviour);
-				}
-			}
+				else
+					Debug.LogWarning("No handler found for: " + behaviour);
 
 			CreateOutput(Avatar, Setup, state);
 		}

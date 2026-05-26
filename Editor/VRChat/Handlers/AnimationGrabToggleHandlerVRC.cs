@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.UIElements;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDK3.Dynamics.Contact.Components;
@@ -17,8 +16,8 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 	{
 		public override Type HandlesBehaviour => typeof(AnimationGrabToggleVRC);
 		public override uint Priority => 1;
-		public override uint Order => 100;
-		public override string Label => "Animation Toggle";
+		public override uint Order => 200;
+		public override string Label => "Animation Grab Toggle";
 
 		public override void Handle(AvatarHandlerContextVRChat Context, IAvatarBehaviour Behaviour)
 		{
@@ -190,19 +189,11 @@ namespace com.squirrelbite.ava_base_setup.vrchat
 
 		public override List<(string Parameter, VRCExpressionParameters.ValueType ValueType)> GetParameters(IAvatarBehaviour Behaviour)
 		{
-			var toggleBehaviour = Behaviour as AnimationToggleVRC;
+			var toggleBehaviour = Behaviour as AnimationGrabToggleVRC;
 			return new() {
-				(toggleBehaviour.ParameterName, VRCExpressionParameters.ValueType.Bool)
+				(toggleBehaviour.ParameterName, VRCExpressionParameters.ValueType.Bool),
+				(toggleBehaviour.GrabEnabledParameter, VRCExpressionParameters.ValueType.Bool),
 			};
-		}
-
-		public override VisualElement CreateGUI(IAvatarBehaviour Behaviour)
-		{
-			var toggleBehaviour = Behaviour as AnimationToggleVRC;
-			var ret = new VisualElement();
-			var label = new Label("Parameter: " + toggleBehaviour.ParameterName);
-			ret.Add(label);
-			return ret;
 		}
 	}
 }
